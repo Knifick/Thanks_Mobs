@@ -1,0 +1,179 @@
+---- Minecraft Crash Report ----
+// On the bright side, I bought you a teddy bear!
+
+Time: 2025-03-09 17:48:32
+Description: Ticking entity
+
+java.lang.NullPointerException: Cannot invoke "net.minecraft.sounds.SoundEvent.getRange(float)" because the return value of "net.minecraft.core.Holder.value()" is null
+	at net.minecraft.server.level.ServerLevel.playSeededSound(ServerLevel.java:907) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.level.Level.playSeededSound(Level.java:395) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.level.Level.playSound(Level.java:401) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.level.Level.playSound(Level.java:389) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.knifick.praporupdate.goal.NarratorGoal.tick(NarratorGoal.java:90) ~[%23196!/:?] {re:classloading}
+	at net.minecraft.world.entity.ai.goal.WrappedGoal.tick(WrappedGoal.java:55) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.world.entity.ai.goal.GoalSelector.tickRunningGoals(GoalSelector.java:123) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.world.entity.ai.goal.GoalSelector.tick(GoalSelector.java:114) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.world.entity.Mob.serverAiStep(Mob.java:760) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.entity.LivingEntity.aiStep(LivingEntity.java:2548) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.world.entity.Mob.aiStep(Mob.java:536) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.entity.AgeableMob.aiStep(AgeableMob.java:118) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.world.entity.animal.Animal.aiStep(Animal.java:54) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.knifick.praporupdate.entity.NarratorEntity.aiStep(NarratorEntity.java:208) ~[%23196!/:?] {re:classloading}
+	at net.minecraft.world.entity.LivingEntity.tick(LivingEntity.java:2298) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.world.entity.Mob.tick(Mob.java:337) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.level.ServerLevel.tickNonPassenger(ServerLevel.java:693) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.level.Level.guardEntityTick(Level.java:479) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.level.ServerLevel.lambda$tick$6(ServerLevel.java:343) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.level.entity.EntityTickList.forEach(EntityTickList.java:53) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:323) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:893) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:814) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:89) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:661) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:251) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:842) ~[?:?] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Server thread
+Suspected Mod: 
+	ThanksMod (prapor), Version: 0.2
+		at TRANSFORMER/prapor@0.2/net.knifick.praporupdate.goal.NarratorGoal.tick(NarratorGoal.java:90)
+Stacktrace:
+	at net.minecraft.server.level.ServerLevel.playSeededSound(ServerLevel.java:907) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.level.Level.playSeededSound(Level.java:395) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.level.Level.playSound(Level.java:401) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.level.Level.playSound(Level.java:389) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.knifick.praporupdate.goal.NarratorGoal.tick(NarratorGoal.java:90) ~[%23196!/:?] {re:classloading}
+	at net.minecraft.world.entity.ai.goal.WrappedGoal.tick(WrappedGoal.java:55) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.world.entity.ai.goal.GoalSelector.tickRunningGoals(GoalSelector.java:123) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.world.entity.ai.goal.GoalSelector.tick(GoalSelector.java:114) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.world.entity.Mob.serverAiStep(Mob.java:760) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.entity.LivingEntity.aiStep(LivingEntity.java:2548) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.world.entity.Mob.aiStep(Mob.java:536) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.entity.AgeableMob.aiStep(AgeableMob.java:118) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.world.entity.animal.Animal.aiStep(Animal.java:54) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.knifick.praporupdate.entity.NarratorEntity.aiStep(NarratorEntity.java:208) ~[%23196!/:?] {re:classloading}
+	at net.minecraft.world.entity.LivingEntity.tick(LivingEntity.java:2298) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.world.entity.Mob.tick(Mob.java:337) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.level.ServerLevel.tickNonPassenger(ServerLevel.java:693) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.level.Level.guardEntityTick(Level.java:479) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.level.ServerLevel.lambda$tick$6(ServerLevel.java:343) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.level.entity.EntityTickList.forEach(EntityTickList.java:53) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:323) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+-- Entity being ticked --
+Details:
+	Entity Type: prapor:narrator (net.knifick.praporupdate.entity.NarratorEntity)
+	Entity ID: 601
+	Entity Name: Наратор
+	Entity's Exact location: 3515.06, 63.00, 2818.90
+	Entity's Block location: World: (3515,63,2818), Section: (at 11,15,2 in 219,3,176; chunk contains blocks 3504,-64,2816 to 3519,319,2831), Region: (6,5; contains chunks 192,160 to 223,191, blocks 3072,-64,2560 to 3583,319,3071)
+	Entity's Momentum: 0.00, -0.08, 0.00
+	Entity's Passengers: []
+	Entity's Vehicle: null
+Stacktrace:
+	at net.minecraft.world.level.Level.guardEntityTick(Level.java:479) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.level.ServerLevel.lambda$tick$6(ServerLevel.java:343) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.world.level.entity.EntityTickList.forEach(EntityTickList.java:53) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading}
+	at net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:323) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:893) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:814) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:89) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:661) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:251) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:842) ~[?:?] {}
+
+
+-- Affected level --
+Details:
+	All players: 1 total; [ServerPlayer['Dev'/8, l='ServerLevel[Новый мир]', x=3514.19, y=63.00, z=2818.25]]
+	Chunk stats: 6434
+	Level dimension: minecraft:overworld
+	Level spawn location: World: (0,99,0), Section: (at 0,3,0 in 0,6,0; chunk contains blocks 0,-64,0 to 15,319,15), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,-64,0 to 511,319,511)
+	Level time: 271962 game time, 6573 day time
+	Level name: Новый мир
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Cheats: true
+	Level weather: Rain time: 1 (now: false), thunder time: 1 (now: false)
+	Known server brands: forge
+	Removed feature flags: 
+	Level was modded: true
+	Level storage version: 0x04ABD - Anvil
+Stacktrace:
+	at net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:893) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:814) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:89) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:661) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:251) ~[forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.jar%23191!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.lang.Thread.run(Thread.java:842) ~[?:?] {}
+
+
+-- System Details --
+Details:
+	Minecraft Version: 1.20.1
+	Minecraft Version ID: 1.20.1
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 17.0.12, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode, sharing), Oracle Corporation
+	Memory: 1914193920 bytes (1825 MiB) / 2973761536 bytes (2836 MiB) up to 8539602944 bytes (8144 MiB)
+	CPUs: 12
+	Processor Vendor: AuthenticAMD
+	Processor Name: AMD Ryzen 5 5600G with Radeon Graphics         
+	Identifier: AuthenticAMD Family 25 Model 80 Stepping 0
+	Microarchitecture: Zen 3
+	Frequency (GHz): 3.89
+	Number of physical packages: 1
+	Number of physical CPUs: 6
+	Number of logical CPUs: 12
+	Graphics card #0 name: NVIDIA GeForce RTX 3060
+	Graphics card #0 vendor: NVIDIA (0x10de)
+	Graphics card #0 VRAM (MB): 4095.00
+	Graphics card #0 deviceId: 0x2544
+	Graphics card #0 versionInfo: DriverVersion=32.0.15.6614
+	Memory slot #0 capacity (MB): 16384.00
+	Memory slot #0 clockSpeed (GHz): 3.20
+	Memory slot #0 type: DDR4
+	Memory slot #1 capacity (MB): 16384.00
+	Memory slot #1 clockSpeed (GHz): 3.20
+	Memory slot #1 type: DDR4
+	Virtual memory max (MB): 38474.86
+	Virtual memory used (MB): 27532.75
+	Swap memory total (MB): 5914.00
+	Swap memory used (MB): 4834.50
+	JVM Flags: 1 total; -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump
+	Server Running: true
+	Player Count: 1 / 8; [ServerPlayer['Dev'/8, l='ServerLevel[Новый мир]', x=3514.19, y=63.00, z=2818.25]]
+	Data Packs: vanilla, mod:forge, mod:prapor, mod:geckolib
+	Enabled Feature Flags: minecraft:vanilla
+	World Generation: Stable
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'forge'; Server brand changed to 'forge'
+	Launched Version: MOD_DEV
+	ModLauncher: 10.0.9+10.0.9+main.dcd20f30
+	ModLauncher launch target: forgeclientuserdev
+	ModLauncher naming: mcp
+	ModLauncher services: 
+		mixin-0.8.5.jar mixin PLUGINSERVICE 
+		eventbus-6.0.5.jar eventbus PLUGINSERVICE 
+		fmlloader-1.20.1-47.3.0.jar slf4jfixer PLUGINSERVICE 
+		fmlloader-1.20.1-47.3.0.jar object_holder_definalize PLUGINSERVICE 
+		fmlloader-1.20.1-47.3.0.jar runtime_enum_extender PLUGINSERVICE 
+		fmlloader-1.20.1-47.3.0.jar capability_token_subclass PLUGINSERVICE 
+		accesstransformers-8.0.4.jar accesstransformer PLUGINSERVICE 
+		fmlloader-1.20.1-47.3.0.jar runtimedistcleaner PLUGINSERVICE 
+		modlauncher-10.0.9.jar mixin TRANSFORMATIONSERVICE 
+		modlauncher-10.0.9.jar fml TRANSFORMATIONSERVICE 
+	FML Language Providers: 
+		minecraft@1.0
+		lowcodefml@null
+		javafml@null
+	Mod List: 
+		forge-1.20.1-47.3.0_mapped_official_1.20.1-recomp.|Minecraft                     |minecraft                     |1.20.1              |DONE      |Manifest: a1:d4:5e:04:4f:d3:d6:e0:7b:37:97:cf:77:b0:de:ad:4a:47:ce:8c:96:49:5f:0a:cf:8c:ae:b2:6d:4b:8a:3f
+		                                                  |Forge                         |forge                         |47.3.0              |DONE      |Manifest: NOSIGNATURE
+		main                                              |ThanksMod                     |prapor                        |0.2                 |DONE      |Manifest: NOSIGNATURE
+		geckolib-forge-1.20.1-4.4.9_mapped_official_1.20.1|GeckoLib 4                    |geckolib                      |4.4.9               |DONE      |Manifest: NOSIGNATURE
+	Crash Report UUID: 071e9c82-ec8e-4851-b8de-258c6fe42841
+	FML: 47.3
+	Forge: net.minecraftforge:47.3.0

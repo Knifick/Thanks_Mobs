@@ -1,0 +1,50 @@
+/tp @s -2008 79 -967
+/locate biome minecraft:flower_forest
+/effect give @e[type=prapor:brolem] minecraft:glowing 40 1 true
+/locate biome minecraft:desert
+/tp @s 529 74 414
+/effect give @e[type=prapor:prapor] minecraft:glowing 40 1 true
+/locate biome minecraft:badlands
+/tp @s 5185 80 -794
+/locate biome minecraft:badlands
+/effect give @e[type=prapor:prapor] minecraft:glowing 40 1 true
+/locate biome minecraft:badlands
+/tp @s -3903 65 -5158
+/effect give @e[type=prapor:prapor] minecraft:glowing 40 1 true
+/effect give @e[type=prapor:bastard] minecraft:glowing 40 1 true
+/time set day
+/give @s prapor:music_record_thanks_street
+/kill @e
+/locate biome minecraft:ice_spikes
+/tp @s -2267 69 -1371
+/locate biome minecraft:snowy_slopes
+/tp @s -2944 85 -1748
+/locate biome minecraft:snowy_slopes
+/tp @s 1629 143 1055
+/locate biome minecraft:snowy_beach
+/tp @s -491 171 2565
+/locate biome minecraft:snowy_taiga
+/tp @s -450 65 2576
+/effect give Dev minecraft:glowing 10 1 true
+/effect give @e[type=prapor:narrator] minecraft:glowing 10 1 true
+/kill a090f06e-a5e9-45df-bcf2-cb86f5f74303
+/effect give @e[type=prapor:narrator] minecraft:glowing 10 1 true
+/kill @e
+/effect give @e[type=prapor:narrator] minecraft:glowing 10 1 true
+/locate biome minecraft:snowy_plains
+/tp @s -712 88 1233
+/effect give @e[type=prapor:narrator] minecraft:glowing 10 1 true
+/locate biome minecraft:plains
+/tp @s -508 96 952
+/time set day
+/setblock ~ ~-1 ~ air
+/locate biome minecraft:snowy_taiga
+/tp @s 305 103 681
+/time set day
+/summon prapor:darkironkin ~ ~ ~ {NoAI:1b}
+/spawnpoint
+/gamerule keepInventory true
+/data merge entity b586a55e-e70f-435f-955b-1192d0a9e762 {NoAI:0b}
+/time set day
+/kill
+/time set day

@@ -1,0 +1,16 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "savanna",
+    "desert",
+    "jungle",
+    "badlands",
+    "wooded_badlands"
+  ],
+  "spawners": {
+    "type": "prapor:prapor",
+    "weight": 9,
+    "minCount": 1,
+    "maxCount": 4
+  }
+}

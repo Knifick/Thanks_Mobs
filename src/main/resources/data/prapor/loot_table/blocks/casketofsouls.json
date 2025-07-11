@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "prapor:blocks/casketofsouls",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "prapor:casketofsouls"
+        }
+      ]
+    }
+  ]
+}

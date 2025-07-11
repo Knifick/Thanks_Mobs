@@ -1,0 +1,346 @@
+{
+  "hurt": {
+    "sounds": [
+      {
+        "name": "prapor:hurt1",
+        "stream": false
+      },
+      {
+        "name": "prapor:hurt2",
+        "stream": false
+      },
+      {
+        "name": "prapor:hurt3",
+        "stream": false
+      }
+    ]
+  },
+  "death": {
+    "sounds": [
+      {
+        "name": "prapor:death1",
+        "stream": false
+      },
+      {
+        "name": "prapor:death2",
+        "stream": false
+      },
+      {
+        "name": "prapor:death3",
+        "stream": false
+      }
+    ]
+  },
+  "pooker_dissapear": {
+    "sounds": [
+      {
+        "name": "prapor:dissappear",
+        "stream": false
+      }
+    ]
+  },
+  "idle": {
+    "sounds": [
+      {
+        "name": "prapor:idleprapor1",
+        "stream": false
+      },
+      {
+        "name": "prapor:idleprapor2",
+        "stream": false
+      },
+      {
+        "name": "prapor:idleprapor3",
+        "stream": false
+      }
+    ]
+  },
+  "pooker_idle": {
+    "sounds": [
+      {
+        "name": "prapor:idle1",
+        "stream": false
+      },
+      {
+        "name": "prapor:idle2",
+        "stream": false
+      },
+      {
+        "name": "prapor:idle3",
+        "stream": false
+      }
+    ]
+  },
+  "scream": {
+    "sounds": [
+      {
+        "name": "prapor:flash0",
+        "stream": false
+      },
+      {
+        "name": "prapor:flash1",
+        "stream": false
+      },
+      {
+        "name": "prapor:flash2",
+        "stream": false
+      }
+    ]
+  },
+  "narator_hit": {
+    "sounds": [
+      {
+        "name": "prapor:hit1",
+        "stream": false
+      },
+      {
+        "name": "prapor:hit2",
+        "stream": false
+      },
+      {
+        "name": "prapor:hit3",
+        "stream": false
+      }
+    ]
+  },
+  "electrocute": {
+    "sounds": [
+      {
+        "name": "prapor:electrosound",
+        "stream": false
+      }
+    ]
+  },
+  "pleaswwfthenarrator": {
+    "sounds": [
+      {
+        "name": "prapor:narrator_sound",
+        "stream": false
+      }
+    ]
+  },
+  "narrator_voice_hit": {
+    "sounds": [
+      {
+        "name": "prapor:hitnarrator1",
+        "stream": false
+      },
+      {
+        "name": "prapor:hitnarrator2",
+        "stream": false
+      },
+      {
+        "name": "prapor:hitnarrator3",
+        "stream": false
+      },
+      {
+        "name": "prapor:hitnarrator4",
+        "stream": false
+      },
+      {
+        "name": "prapor:hitnarrator5",
+        "stream": false
+      },
+      {
+        "name": "prapor:hitnarrator6",
+        "stream": false
+      },
+      {
+        "name": "prapor:hitnarrator7",
+        "stream": false
+      }
+    ]
+  },
+  "soul_sounds": {
+    "sounds": [
+      {
+        "name": "prapor:soul1",
+        "stream": false
+      },
+      {
+        "name": "prapor:soul2",
+        "stream": false
+      },
+      {
+        "name": "prapor:soul3",
+        "stream": false
+      },
+      {
+        "name": "prapor:soul4",
+        "stream": false
+      }
+    ]
+  },
+  "bastard_idle": {
+    "sounds": [
+      {
+        "name": "prapor:bustard_idle1",
+        "stream": false
+      },
+      {
+        "name": "prapor:bustard_idle2",
+        "stream": false
+      }
+    ]
+  },
+  "bastard_hurt": {
+    "sounds": [
+      {
+        "name": "prapor:bustard_hurt1",
+        "stream": false
+      }
+    ]
+  },
+  "bastard_death": {
+    "sounds": [
+      {
+        "name": "prapor:bustard_death",
+        "stream": false
+      }
+    ]
+  },
+  "sound_track": {
+    "sounds": [
+      {
+        "name": "prapor:mysound",
+        "stream": true
+      }
+    ]
+  },
+  "build_bro": {
+    "sounds": [
+      {
+        "name": "prapor:builddruzhojek",
+        "stream": false
+      }
+    ]
+  },
+  "golem_hit": {
+    "sounds": [
+      {
+        "name": "prapor:golem_hit1",
+        "stream": false
+      },
+      {
+        "name": "prapor:golem_hit2",
+        "stream": false
+      },
+      {
+        "name": "prapor:golem_hit3",
+        "stream": false
+      },
+      {
+        "name": "prapor:golem_hit4",
+        "stream": false
+      },
+      {
+        "name": "prapor:golem_hit5",
+        "stream": false
+      }
+    ]
+  },
+  "golem_death": {
+    "sounds": [
+      {
+        "name": "prapor:golem_death",
+        "stream": false
+      }
+    ]
+  },
+  "golem_steps": {
+    "sounds": [
+      {
+        "name": "prapor:golem_step1",
+        "stream": false
+      },
+      {
+        "name": "prapor:golem_step2",
+        "stream": false
+      }
+    ]
+  },
+  "idle_iron": {
+    "sounds": [
+      {
+        "name": "prapor:iron_1",
+        "stream": false
+      },
+      {
+        "name": "prapor:iron_2",
+        "stream": false
+      },
+      {
+        "name": "prapor:iron_3",
+        "stream": false
+      }
+    ]
+  },
+  "ironkin_ground_hit": {
+    "sounds": [
+      {
+        "name": "prapor:grhit",
+        "stream": false
+      }
+    ]
+  },
+  "summon": {
+    "sounds": [
+      {
+        "name": "prapor:summon_sound",
+        "stream": false
+      }
+    ]
+  },
+  "pluh": {
+    "sounds": [
+      {
+        "name": "prapor:pluh",
+        "stream": false
+      }
+    ]
+  },
+  "brolem_ruins": {
+    "sounds": [
+      {
+        "name": "prapor:brolemdestroyruins",
+        "stream": false
+      }
+    ]
+  },
+  "adopt": {
+    "sounds": [
+      {
+        "name": "prapor:adopt_sound",
+        "stream": false
+      }
+    ]
+  },
+  "thanks_street": {
+    "sounds": [
+      {
+        "name": "prapor:thanks_street",
+        "stream": true
+      }
+    ]
+  },
+  "dictor_sound": {
+    "sounds": [
+      {
+        "name": "prapor:dictor1",
+        "stream": false
+      },
+      {
+        "name": "prapor:dictor2",
+        "stream": false
+      },
+      {
+        "name": "prapor:dictor3",
+        "stream": false
+      },
+      {
+        "name": "prapor:dictor4",
+        "stream": false
+      }
+    ]
+  }
+}

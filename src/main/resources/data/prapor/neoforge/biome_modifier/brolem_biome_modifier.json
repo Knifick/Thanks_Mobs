@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "flower_forest"
+  ],
+  "spawners": {
+    "type": "prapor:brolem",
+    "weight": 6,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "prapor:custom/gold_trophy_particle"
+    },
+    "facing=east": {
+      "model": "prapor:custom/gold_trophy_particle",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "prapor:custom/gold_trophy_particle",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "prapor:custom/gold_trophy_particle",
+      "y": 270
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:spyglass"
+    },
+    "title": {
+      "translate": "advancements.pooker_achieve.title"
+    },
+    "description": {
+      "translate": "advancements.pooker_achieve.descr"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "pooker_achieve_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "prapor:praporshik"
+}

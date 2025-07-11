@@ -1,0 +1,7 @@
+
+{
+  "parent": "prapor:displaysettings/gold_wither",
+  "textures": {
+    "particle": "prapor:block/gold_statue"
+  }
+}

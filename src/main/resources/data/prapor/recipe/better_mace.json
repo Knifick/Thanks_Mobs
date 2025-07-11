@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "prapor:upgrade_active"
+  },
+  "base": {
+    "item": "minecraft:mace"
+  },
+  "addition": {
+    "item": "minecraft:netherite_ingot"
+  },
+  "result": {
+    "id": "prapor:dark_mace"
+  }
+}

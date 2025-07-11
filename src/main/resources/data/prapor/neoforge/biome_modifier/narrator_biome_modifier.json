@@ -1,0 +1,22 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "snowy_slopes",
+    "snowy_beach",
+    "snowy_plains",
+    "snowy_taiga",
+    "ice_spikes",
+    "birch_forest",
+    "taiga",
+    "plains",
+    "sunflower_plains",
+    "forest",
+    "flower_forest"
+  ],
+  "spawners": {
+    "type": "prapor:narrator",
+    "weight": 3,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

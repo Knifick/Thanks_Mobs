@@ -1,0 +1,42 @@
+{
+  "display": {
+    "icon": {
+      "id": "prapor:spawner_shard"
+    },
+    "title": {
+      "translate": "advancements.spawner_breaker.title"
+    },
+    "description": {
+      "translate": "advancements.spawner_breaker.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "spawner_breaker_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "prapor:spawner_shard"
+            ],
+            "count": {
+              "min": 1,
+              "max": 64
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 0,
+    "recipes": [
+      "prapor:casket_of_souls_craft"
+    ]
+  },
+  "parent": "prapor:praporshik"
+}

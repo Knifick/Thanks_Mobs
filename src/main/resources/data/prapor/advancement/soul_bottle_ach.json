@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:barrier"
+    },
+    "title": {
+      "translate": "advancements.soul_bottle_ach.title"
+    },
+    "description": {
+      "translate": "advancements.soul_bottle_ach.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "soul_bottle_ach_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "prapor:soul_ach"
+}

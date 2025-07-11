@@ -1,0 +1,180 @@
+---- Minecraft Crash Report ----
+// Hi. I'm Minecraft, and I'm a crashaholic.
+
+Time: 2025-07-09 14:52:29
+Description: Ticking entity
+
+java.lang.NullPointerException: Cannot invoke "net.minecraft.sounds.SoundEvent.getRange(float)" because the return value of "net.minecraft.core.Holder.value()" is null
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.playSeededSound(ServerLevel.java:998) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.Level.playSeededSound(Level.java:439) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.Level.playSound(Level.java:455) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.Entity.playSound(Entity.java:1125) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/prapor@1.3.2/net.knifick.praporupdate.goal.NarratorGoal.handleSoundAndScare(NarratorGoal.java:115) ~[%23185!/:?] {re:classloading}
+	at TRANSFORMER/prapor@1.3.2/net.knifick.praporupdate.goal.NarratorGoal.tick(NarratorGoal.java:77) ~[%23185!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.ai.goal.WrappedGoal.tick(WrappedGoal.java:63) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.ai.goal.GoalSelector.tickRunningGoals(GoalSelector.java:113) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.Mob.serverAiStep(Mob.java:770) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.LivingEntity.aiStep(LivingEntity.java:2705) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.Mob.aiStep(Mob.java:559) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.AgeableMob.aiStep(AgeableMob.java:124) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.animal.Animal.aiStep(Animal.java:55) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading}
+	at TRANSFORMER/prapor@1.3.2/net.knifick.praporupdate.entity.NarratorEntity.aiStep(NarratorEntity.java:406) ~[%23185!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.LivingEntity.tick(LivingEntity.java:2431) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.Mob.tick(Mob.java:351) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.tickNonPassenger(ServerLevel.java:774) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.Level.guardEntityTick(Level.java:570) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.lambda$tick$2(ServerLevel.java:420) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.entity.EntityTickList.forEach(EntityTickList.java:53) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:400) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1037) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:917) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:110) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:707) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:267) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?] {}
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Server thread
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.playSeededSound(ServerLevel.java:998) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.Level.playSeededSound(Level.java:439) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.Level.playSound(Level.java:455) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.Entity.playSound(Entity.java:1125) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/prapor@1.3.2/net.knifick.praporupdate.goal.NarratorGoal.handleSoundAndScare(NarratorGoal.java:115) ~[%23185!/:?] {re:classloading}
+	at TRANSFORMER/prapor@1.3.2/net.knifick.praporupdate.goal.NarratorGoal.tick(NarratorGoal.java:77) ~[%23185!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.ai.goal.WrappedGoal.tick(WrappedGoal.java:63) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.ai.goal.GoalSelector.tickRunningGoals(GoalSelector.java:113) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.Mob.serverAiStep(Mob.java:770) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.LivingEntity.aiStep(LivingEntity.java:2705) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.Mob.aiStep(Mob.java:559) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.AgeableMob.aiStep(AgeableMob.java:124) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.animal.Animal.aiStep(Animal.java:55) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading}
+	at TRANSFORMER/prapor@1.3.2/net.knifick.praporupdate.entity.NarratorEntity.aiStep(NarratorEntity.java:406) ~[%23185!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.LivingEntity.tick(LivingEntity.java:2431) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B,re:mixin,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.entity.Mob.tick(Mob.java:351) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.tickNonPassenger(ServerLevel.java:774) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.Level.guardEntityTick(Level.java:570) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.lambda$tick$2(ServerLevel.java:420) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.entity.EntityTickList.forEach(EntityTickList.java:53) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading}
+-- Entity being ticked --
+Details:
+	Entity Type: prapor:narrator (net.knifick.praporupdate.entity.NarratorEntity)
+	Entity ID: 1332
+	Entity Name: Наратор
+	Entity's Exact location: -528.50, 79.00, 1016.50
+	Entity's Block location: World: (-529,79,1016), Section: (at 15,15,8 in -34,4,63; chunk contains blocks -544,-64,1008 to -529,319,1023), Region: (-2,1; contains chunks -64,32 to -33,63, blocks -1024,-64,512 to -513,319,1023)
+	Entity's Momentum: 0.00, -0.08, 0.00
+	Entity's Passengers: []
+	Entity's Vehicle: null
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.Level.guardEntityTick(Level.java:570) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.lambda$tick$2(ServerLevel.java:420) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.world.level.entity.EntityTickList.forEach(EntityTickList.java:53) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.tick(ServerLevel.java:400) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1037) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:917) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:110) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:707) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:267) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?] {}
+
+
+-- Affected level --
+Details:
+	All players: 1 total; [ServerPlayer['Dev'/9, l='ServerLevel[Новый мир]', x=-531.14, y=83.29, z=1020.01]]
+	Chunk stats: 3201
+	Level dimension: minecraft:overworld
+	Level spawn location: World: (-64,71,224), Section: (at 0,7,0 in -4,4,14; chunk contains blocks -64,-64,224 to -49,319,239), Region: (-1,0; contains chunks -32,0 to -1,31, blocks -512,-64,0 to -1,319,511)
+	Level time: 1346 game time, 1346 day time
+	Level name: Новый мир
+	Level game mode: Game mode: creative (ID 1). Hardcore: false. Commands: true
+	Level weather: Rain time: 69381 (now: false), thunder time: 71885 (now: false)
+	Known server brands: neoforge
+	Removed feature flags: 
+	Level was modded: true
+	Level storage version: 0x04ABD - Anvil
+	Loaded entity count: 156
+Stacktrace:
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.level.ServerLevel.fillReportDetails(ServerLevel.java:1718) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickChildren(MinecraftServer.java:1040) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.tickServer(MinecraftServer.java:917) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:110) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:runtimedistcleaner:A}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:707) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at TRANSFORMER/minecraft@1.21.1/net.minecraft.server.MinecraftServer.lambda$spin$2(MinecraftServer.java:267) ~[neoforge-21.1.65-minecraft-merged.jar%23183!/:?] {re:classloading,pl:accesstransformer:B}
+	at java.base/java.lang.Thread.run(Thread.java:1583) [?:?] {}
+
+
+-- System Details --
+Details:
+	Minecraft Version: 1.21.1
+	Minecraft Version ID: 1.21.1
+	Operating System: Windows 11 (amd64) version 10.0
+	Java Version: 21.0.6, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode, sharing), Oracle Corporation
+	Memory: 1317697952 bytes (1256 MiB) / 2252341248 bytes (2148 MiB) up to 8539602944 bytes (8144 MiB)
+	CPUs: 12
+	Processor Vendor: AuthenticAMD
+	Processor Name: AMD Ryzen 5 5600G with Radeon Graphics         
+	Identifier: AuthenticAMD Family 25 Model 80 Stepping 0
+	Microarchitecture: Zen 3
+	Frequency (GHz): 3.89
+	Number of physical packages: 1
+	Number of physical CPUs: 6
+	Number of logical CPUs: 12
+	Graphics card #0 name: NVIDIA GeForce RTX 3060
+	Graphics card #0 vendor: NVIDIA
+	Graphics card #0 VRAM (MiB): 8192.00
+	Graphics card #0 deviceId: VideoController1
+	Graphics card #0 versionInfo: 32.0.15.7680
+	Memory slot #0 capacity (MiB): 16384.00
+	Memory slot #0 clockSpeed (GHz): 3.20
+	Memory slot #0 type: DDR4
+	Memory slot #1 capacity (MiB): 16384.00
+	Memory slot #1 clockSpeed (GHz): 3.20
+	Memory slot #1 type: DDR4
+	Virtual memory max (MiB): 34608.81
+	Virtual memory used (MiB): 19338.74
+	Swap memory total (MiB): 2048.00
+	Swap memory used (MiB): 172.97
+	Space in storage for jna.tmpdir (MiB): <path not set>
+	Space in storage for org.lwjgl.system.SharedLibraryExtractPath (MiB): <path not set>
+	Space in storage for io.netty.native.workdir (MiB): <path not set>
+	Space in storage for java.io.tmpdir (MiB): available: 47349.07, total: 164120.19
+	Space in storage for workdir (MiB): available: 367430.22, total: 476923.00
+	JVM Flags: 0 total; 
+	Server Running: true
+	Player Count: 1 / 8; [ServerPlayer['Dev'/9, l='ServerLevel[Новый мир]', x=-531.14, y=83.29, z=1020.01]]
+	Active Data Packs: vanilla, mod_data, mod/geckolib, mod/neoforge, mod/prapor
+	Available Data Packs: bundle, trade_rebalance, vanilla, mod/geckolib, mod/neoforge, mod/prapor, mod_data
+	Enabled Feature Flags: minecraft:vanilla
+	World Generation: Stable
+	World Seed: -8596795850926497435
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'neoforge'; Server brand changed to 'neoforge'
+	Launched Version: 21.1.65
+	ModLauncher: 11.0.4+main.d2e20e43
+	ModLauncher launch target: forgeclientuserdev
+	ModLauncher services: 
+		sponge-mixin-0.15.2+mixin.0.8.7.jar mixin PLUGINSERVICE 
+		loader-4.0.24.jar slf4jfixer PLUGINSERVICE 
+		loader-4.0.24.jar runtime_enum_extender PLUGINSERVICE 
+		at-modlauncher-10.0.1.jar accesstransformer PLUGINSERVICE 
+		loader-4.0.24.jar runtimedistcleaner PLUGINSERVICE 
+		modlauncher-11.0.4.jar mixin TRANSFORMATIONSERVICE 
+		modlauncher-11.0.4.jar fml TRANSFORMATIONSERVICE 
+	FML Language Providers: 
+		javafml@4.0
+		lowcodefml@4.0
+		minecraft@4.0
+	Mod List: 
+		neoforge-21.1.65-minecraft-merged.jar             |Minecraft                     |minecraft                     |1.21.1              |Manifest: NOSIGNATURE
+		geckolib-neoforge-1.21.1-4.7.jar                  |GeckoLib 4                    |geckolib                      |4.7                 |Manifest: NOSIGNATURE
+		neoforge-21.1.65-minecraft-merged.jar             |NeoForge                      |neoforge                      |21.1.65             |Manifest: NOSIGNATURE
+		main                                              |ThanksMobs                    |prapor                        |1.3.2               |Manifest: NOSIGNATURE
+	Crash Report UUID: 5754931b-ca01-4257-befb-b8c8081de027
+	FML: 4.0.24
+	NeoForge: 21.1.65

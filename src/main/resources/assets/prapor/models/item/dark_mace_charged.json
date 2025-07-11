@@ -1,0 +1,6 @@
+{
+  "parent": "item/handheld",
+  "textures": {
+    "layer0": "prapor:item/mace_charged_animated"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "entries": [
+    {
+      "enum": "net/minecraft/world/entity/raid/Raid$RaiderType",
+      "name": "PRAPOR_BASTARD",
+      "constructor": "(Ljava/util/function/Supplier;[I)V",
+      "parameters": {
+        "class": "net/knifick/praporupdate/entity/BastardEntity",
+        "field": "RAIDER_TYPE"
+      }
+    }
+  ]
+}

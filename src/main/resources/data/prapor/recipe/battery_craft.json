@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "abc",
+    "ded",
+    "fbf"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:comparator"
+    },
+    "b": {
+      "item": "minecraft:iron_ingot"
+    },
+    "c": {
+      "item": "minecraft:repeater"
+    },
+    "d": {
+      "item": "prapor:copper_wire"
+    },
+    "e": {
+      "item": "minecraft:redstone_block"
+    },
+    "f": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "id": "prapor:battery",
+    "count": 1
+  }
+}

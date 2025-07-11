@@ -1,0 +1,11 @@
+{
+  "mappings": {
+    "default": {
+      "map": {
+        "0": "praporka_texture",
+        "missing": "praporka_texture"
+      },
+      "name": "default"
+    }
+  }
+}

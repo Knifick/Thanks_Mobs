@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "prapor:block/casketofsouls_bottom",
+    "up": "prapor:block/caket_top_charged",
+    "north": "prapor:block/casketofsouls_sides4",
+    "east": "prapor:block/casketofsouls_sides4",
+    "south": "prapor:block/casketofsouls_sides4",
+    "west": "prapor:block/casketofsouls_sides4",
+    "particle": "prapor:block/casketofsouls_bottom"
+  },
+  "render_type": "solid"
+}

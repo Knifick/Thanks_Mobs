@@ -1,0 +1,36 @@
+{
+  "display": {
+    "icon": {
+      "id": "prapor:soul_bottle"
+    },
+    "title": {
+      "translate": "advancements.soul_ach.title"
+    },
+    "description": {
+      "translate": "advancements.soul_ach.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "soul_ach_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "prapor:soul_bottle"
+            ],
+            "count": {
+              "min": 1,
+              "max": 1
+            }
+          }
+        ]
+      }
+    }
+  },
+  "parent": "prapor:praporshik"
+}

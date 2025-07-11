@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "id": "prapor:dark_mace"
+    },
+    "title": {
+      "translate": "advancements.dark_mace.title"
+    },
+    "description": {
+      "translate": "advancements.dark_mace.descr"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "dark_mace_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "prapor:dark_mace"
+            ],
+            "count": {
+              "min": 1,
+              "max": 1
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 10
+  },
+  "parent": "prapor:praporshik"
+}

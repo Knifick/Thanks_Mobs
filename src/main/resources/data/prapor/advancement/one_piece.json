@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:red_dye"
+    },
+    "title": {
+      "translate": "advancements.one_piece.title"
+    },
+    "description": {
+      "translate": "advancements.one_piece.descr"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "one_piece_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "prapor:bustard_ach"
+}

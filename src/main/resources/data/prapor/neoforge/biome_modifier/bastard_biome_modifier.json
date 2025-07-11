@@ -1,0 +1,16 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "plains",
+    "desert",
+    "savanna",
+    "taiga",
+    "snowy_taiga"
+  ],
+  "spawners": {
+    "type": "prapor:bastard",
+    "weight": 2,
+    "minCount": 1,
+    "maxCount": 1
+  }
+}

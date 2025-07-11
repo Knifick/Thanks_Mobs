@@ -1,0 +1,21 @@
+{
+  "prapor:praporshik": {
+    "criteria": {
+      "praporshik_0": "2025-07-11 18:22:05 +0700"
+    },
+    "done": true
+  },
+  "minecraft:recipes/decorations/crafting_table": {
+    "criteria": {
+      "unlock_right_away": "2025-07-11 18:22:05 +0700"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:taiga": "2025-07-11 18:22:06 +0700"
+    },
+    "done": false
+  },
+  "DataVersion": 3955
+}

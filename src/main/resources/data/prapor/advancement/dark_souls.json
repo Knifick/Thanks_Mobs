@@ -1,0 +1,39 @@
+{
+  "display": {
+    "icon": {
+      "id": "prapor:casketofsouls"
+    },
+    "title": {
+      "translate": "advancements.dark_souls.title"
+    },
+    "description": {
+      "translate": "advancements.dark_souls.descr"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "dark_souls_0": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "prapor:casketofsouls"
+            ],
+            "count": {
+              "min": 1,
+              "max": 1
+            }
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "experience": 10
+  },
+  "parent": "prapor:spawner_breaker"
+}

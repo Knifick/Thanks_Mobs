@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "soul_sand_valley",
+  "spawners": {
+    "type": "prapor:soul",
+    "weight": 100,
+    "minCount": 15,
+    "maxCount": 20
+  }
+}

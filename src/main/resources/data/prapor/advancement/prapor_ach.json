@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "prapor:praporka_with_sign"
+    },
+    "title": {
+      "translate": "advancements.prapor_ach.title"
+    },
+    "description": {
+      "translate": "advancements.prapor_ach.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "prapor_ach_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "prapor:praporshik"
+}

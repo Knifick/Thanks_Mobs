@@ -1,0 +1,49 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="MIT"
+
+[[mods]]
+modId="prapor"
+version="1.3.3"
+displayName="ThanksMobs"
+displayURL="https://www.youtube.com/@knifick"
+logoFile="logo.png"
+credits="DEVELOPERS THANK U VERY MUCH!!!"
+authors="Knifick, N0rix_, Liberty_Frog"
+description="DEVELOPERS THANK U VERY MUCH!!!"
+enumExtensions="META-INF/enumextensions.json"
+
+# Start of user code block mod configuration
+# End of user code block mod configuration
+
+[[dependencies.prapor]]
+    modId="neoforge"
+    type="required"
+    versionRange="[21.1.65,)"
+    ordering="AFTER"
+    side="BOTH"
+
+[[dependencies.prapor]]
+    modId="minecraft"
+    type="required"
+    versionRange="[1.21.1]"
+    ordering="AFTER"
+    side="BOTH"
+
+
+[[dependencies.prapor]]
+    modId="mixin"
+    type="optional"
+    versionRange="[0,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.prapor]]
+    modId="geckolib"
+    type="optional"
+    versionRange="[0,)"
+    ordering="NONE"
+    side="BOTH"
+
+
+# Start of user code block dependencies configuration
+# End of user code block dependencies configuration
