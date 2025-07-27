@@ -35,7 +35,7 @@ public class MusicStopOnDeathHandler {
 			if (discStack.getItem() == PraporModItems.MUSIC_RECORD_N_42.get()) {
 				soundId = PraporModSounds.SOUND_TRACK.getId();
 			} else if (discStack.getItem() == PraporModItems.MUSIC_RECORD_THANKS_STREET.get()) {
-				soundId = PraporModSounds.THANKS_STREET.getId();
+				//soundId = PraporModSounds.THANKS_STREET.getId();
 			} else if (discStack.is(Tags.Items.MUSIC_DISCS)) {
 				var soundEvent = NarratorToAdoptProcedure.musics.get(discStack.getItem());
 				if (soundEvent != null) {

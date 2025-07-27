@@ -40,6 +40,5 @@ public class PraporModSounds {
 	public static final DeferredHolder<SoundEvent, SoundEvent> PLUH = REGISTRY.register("pluh", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("prapor", "pluh")));
 	public static final DeferredHolder<SoundEvent, SoundEvent> BROLEM_RUINS = REGISTRY.register("brolem_ruins", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("prapor", "brolem_ruins")));
 	public static final DeferredHolder<SoundEvent, SoundEvent> ADOPT = REGISTRY.register("adopt", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("prapor", "adopt")));
-	public static final DeferredHolder<SoundEvent, SoundEvent> THANKS_STREET = REGISTRY.register("thanks_street", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("prapor", "thanks_street")));
 	public static final DeferredHolder<SoundEvent, SoundEvent> DICTOR_SOUND = REGISTRY.register("dictor_sound", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("prapor", "dictor_sound")));
 }

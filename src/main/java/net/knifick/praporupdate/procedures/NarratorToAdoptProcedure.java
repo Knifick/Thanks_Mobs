@@ -162,7 +162,7 @@ public class NarratorToAdoptProcedure {
 						sound = PraporModSounds.SOUND_TRACK.get();
 					}
 					else if (itemstack.getItem() == PraporModItems.MUSIC_RECORD_THANKS_STREET.get()) {
-						sound = PraporModSounds.THANKS_STREET.get();
+						//sound = PraporModSounds.THANKS_STREET.get();
 					}
 
 					if (sound != null) {
@@ -206,7 +206,7 @@ public class NarratorToAdoptProcedure {
 						soundId = PraporModSounds.SOUND_TRACK.get().getLocation();
 					}
 					else if (extractedDisc.getItem() == PraporModItems.MUSIC_RECORD_THANKS_STREET.get()) {
-						soundId = PraporModSounds.THANKS_STREET.get().getLocation();
+						//soundId = PraporModSounds.THANKS_STREET.get().getLocation();
 					}
 
 					if (soundId != null) {

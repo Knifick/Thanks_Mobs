@@ -315,14 +315,6 @@
       }
     ]
   },
-  "thanks_street": {
-    "sounds": [
-      {
-        "name": "prapor:thanks_street",
-        "stream": true
-      }
-    ]
-  },
   "dictor_sound": {
     "sounds": [
       {
