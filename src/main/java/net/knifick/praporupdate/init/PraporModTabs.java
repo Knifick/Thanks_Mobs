@@ -4,6 +4,8 @@
  */
 package net.knifick.praporupdate.init;
 
+import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -25,11 +27,11 @@ public class PraporModTabs {
 			() -> CreativeModeTab.builder().title(Component.translatable("item_group.prapor.thanks_tab")).icon(() -> new ItemStack(PraporModItems.GOLD_TROPHY.get())).displayItems((parameters, tabData) -> {
 				tabData.accept(PraporModItems.PRAPOR_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.POOKER_SPAWN_EGG.get());
-				tabData.accept(PraporModItems.SOUL_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.NARRATOR_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.BASTARD_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.BROLEM_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.DARKIRONKIN_SPAWN_EGG.get());
+				tabData.accept(PraporModItems.SOUL_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.PRAPORKA.get());
 				tabData.accept(PraporModItems.BATTERY.get());
 				tabData.accept(PraporModItems.COPPER_WIRE.get());
@@ -57,6 +59,11 @@ public class PraporModTabs {
 			tabData.accept(PraporModItems.BASTARD_SPAWN_EGG.get());
 			tabData.accept(PraporModItems.BROLEM_SPAWN_EGG.get());
 			tabData.accept(PraporModItems.DARKIRONKIN_SPAWN_EGG.get());
+		}
+		if (tabData.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+			tabData.insertAfter(Items.AXOLOTL_BUCKET.getDefaultInstance(),
+					PraporModItems.SOUL_SPAWN_EGG.get().getDefaultInstance(),
+					CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
 		}
 	}
 }

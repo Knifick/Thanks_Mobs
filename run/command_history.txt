@@ -1,5 +1,3 @@
-/kill a090f06e-a5e9-45df-bcf2-cb86f5f74303
-/effect give @e[type=prapor:narrator] minecraft:glowing 10 1 true
 /kill @e
 /effect give @e[type=prapor:narrator] minecraft:glowing 10 1 true
 /locate biome minecraft:snowy_plains
@@ -48,3 +46,5 @@
 /kill
 /time set day
 /give @s prapor:music_record_thanks_street
+/time set day
+/kill @e[type=prapor:soul]

@@ -16,26 +16,45 @@ import net.minecraft.core.BlockPos;
 import net.knifick.praporupdate.init.PraporModItems;
 
 public class SoulPriShchielchkiePKMPoSushchnostiProcedure {
-	public static void execute(LevelAccessor world, double x, double y, double z, Entity entity, Entity sourceentity) {
-		if (entity == null || sourceentity == null)
+
+	public static void execute(LevelAccessor world, double x, double y, double z, Entity entity, Entity sourceEntity) {
+		if (!(entity instanceof LivingEntity) || !(sourceEntity instanceof LivingEntity livingSource))
 			return;
-		if ((sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == Items.GLASS_BOTTLE) {
-			if (!entity.level().isClientSide())
-				entity.discard();
-			if (sourceentity instanceof LivingEntity _entity) {
-				ItemStack _setstack = new ItemStack(PraporModItems.SOUL_BOTTLE.get()).copy();
-				_setstack.setCount(1);
-				_entity.setItemInHand(InteractionHand.MAIN_HAND, _setstack);
-				if (_entity instanceof Player _player)
-					_player.getInventory().setChanged();
-			}
-			if (world instanceof Level _level) {
-				if (!_level.isClientSide()) {
-					_level.playSound(null, BlockPos.containing(x, y, z), BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:soul_sounds")), SoundSource.AMBIENT, 1, 1);
-				} else {
-					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:soul_sounds")), SoundSource.AMBIENT, 1, 1, false);
-				}
+
+		ItemStack mainHand = livingSource.getMainHandItem();
+		if (mainHand.getItem() != Items.GLASS_BOTTLE
+		&& mainHand.getItem() != Items.BUCKET)
+			return;
+
+		// Удаляем сущность на сервере
+		if (!entity.level().isClientSide()) {
+			entity.discard();
+		}
+
+		ItemStack newItem;
+		if (mainHand.getItem() == Items.GLASS_BOTTLE) {
+			newItem = new ItemStack(PraporModItems.SOUL_BOTTLE.get());
+		} else if (mainHand.getItem() == Items.BUCKET) {
+			newItem = new ItemStack(PraporModItems.SOUL_SPAWN_EGG.get()); // пример, если есть
+		} else {
+			return;
+		}
+
+		livingSource.setItemInHand(InteractionHand.MAIN_HAND, newItem);
+		if (livingSource instanceof Player player) {
+			player.getInventory().setChanged();
+		}
+
+
+		// Проигрываем звук
+		if (world instanceof Level level) {
+			var sound = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:soul_sounds"));
+			if (!level.isClientSide()) {
+				level.playSound(null, BlockPos.containing(x, y, z), sound, SoundSource.AMBIENT, 1.0F, 1.0F);
+			} else {
+				level.playLocalSound(x, y, z, sound, SoundSource.AMBIENT, 1.0F, 1.0F, false);
 			}
 		}
 	}
 }
+
