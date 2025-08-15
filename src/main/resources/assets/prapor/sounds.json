@@ -390,5 +390,13 @@
         "stream": false
       }
     ]
+  },
+  "sucker_approach": {
+    "sounds": [
+      {
+        "name": "prapor:sucker_approach",
+        "stream": false
+      }
+    ]
   }
 }

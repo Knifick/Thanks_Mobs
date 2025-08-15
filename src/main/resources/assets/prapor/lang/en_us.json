@@ -105,5 +105,6 @@
   "item.prapor.upgrade_inactive": "Inactive dark upgrade",
   "advancements.dark_mace.title": "Level up",
   "advancements.dark_mace.descr": "Craft the dark mace",
-  "item.prapor.sucker_spawn_egg": "Sucker spawn egg"
+  "item.prapor.sucker_spawn_egg": "Sucker spawn egg",
+  "entity.prapor.sucker": "Sucker"
 }

@@ -46,13 +46,17 @@ import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 public class SuckerEntity extends TamableAnimal implements GeoEntity {
 	public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.STRING);
 	public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.STRING);
 	public static final EntityDataAccessor<Boolean> DATA_isTamed = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Optional<UUID>> PLAYER_UUID = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 	private boolean swinging;
 	private boolean lastloop;
@@ -71,6 +75,7 @@ public class SuckerEntity extends TamableAnimal implements GeoEntity {
 		builder.define(SHOOT, false);
 		builder.define(ANIMATION, "undefined");
 		builder.define(TEXTURE, "sucker_idle");
+		builder.define(PLAYER_UUID, Optional.empty());
 		builder.define(DATA_isTamed, false);
 	}
 
@@ -80,6 +85,15 @@ public class SuckerEntity extends TamableAnimal implements GeoEntity {
 
 	public String getTexture() {
 		return this.entityData.get(TEXTURE);
+	}
+
+	public void setPlayerUUID(@Nullable UUID player) {
+		this.entityData.set(PLAYER_UUID, Optional.ofNullable(player));
+	}
+
+	@Nullable
+	public UUID getPlayerUUID() {
+		return this.entityData.get(PLAYER_UUID).orElse(null);
 	}
 
 	@Override
@@ -142,6 +156,7 @@ public class SuckerEntity extends TamableAnimal implements GeoEntity {
 	public void addAdditionalSaveData(CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 		compound.putString("Texture", this.getTexture());
+		compound.putUUID("player_uuid", this.getPlayerUUID());
 		compound.putBoolean("DataisTamed", this.entityData.get(DATA_isTamed));
 	}
 
@@ -152,6 +167,8 @@ public class SuckerEntity extends TamableAnimal implements GeoEntity {
 			this.setTexture(compound.getString("Texture"));
 		if (compound.contains("DataisTamed"))
 			this.entityData.set(DATA_isTamed, compound.getBoolean("DataisTamed"));
+		if (compound.contains("player_uuid"))
+			this.setPlayerUUID(compound.getUUID("player_uuid"));
 	}
 
 	@Override

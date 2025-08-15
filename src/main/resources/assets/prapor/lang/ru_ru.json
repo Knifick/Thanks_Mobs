@@ -105,5 +105,6 @@
   "item.prapor.upgrade_inactive": "Не активированное тёмное улучшение",
   "advancements.dark_mace.title": "Новый уровень",
   "advancements.dark_mace.descr": "Создайте тёмную булаву",
-  "item.prapor.sucker_spawn_egg": "Яйцо призыва Сосунка"
+  "item.prapor.sucker_spawn_egg": "Яйцо призыва Сосунка",
+  "entity.prapor.sucker": "Сосунок"
 }
