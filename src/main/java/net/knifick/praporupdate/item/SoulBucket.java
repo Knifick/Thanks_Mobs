@@ -5,6 +5,7 @@ import net.knifick.praporupdate.init.PraporModSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -33,9 +34,6 @@ public class SoulBucket extends Item{
         Level level = context.getLevel();
         Player player = context.getPlayer();
         Minecraft mc = Minecraft.getInstance();
-        mc.player.playSound(SoundEvents.BUCKET_FILL,
-                1f,
-                1f);
         mc.player.playSound(PraporModSounds.SOUL_SOUNDS.get(),
                 1f,
                 1f);
@@ -46,13 +44,14 @@ public class SoulBucket extends Item{
         BlockPos pos = context.getClickedPos().relative(context.getClickedFace());
         level.playSound(context.getPlayer(),
                 pos,
-                SoundEvents.BUCKET_FILL_AXOLOTL,
+                PraporModSounds.SOUL_SOUNDS.get(),
                 SoundSource.PLAYERS,
                 1f,
                 1f);
         type.spawn(serverLevel, stack, context.getPlayer(), pos, MobSpawnType.SPAWN_EGG, true, false);
-
-        player.setItemInHand(context.getHand(), new ItemStack(Items.BUCKET));
+        if(player instanceof ServerPlayer serverPlayer
+        && !serverPlayer.gameMode.isCreative())
+            player.setItemInHand(context.getHand(), new ItemStack(Items.BUCKET));
         return InteractionResult.CONSUME;
     }
 

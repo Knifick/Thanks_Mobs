@@ -4,6 +4,7 @@
  */
 package net.knifick.praporupdate.init;
 
+import net.knifick.praporupdate.entity.*;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
@@ -16,13 +17,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.core.registries.Registries;
 
-import net.knifick.praporupdate.entity.SoulEntity;
-import net.knifick.praporupdate.entity.PraporEntity;
-import net.knifick.praporupdate.entity.PookerEntity;
-import net.knifick.praporupdate.entity.NarratorEntity;
-import net.knifick.praporupdate.entity.DarkironkinEntity;
-import net.knifick.praporupdate.entity.BrolemEntity;
-import net.knifick.praporupdate.entity.BastardEntity;
 import net.knifick.praporupdate.PraporMod;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
@@ -30,7 +24,6 @@ public class PraporModEntities {
 	public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(Registries.ENTITY_TYPE, PraporMod.MODID);
 	public static final DeferredHolder<EntityType<?>, EntityType<PraporEntity>> PRAPOR = register("prapor",
 			EntityType.Builder.<PraporEntity>of(PraporEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
-
 					.sized(0.6f, 1.6f));
 	public static final DeferredHolder<EntityType<?>, EntityType<PookerEntity>> POOKER = register("pooker",
 			EntityType.Builder.<PookerEntity>of(PookerEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).fireImmune().sized(2f, 3f));
@@ -50,6 +43,9 @@ public class PraporModEntities {
 					.sized(1.4f, 2.9f));
 	public static final DeferredHolder<EntityType<?>, EntityType<DarkironkinEntity>> DARKIRONKIN = register("darkironkin",
 			EntityType.Builder.<DarkironkinEntity>of(DarkironkinEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).fireImmune().sized(1.2f, 2.5f));
+	public static final DeferredHolder<EntityType<?>, EntityType<SuckerEntity>> SUCKER = register("sucker",
+			EntityType.Builder.<SuckerEntity>of(SuckerEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+					.sized(1.3f, 1.3f));
 
 	// Start of user code block custom entities
 	// End of user code block custom entities
@@ -77,5 +73,6 @@ public class PraporModEntities {
 		event.put(BASTARD.get(), BastardEntity.createAttributes().build());
 		event.put(BROLEM.get(), BrolemEntity.createAttributes().build());
 		event.put(DARKIRONKIN.get(), DarkironkinEntity.createAttributes().build());
+		event.put(SUCKER.get(), SuckerEntity.createAttributes().build());
 	}
 }

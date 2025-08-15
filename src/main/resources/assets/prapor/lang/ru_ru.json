@@ -1,5 +1,5 @@
 {
-  "item.prapor.pooker_spawn_egg": "Яико Пяльчика",
+  "item.prapor.pooker_spawn_egg": "Яйцо призыва Пяльчика",
   "advancements.spawner_breaker.title": "Контроль популяции",
   "subtitles.bastard_death": "",
   "advancements.prapor_ach.descr": "Оседлайте Прапора",
@@ -10,7 +10,7 @@
   "entity.prapor.brolem": "Дружочек",
   "subtitles.scream": "",
   "item.prapor.oxidizedcoppersheet": "Окисленный медный лист",
-  "item.prapor.bastard_spawn_egg": "Яйцо спавна Падлы",
+  "item.prapor.bastard_spawn_egg": "Яйцо призыва Падлы",
   "death.attack.electricalshort.player": "%1$s испытал короткое замыкание пока убегал от %2$s",
   "subtitles.summon": "",
   "death.attack.darkironkinhurt": "%1$s раздавлен в смятку",
@@ -35,12 +35,12 @@
   "item.prapor.soul_bottle": "Бутылёк душ",
   "item.prapor.music_record_thanks_street.description_0": "N0rix - Спасибо район",
   "item.prapor.music_record_thanks_street": "Music Disc",
-  "item.prapor.soul_spawn_egg": "Яйцо спавна души",
+  "item.prapor.soul_bucket": "Ведро с душой",
   "death.attack.electricalshort.item": "%1$s был убит %2$s используя %3$s",
   "item.prapor.spawner_shard": "Осколок спавнера",
   "death.attack.darkironkinhurt.player": "%1$s был раздавлен в смятку пока пытался убежать от %2$s",
   "item.prapor.brolem_spawn_egg": "Яйцо призыва Дружочка",
-  "item.prapor.narrator_spawn_egg": "Яйцо призыва наратора",
+  "item.prapor.narrator_spawn_egg": "Яйцо призыва Наратора",
   "subtitles.narrator_voice_hit": "",
   "advancements.narator_ach.descr": "Встретьтесь с Наратором",
   "advancements.bustard_ach.descr": "Поторгуйтесь с Падлой",
@@ -105,5 +105,5 @@
   "item.prapor.upgrade_inactive": "Не активированное тёмное улучшение",
   "advancements.dark_mace.title": "Новый уровень",
   "advancements.dark_mace.descr": "Создайте тёмную булаву",
-  "item.prapor.soul_bucket": "Ведро с душой"
+  "item.prapor.sucker_spawn_egg": "Яйцо призыва Сосунка"
 }

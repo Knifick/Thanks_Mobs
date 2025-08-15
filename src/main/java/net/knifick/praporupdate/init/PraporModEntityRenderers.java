@@ -4,18 +4,12 @@
  */
 package net.knifick.praporupdate.init;
 
+import net.knifick.praporupdate.client.renderer.*;
+import net.knifick.praporupdate.entity.SuckerEntity;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.api.distmarker.Dist;
-
-import net.knifick.praporupdate.client.renderer.SoulRenderer;
-import net.knifick.praporupdate.client.renderer.PraporRenderer;
-import net.knifick.praporupdate.client.renderer.PookerRenderer;
-import net.knifick.praporupdate.client.renderer.NarratorRenderer;
-import net.knifick.praporupdate.client.renderer.DarkironkinRenderer;
-import net.knifick.praporupdate.client.renderer.BrolemRenderer;
-import net.knifick.praporupdate.client.renderer.BastardRenderer;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class PraporModEntityRenderers {
@@ -28,5 +22,6 @@ public class PraporModEntityRenderers {
 		event.registerEntityRenderer(PraporModEntities.BASTARD.get(), BastardRenderer::new);
 		event.registerEntityRenderer(PraporModEntities.BROLEM.get(), BrolemRenderer::new);
 		event.registerEntityRenderer(PraporModEntities.DARKIRONKIN.get(), DarkironkinRenderer::new);
+		event.registerEntityRenderer(PraporModEntities.SUCKER.get(), SuckerRenderer::new);
 	}
 }

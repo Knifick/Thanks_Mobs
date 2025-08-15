@@ -1,90 +1,65 @@
 
 package net.knifick.praporupdate.entity;
 
-import net.minecraft.world.item.Items;
-import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animatable.GeoEntity;
-
-import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
-import net.neoforged.neoforge.event.EventHooks;
-
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.SpawnEggItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.food.FoodProperties;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.animal.Chicken;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.entity.ai.goal.TemptGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.world.entity.ai.goal.FollowParentGoal;
-import net.minecraft.world.entity.ai.goal.FollowOwnerGoal;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.BreedGoal;
-import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.TamableAnimal;
-import net.minecraft.world.entity.SpawnPlacementTypes;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.AgeableMob;
-import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.registries.BuiltInRegistries;
-
-import net.knifick.praporupdate.procedures.PraporkaToPraporProcedure;
-import net.knifick.praporupdate.procedures.PraporTamedProcedureProcedure;
-import net.knifick.praporupdate.procedures.PraporSlowFallingProcedure;
-import net.knifick.praporupdate.procedures.DanceRetirnerProcedure;
-import net.knifick.praporupdate.init.PraporModItems;
 import net.knifick.praporupdate.init.PraporModEntities;
+import net.knifick.praporupdate.procedures.DanceRetirnerProcedure;
+import net.knifick.praporupdate.procedures.PraporSlowFallingProcedure;
+import net.knifick.praporupdate.procedures.PraporTamedProcedureProcedure;
+import net.knifick.praporupdate.procedures.PraporkaToPraporProcedure;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.OwnerHurtTargetGoal;
+import net.minecraft.world.entity.animal.Chicken;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.EventHooks;
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.*;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.List;
 import java.util.Objects;
 
-public class PraporEntity extends TamableAnimal implements GeoEntity {
-	public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(PraporEntity.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(PraporEntity.class, EntityDataSerializers.STRING);
-	public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(PraporEntity.class, EntityDataSerializers.STRING);
-	public static final EntityDataAccessor<Boolean> DATA_isTamed = SynchedEntityData.defineId(PraporEntity.class, EntityDataSerializers.BOOLEAN);
+public class SuckerEntity extends TamableAnimal implements GeoEntity {
+	public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.STRING);
+	public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.STRING);
+	public static final EntityDataAccessor<Boolean> DATA_isTamed = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.BOOLEAN);
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 	private boolean swinging;
 	private boolean lastloop;
 	private long lastSwing;
 	public String animationprocedure = "empty";
 
-	public PraporEntity(EntityType<PraporEntity> type, Level world) {
+	public SuckerEntity(EntityType<SuckerEntity> type, Level world) {
 		super(type, world);
 		xpReward = 0;
 		setNoAi(false);
@@ -110,63 +85,30 @@ public class PraporEntity extends TamableAnimal implements GeoEntity {
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		this.goalSelector.addGoal(1, new AvoidEntityGoal<>(this, Chicken.class, (float) 6, 1.2, 1.2));
-		this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 1, (float) 10, (float) 2));
-		this.goalSelector.addGoal(3, new MeleeAttackGoal(this, 1.2, false) {
-			@Override
-			protected boolean canPerformAttack(LivingEntity entity) {
-				return this.isTimeToAttack() && this.mob.distanceToSqr(entity) < (this.mob.getBbWidth() * this.mob.getBbWidth() + entity.getBbWidth() * entity.getBbWidth()) && this.mob.getSensing().hasLineOfSight(entity);
-			}
-		});
-		this.targetSelector.addGoal(4, new HurtByTargetGoal(this).setAlertOthers());
-		this.goalSelector.addGoal(5, new TemptGoal(this, 1, Ingredient.of(Items.SAND), false));
-		this.goalSelector.addGoal(6, new RandomStrollGoal(this, 0.8));
-		this.goalSelector.addGoal(7, new OwnerHurtByTargetGoal(this));
-		this.targetSelector.addGoal(8, new OwnerHurtTargetGoal(this) {
+		this.goalSelector.addGoal(1, new FollowOwnerGoal(this, 1, (float) 10, (float) 2));
+		this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.8));
+		this.goalSelector.addGoal(3, new RandomLookAroundGoal(this) {
 			@Override
 			public boolean canUse() {
-				double x = PraporEntity.this.getX();
-				double y = PraporEntity.this.getY();
-				double z = PraporEntity.this.getZ();
-				Entity entity = PraporEntity.this;
-				Level world = PraporEntity.this.level();
-				return super.canUse() && PraporTamedProcedureProcedure.execute(entity);
-			}
-
-			@Override
-			public boolean canContinueToUse() {
-				double x = PraporEntity.this.getX();
-				double y = PraporEntity.this.getY();
-				double z = PraporEntity.this.getZ();
-				Entity entity = PraporEntity.this;
-				Level world = PraporEntity.this.level();
-				return super.canContinueToUse() && PraporTamedProcedureProcedure.execute(entity);
-			}
-		});
-		this.goalSelector.addGoal(9, new FollowParentGoal(this, 0.8));
-		this.goalSelector.addGoal(10, new BreedGoal(this, 1));
-		this.goalSelector.addGoal(11, new RandomLookAroundGoal(this) {
-			@Override
-			public boolean canUse() {
-				double x = PraporEntity.this.getX();
-				double y = PraporEntity.this.getY();
-				double z = PraporEntity.this.getZ();
-				Entity entity = PraporEntity.this;
-				Level world = PraporEntity.this.level();
+				double x = SuckerEntity.this.getX();
+				double y = SuckerEntity.this.getY();
+				double z = SuckerEntity.this.getZ();
+				Entity entity = SuckerEntity.this;
+				Level world = SuckerEntity.this.level();
 				return super.canUse() && DanceRetirnerProcedure.execute(entity);
 			}
 
 			@Override
 			public boolean canContinueToUse() {
-				double x = PraporEntity.this.getX();
-				double y = PraporEntity.this.getY();
-				double z = PraporEntity.this.getZ();
-				Entity entity = PraporEntity.this;
-				Level world = PraporEntity.this.level();
+				double x = SuckerEntity.this.getX();
+				double y = SuckerEntity.this.getY();
+				double z = SuckerEntity.this.getZ();
+				Entity entity = SuckerEntity.this;
+				Level world = SuckerEntity.this.level();
 				return super.canContinueToUse() && DanceRetirnerProcedure.execute(entity);
 			}
 		});
-		this.goalSelector.addGoal(12, new FloatGoal(this));
+		this.goalSelector.addGoal(4, new FloatGoal(this));
 	}
 
 	@Override
@@ -176,17 +118,17 @@ public class PraporEntity extends TamableAnimal implements GeoEntity {
 
 	@Override
 	public SoundEvent getAmbientSound() {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:idle"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:sucker_idle"));
 	}
 
 	@Override
 	public SoundEvent getHurtSound(DamageSource ds) {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:hurt"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:sucker_hurt"));
 	}
 
 	@Override
 	public SoundEvent getDeathSound() {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:death"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:sucker_hurt"));
 	}
 
 	@Override
@@ -254,14 +196,12 @@ public class PraporEntity extends TamableAnimal implements GeoEntity {
 					this.setPersistenceRequired();
 			}
 		}
-		//sourceentity.startRiding(this);
 		double x = this.getX();
 		double y = this.getY();
 		double z = this.getZ();
 		Entity entity = this;
 		Level world = this.level();
 
-		PraporkaToPraporProcedure.execute(world, entity, sourceentity, itemstack);
 		return retval;
 	}
 
@@ -279,7 +219,7 @@ public class PraporEntity extends TamableAnimal implements GeoEntity {
 
 	@Override
 	public AgeableMob getBreedOffspring(ServerLevel serverWorld, AgeableMob ageable) {
-		PraporEntity retval = PraporModEntities.PRAPOR.get().create(serverWorld);
+		SuckerEntity retval = PraporModEntities.SUCKER.get().create(serverWorld);
 		retval.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(retval.blockPosition()), MobSpawnType.BREEDING, null);
 		return retval;
 	}
@@ -331,7 +271,7 @@ public class PraporEntity extends TamableAnimal implements GeoEntity {
 
 	public static AttributeSupplier.Builder createAttributes() {
 		AttributeSupplier.Builder builder = Mob.createMobAttributes();
-		builder = builder.add(Attributes.MOVEMENT_SPEED, 0.3);
+		builder = builder.add(Attributes.MOVEMENT_SPEED, 0.15);
 		builder = builder.add(Attributes.MAX_HEALTH, 10);
 		builder = builder.add(Attributes.ARMOR, 0);
 		builder = builder.add(Attributes.ATTACK_DAMAGE, 3);
@@ -343,7 +283,7 @@ public class PraporEntity extends TamableAnimal implements GeoEntity {
 
 	private PlayState movementPredicate(AnimationState event) {
 		if (this.animationprocedure.equals("empty")) {
-			if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) && this.onGround() && !this.isAggressive() && !this.isSprinting()) {
+			if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.1F && event.getLimbSwingAmount() < 0.1F)) && this.onGround() && !this.isAggressive() && !this.isSprinting()) {
 				return event.setAndContinue(RawAnimation.begin().thenLoop("walk"));
 			}
 			if (this.isDeadOrDying()) {
@@ -401,15 +341,6 @@ public class PraporEntity extends TamableAnimal implements GeoEntity {
 		}
 		prevAnim = this.animationprocedure;
 		return PlayState.CONTINUE;
-	}
-
-	@Override
-	protected void tickDeath() {
-		++this.deathTime;
-		if (this.deathTime == 42) {
-			this.remove(PraporEntity.RemovalReason.KILLED);
-			this.dropExperience(this);
-		}
 	}
 
 	public String getSyncedAnimation() {

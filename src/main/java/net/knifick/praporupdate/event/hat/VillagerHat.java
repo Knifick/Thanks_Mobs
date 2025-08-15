@@ -29,8 +29,8 @@ public class VillagerHat {
 			double x = villager.getX();
 			double y = villager.getY();
 			double z = villager.getZ();
-			// Проигрываем звук отказа
-			villager.level().playSound(null, villager.blockPosition(), SoundEvents.VILLAGER_NO, SoundSource.NEUTRAL, 1.0f, 1.0f);
+			villager.setUnhappyCounter(40);
+			villager.makeSound(SoundEvents.VILLAGER_NO);
 			if(villager.level() instanceof ServerLevel level){
 				level.sendParticles(ParticleTypes.ANGRY_VILLAGER, x, y+1.4, z, 4, 0.2, 0.2, 0.2, 1);
 			}

@@ -334,5 +334,61 @@
         "stream": false
       }
     ]
+  },
+  "sucker_idle": {
+    "sounds": [
+      {
+        "name": "prapor:sucker_idle",
+        "stream": false
+      },
+      {
+        "name": "prapor:sucker_idle2",
+        "stream": false
+      },
+      {
+        "name": "prapor:sucker_idle3",
+        "stream": false
+      },
+      {
+        "name": "prapor:sucker_idle4",
+        "stream": false
+      }
+    ]
+  },
+  "sucker_hurt": {
+    "sounds": [
+      {
+        "name": "prapor:sucker_hurt1",
+        "stream": false
+      },
+      {
+        "name": "prapor:sucker_hurt2",
+        "stream": false
+      },
+      {
+        "name": "prapor:sucker_hurt3",
+        "stream": false
+      },
+      {
+        "name": "prapor:sucker_hurt4",
+        "stream": false
+      },
+      {
+        "name": "prapor:sucker_hurt5",
+        "stream": false
+      },
+      {
+        "name": "prapor:sucker_hurt6",
+        "stream": false
+      },
+      {
+        "name": "prapor:sucker_hurt7",
+        "stream": false
+      },
+      {
+        "name": "prapor:sucker_hurt8",
+        "stream": false
+      }
+    ]
   }
 }

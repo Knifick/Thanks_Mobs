@@ -31,6 +31,7 @@ public class PraporModTabs {
 				tabData.accept(PraporModItems.BASTARD_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.BROLEM_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.DARKIRONKIN_SPAWN_EGG.get());
+				tabData.accept(PraporModItems.SUCKER_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.SOUL_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.PRAPORKA.get());
 				tabData.accept(PraporModItems.BATTERY.get());
@@ -54,11 +55,11 @@ public class PraporModTabs {
 		if (tabData.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
 			tabData.accept(PraporModItems.PRAPOR_SPAWN_EGG.get());
 			tabData.accept(PraporModItems.POOKER_SPAWN_EGG.get());
-			tabData.accept(PraporModItems.SOUL_SPAWN_EGG.get());
 			tabData.accept(PraporModItems.NARRATOR_SPAWN_EGG.get());
 			tabData.accept(PraporModItems.BASTARD_SPAWN_EGG.get());
 			tabData.accept(PraporModItems.BROLEM_SPAWN_EGG.get());
 			tabData.accept(PraporModItems.DARKIRONKIN_SPAWN_EGG.get());
+			tabData.accept(PraporModItems.SUCKER_SPAWN_EGG.get());
 		}
 		if (tabData.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
 			tabData.insertAfter(Items.AXOLOTL_BUCKET.getDefaultInstance(),

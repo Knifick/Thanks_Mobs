@@ -41,4 +41,6 @@ public class PraporModSounds {
 	public static final DeferredHolder<SoundEvent, SoundEvent> BROLEM_RUINS = REGISTRY.register("brolem_ruins", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("prapor", "brolem_ruins")));
 	public static final DeferredHolder<SoundEvent, SoundEvent> ADOPT = REGISTRY.register("adopt", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("prapor", "adopt")));
 	public static final DeferredHolder<SoundEvent, SoundEvent> DICTOR_SOUND = REGISTRY.register("dictor_sound", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("prapor", "dictor_sound")));
+	public static final DeferredHolder<SoundEvent, SoundEvent> SUCKER_IDLE = REGISTRY.register("sucker_idle", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("prapor", "sucker_idle")));
+	public static final DeferredHolder<SoundEvent, SoundEvent> SUCKER_HURT = REGISTRY.register("sucker_hurt", () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("prapor", "sucker_hurt")));
 }

@@ -47,6 +47,7 @@ public class PraporModItems {
 	public static final DeferredItem<Item> BETTER_MACE_CHARGED = REGISTRY.register("dark_mace_charged", BetterMaceChargedItem::new);
 	public static final DeferredItem<Item> UPGRADE_ACTIVE = REGISTRY.register("upgrade_active", () -> new Item(new Item.Properties().rarity(Rarity.EPIC).fireResistant()));
 	public static final DeferredItem<Item> UPGRADE_INACTIVE = REGISTRY.register("upgrade_inactive", () -> new Item(new Item.Properties().rarity(Rarity.EPIC).fireResistant()));
+	public static final DeferredItem<Item> SUCKER_SPAWN_EGG = REGISTRY.register("sucker_spawn_egg", () -> new CustomSpawnEggItem(PraporModEntities.SUCKER.get(), new Item.Properties()));
 
 	// Start of user code block custom items
 	// End of user code block custom items

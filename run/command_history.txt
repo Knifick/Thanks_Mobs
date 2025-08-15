@@ -1,21 +1,3 @@
-/kill @e
-/effect give @e[type=prapor:narrator] minecraft:glowing 10 1 true
-/locate biome minecraft:snowy_plains
-/tp @s -712 88 1233
-/effect give @e[type=prapor:narrator] minecraft:glowing 10 1 true
-/locate biome minecraft:plains
-/tp @s -508 96 952
-/time set day
-/setblock ~ ~-1 ~ air
-/locate biome minecraft:snowy_taiga
-/tp @s 305 103 681
-/time set day
-/summon prapor:darkironkin ~ ~ ~ {NoAI:1b}
-/spawnpoint
-/gamerule keepInventory true
-/data merge entity b586a55e-e70f-435f-955b-1192d0a9e762 {NoAI:0b}
-/time set day
-/kill
 /time set day
 /locate structure minecraft:village_plains
 /tp @s -384 ~ 240
@@ -48,3 +30,21 @@
 /give @s prapor:music_record_thanks_street
 /time set day
 /kill @e[type=prapor:soul]
+/summon prapor:sucker
+/give @s prapor:sucker_spawn_egg
+/setblock ~ ~ ~ minecraft:end_portal
+/kill
+/time set day
+/locate structure minecraft:village_plains
+/tp @s 240 ~ 64
+/setblock ~ ~ ~ minecraft:end_portal
+/kill
+/tp @s 240 ~ 64
+/time set day
+/locate structure minecraft:village_snowy
+/tp @s -512 ~ -2320
+/setblock ~ ~ ~ minecraft:end_portal
+/data merge entity 0d358f6f-fcde-485b-b50f-69afde0426c2 {"Texture":"sucker_suck"}
+/setblock ~ ~ ~ minecraft:end_portal
+/data get entity @e[type=minecraft:item, limit=1]
+/data get entity @e[type=minecraft:item, distance=..5, limit=1]
