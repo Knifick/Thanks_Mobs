@@ -2,6 +2,7 @@ package net.knifick.praporupdate.event.sucker;
 
 import net.knifick.praporupdate.entity.SuckerEntity;
 import net.knifick.praporupdate.init.PraporModEntities;
+import net.knifick.praporupdate.init.PraporModSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -56,6 +57,7 @@ public class TossHandler {
                 ServerPlayer owner = entity.level().getServer().getPlayerList().getPlayer(ownerId);
                 if (owner != null) {
                     SuckerEntity sucker = PraporModEntities.SUCKER.get().create(entity.level());
+                    entity.playSound(PraporModSounds.SUCKER_APPROACH.get(), 49, 1);
                     if (sucker != null) {
                         sucker.moveTo(entity.getX(), entity.getY(), entity.getZ(),
                                 owner.getYRot(), owner.getXRot());
@@ -96,7 +98,7 @@ public class TossHandler {
         Vec3 direction = ownerPos.subtract(entityPos);
         double distance = direction.length();
 
-        if (distance > 0.5 && entity.tickCount < 100) {
+        if (distance > 0.1 && entity.tickCount < 100) {
             // Нормализуем вектор и задаём скорость движения
             Vec3 movement = direction.normalize().scale(0.6).add(0, 0.3, 0);
             entity.setDeltaMovement(movement);
@@ -113,6 +115,9 @@ public class TossHandler {
             );
         } else {
             // Достигли игрока — приручаем
+            CompoundTag data = entity.getPersistentData();
+            //ЗАВТРА ДОДЕЛАЮ СПАВН!!1!!!!!!11111!!!11!11
+            data.putUUID("SuckerUUID", owner.getUUID());
             entity.tame(owner);
             entity.setPlayerUUID(null);
             entity.setDeltaMovement(Vec3.ZERO);
