@@ -95,7 +95,7 @@ public class PraporEntity extends TamableAnimal implements GeoEntity {
 		super.defineSynchedData(builder);
 		builder.define(SHOOT, false);
 		builder.define(ANIMATION, "undefined");
-		builder.define(TEXTURE, "sucker_idle");
+		builder.define(TEXTURE, "prapor");
 		builder.define(DATA_isTamed, false);
 	}
 

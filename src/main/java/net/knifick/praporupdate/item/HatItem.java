@@ -1,6 +1,7 @@
 
 package net.knifick.praporupdate.item;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -41,7 +42,7 @@ public abstract class HatItem extends ArmorItem {
 				map.put(ArmorItem.Type.BOOTS, 0);
 				map.put(ArmorItem.Type.LEGGINGS, 0);
 				map.put(ArmorItem.Type.CHESTPLATE, 0);
-				map.put(ArmorItem.Type.HELMET, 1);
+				map.put(ArmorItem.Type.HELMET, 0);
 				map.put(ArmorItem.Type.BODY, 0);
 			}), 0, BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.EMPTY), () -> Ingredient.of(), List.of(new ArmorMaterial.Layer(ResourceLocation.parse("prapor:leather"))), 0f, 0f);
 			registerHelper.register(ResourceLocation.parse("prapor:hat"), armorMaterial);
@@ -68,6 +69,11 @@ public abstract class HatItem extends ArmorItem {
 
 	public HatItem(ArmorItem.Type type, Item.Properties properties) {
 		super(ARMOR_MATERIAL, type, properties);
+	}
+
+	@Override
+	public EquipmentSlot getEquipmentSlot() {
+		return EquipmentSlot.HEAD;
 	}
 
 	public static class Helmet extends HatItem {

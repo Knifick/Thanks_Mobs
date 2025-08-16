@@ -36,6 +36,9 @@ public class TossHandler {
             ItemEntity itemEntity = event.getEntity();
             CompoundTag data = itemEntity.getPersistentData();
             data.putUUID("OwnerUUID", player.getUUID());
+            data.putDouble("OwnerX", player.getX());
+            data.putDouble("OwnerY", player.getY());
+            data.putDouble("OwnerZ", player.getZ());
         }
     }
 
@@ -51,17 +54,23 @@ public class TossHandler {
             }
 
             UUID ownerId = data.getUUID("OwnerUUID");
+            Vec3 ownerPos = new Vec3(
+                    data.getDouble("OwnerX"),
+                    data.getDouble("OwnerY"),
+                    data.getDouble("OwnerZ")
+            );
 
             if (ownerId != null) {
                 entity.level().getServer().sendSystemMessage(Component.literal(ownerId.toString()));
-                ServerPlayer owner = entity.level().getServer().getPlayerList().getPlayer(ownerId);
+                ServerPlayer owner = (ServerPlayer) entity.level().getPlayerByUUID(ownerId);
                 if (owner != null) {
                     SuckerEntity sucker = PraporModEntities.SUCKER.get().create(entity.level());
                     entity.playSound(PraporModSounds.SUCKER_APPROACH.get(), 49, 1);
                     if (sucker != null) {
                         sucker.moveTo(entity.getX(), entity.getY(), entity.getZ(),
                                 owner.getYRot(), owner.getXRot());
-                        owner.level().addFreshEntity(sucker); // Тут, кстати, раньше у тебя был баг — ты добавлял owner вместо сущности!
+                        owner.level().addFreshEntity(sucker);
+                        sucker.playerPos = ownerPos;
                         sucker.setPlayerUUID(ownerId);
                     }
                     entity.discard();
@@ -92,7 +101,7 @@ public class TossHandler {
         if (entity.getOwner() != null) return;
 
         Vec3 entityPos = entity.position();
-        Vec3 ownerPos = owner.position();
+        Vec3 ownerPos = entity.playerPos;
 
         // Вектор направления от сущности к игроку
         Vec3 direction = ownerPos.subtract(entityPos);

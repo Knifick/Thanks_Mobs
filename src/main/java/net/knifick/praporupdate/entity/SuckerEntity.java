@@ -61,6 +61,7 @@ public class SuckerEntity extends TamableAnimal implements GeoEntity {
 	private boolean swinging;
 	private boolean lastloop;
 	private long lastSwing;
+	public Vec3 playerPos;
 	public String animationprocedure = "empty";
 
 	public SuckerEntity(EntityType<SuckerEntity> type, Level world) {
