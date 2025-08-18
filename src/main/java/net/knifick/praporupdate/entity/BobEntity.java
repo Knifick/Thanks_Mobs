@@ -76,15 +76,10 @@ public class BobEntity extends Monster implements GeoEntity {
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		this.goalSelector.addGoal(0, new RandomStrollGoal(this, 5.2){
+		this.goalSelector.addGoal(0, new RandomStrollGoal(this, 2){
 			@Override
 			protected Vec3 getPosition() {
 				return DefaultRandomPos.getPos(this.mob, 90, 5);
-			}
-
-			@Override
-			public void setInterval(int interval) {
-				this.interval = 60;
 			}
 		});
 	}
@@ -135,7 +130,7 @@ public class BobEntity extends Monster implements GeoEntity {
 					}
 
 					// 4) Проверяем, что в радиусе 30 блоков нет другого BOB
-					double radius = 30.0;
+					double radius = 120.0;
 					if (!world.getEntitiesOfClass(BobEntity.class,
 							new AABB(pos).inflate(radius)).isEmpty()) {
 						return false;
@@ -151,7 +146,7 @@ public class BobEntity extends Monster implements GeoEntity {
 	public static AttributeSupplier.Builder createAttributes() {
 		AttributeSupplier.Builder builder = Mob.createMobAttributes();
 		builder = builder.add(Attributes.MOVEMENT_SPEED, 0.1);
-		builder = builder.add(Attributes.MAX_HEALTH, 1488);
+		builder = builder.add(Attributes.MAX_HEALTH, 1040);
 		builder = builder.add(Attributes.ARMOR, 0);
 		builder = builder.add(Attributes.ATTACK_DAMAGE, 0);
 		builder = builder.add(Attributes.STEP_HEIGHT, 1.6);

@@ -1051,12 +1051,6 @@
     },
     "done": true
   },
-  "minecraft:nether/explore_nether": {
-    "criteria": {
-      "minecraft:crimson_forest": "2025-08-18 19:41:53 +0700"
-    },
-    "done": false
-  },
   "minecraft:nether/root": {
     "criteria": {
       "entered_nether": "2025-08-18 19:41:52 +0700"
@@ -1066,6 +1060,27 @@
   "minecraft:story/enter_the_nether": {
     "criteria": {
       "entered_nether": "2025-08-18 19:41:52 +0700"
+    },
+    "done": true
+  },
+  "minecraft:nether/explore_nether": {
+    "criteria": {
+      "minecraft:crimson_forest": "2025-08-18 19:41:53 +0700",
+      "minecraft:nether_wastes": "2025-08-18 22:39:23 +0700",
+      "minecraft:soul_sand_valley": "2025-08-18 22:39:20 +0700",
+      "minecraft:basalt_deltas": "2025-08-18 22:33:15 +0700"
+    },
+    "done": false
+  },
+  "minecraft:recipes/brewing/fermented_spider_eye": {
+    "criteria": {
+      "has_spider_eye": "2025-08-18 22:30:59 +0700"
+    },
+    "done": true
+  },
+  "prapor:bob": {
+    "criteria": {
+      "bob": "2025-08-18 23:12:56 +0700"
     },
     "done": true
   },

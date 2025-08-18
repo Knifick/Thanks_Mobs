@@ -47,7 +47,7 @@ public class PraporModEntities {
 			EntityType.Builder.<SuckerEntity>of(SuckerEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 					.sized(1.3f, 1.3f));
 	public static final DeferredHolder<EntityType<?>, EntityType<BobEntity>> BOB = register("bob",
-			EntityType.Builder.<BobEntity>of(BobEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).sized(5f, 23f));
+			EntityType.Builder.<BobEntity>of(BobEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).sized(1.5f, 7f));
 
 	// Start of user code block custom entities
 	// End of user code block custom entities

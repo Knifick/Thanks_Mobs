@@ -17,7 +17,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 public class BobRenderer extends GeoEntityRenderer<BobEntity> {
 	public BobRenderer(EntityRendererProvider.Context renderManager) {
 		super(renderManager, new BobModel());
-		this.shadowRadius = 0.6f;
+		this.shadowRadius = 2f;
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class BobRenderer extends GeoEntityRenderer<BobEntity> {
 
 	@Override
 	public void preRender(PoseStack poseStack, BobEntity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-		float scale = 10f;
+		float scale = 3f;
 		this.scaleHeight = scale;
 		this.scaleWidth = scale;
 		super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);

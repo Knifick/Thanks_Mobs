@@ -109,5 +109,7 @@
   "entity.prapor.sucker": "Сосунок",
   "advancements.mouth_job.title": "Насосал",
   "advancements.mouth_job.descr": "Дайте всосасть сосунку 1000 предметов",
-  "item.prapor.bob_spawn_egg": "Яйцо призыва Боба"
+  "item.prapor.bob_spawn_egg": "Яйцо призыва Боба",
+  "advancements.bob.title": "боб",
+  "advancements.bob.descr": "БОБ"
 }

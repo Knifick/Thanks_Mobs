@@ -109,5 +109,7 @@
   "entity.prapor.sucker": "Sucker",
   "advancements.mouth_job.title": "Mouth job",
   "advancements.mouth_job.descr": "Give the sucker 1000 items to suck in",
-  "item.prapor.bob_spawn_egg": "Bob spawn egg"
+  "item.prapor.bob_spawn_egg": "Bob spawn egg",
+  "advancements.bob.title": "bob",
+  "advancements.bob.descr": "BOB"
 }
