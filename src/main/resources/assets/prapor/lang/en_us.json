@@ -106,5 +106,8 @@
   "advancements.dark_mace.title": "Level up",
   "advancements.dark_mace.descr": "Craft the dark mace",
   "item.prapor.sucker_spawn_egg": "Sucker spawn egg",
-  "entity.prapor.sucker": "Sucker"
+  "entity.prapor.sucker": "Sucker",
+  "advancements.mouth_job.title": "Mouth job",
+  "advancements.mouth_job.descr": "Give the sucker 1000 items to suck in",
+  "item.prapor.bob_spawn_egg": "Bob spawn egg"
 }

@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "prapor:sucker_spawn_egg"
+    },
+    "title": {
+      "translate": "advancements.mouth_job.title"
+    },
+    "description": {
+      "translate": "advancements.mouth_job.descr"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "mouth_job": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "prapor:praporshik"
+}

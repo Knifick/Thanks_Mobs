@@ -3,9 +3,7 @@ package net.knifick.praporupdate.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.knifick.praporupdate.entity.PraporEntity;
 import net.knifick.praporupdate.entity.SuckerEntity;
-import net.knifick.praporupdate.entity.model.PraporModel;
 import net.knifick.praporupdate.entity.model.SuckerModel;
 import net.knifick.praporupdate.procedures.PraporEntityVisualScaleProcedure;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -15,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.util.Color;
 
 public class SuckerRenderer extends GeoEntityRenderer<SuckerEntity> {
 	public SuckerRenderer(EntityRendererProvider.Context renderManager) {
@@ -43,4 +42,16 @@ public class SuckerRenderer extends GeoEntityRenderer<SuckerEntity> {
 	protected float getDeathMaxRotation(SuckerEntity entityLivingBaseIn) {
 		return 0.0F;
 	}
+
+	@Override
+	public Color getRenderColor(SuckerEntity animatable, float partialTick, int packedLight) {
+		int color = animatable.getColor();
+
+		float r = (color >> 16 & 0xFF) / 255.0F;
+		float g = (color >> 8 & 0xFF) / 255.0F;
+		float b = (color & 0xFF) / 255.0F;
+
+		return Color.ofRGBA(r, g, b, 1.0F);
+	}
+
 }

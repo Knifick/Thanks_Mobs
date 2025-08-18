@@ -23,5 +23,6 @@ public class PraporModEntityRenderers {
 		event.registerEntityRenderer(PraporModEntities.BROLEM.get(), BrolemRenderer::new);
 		event.registerEntityRenderer(PraporModEntities.DARKIRONKIN.get(), DarkironkinRenderer::new);
 		event.registerEntityRenderer(PraporModEntities.SUCKER.get(), SuckerRenderer::new);
+		event.registerEntityRenderer(PraporModEntities.BOB.get(), BobRenderer::new);
 	}
 }

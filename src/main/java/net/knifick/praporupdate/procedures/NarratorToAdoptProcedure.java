@@ -119,6 +119,10 @@ public class NarratorToAdoptProcedure {
 			if (!world.isClientSide()) {
 				narrator.setPowerTimer(72000);
 				narrator.setPowered(true);
+				if(narrator.getVariant()==1)
+					narrator.setTexture("narator_animated");
+				else if(narrator.getVariant()==2)
+					narrator.setTexture("dictor_animated");
 				narrator.setAnimation("BatteryEnd");
 				itemstack.shrink(1);
 			}

@@ -1,15 +1,9 @@
 package net.knifick.praporupdate.init;
 
+import net.knifick.praporupdate.entity.*;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
-
-import net.knifick.praporupdate.entity.PraporEntity;
-import net.knifick.praporupdate.entity.PookerEntity;
-import net.knifick.praporupdate.entity.NarratorEntity;
-import net.knifick.praporupdate.entity.DarkironkinEntity;
-import net.knifick.praporupdate.entity.BrolemEntity;
-import net.knifick.praporupdate.entity.BastardEntity;
 
 @EventBusSubscriber
 public class EntityAnimationFactory {
@@ -34,7 +28,6 @@ public class EntityAnimationFactory {
 				String animation = syncable.getSyncedAnimation();
 				if (!animation.equals("undefined")) {
 					syncable.setAnimation("undefined");
-					syncable.animationprocedure = animation;
 				}
 			}
 			if (event.getEntity() instanceof BastardEntity syncable) {
@@ -52,6 +45,13 @@ public class EntityAnimationFactory {
 				}
 			}
 			if (event.getEntity() instanceof DarkironkinEntity syncable) {
+				String animation = syncable.getSyncedAnimation();
+				if (!animation.equals("undefined")) {
+					syncable.setAnimation("undefined");
+					syncable.animationprocedure = animation;
+				}
+			}
+			if (event.getEntity() instanceof SuckerEntity syncable) {
 				String animation = syncable.getSyncedAnimation();
 				if (!animation.equals("undefined")) {
 					syncable.setAnimation("undefined");

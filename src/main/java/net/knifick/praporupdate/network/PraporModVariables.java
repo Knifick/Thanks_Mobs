@@ -70,7 +70,9 @@ public class PraporModVariables {
 			if (!event.isWasDeath()) {
 				clone.screamAnimValue = original.screamAnimValue;
 			}
+			clone.hasSucker = original.hasSucker;
 			clone.bmaceSlot = original.bmaceSlot;
+			clone.suckCount = original.suckCount;
 			event.getEntity().setData(PLAYER_VARIABLES, clone);
 		}
 
@@ -209,23 +211,29 @@ public class PraporModVariables {
 
 	public static class PlayerVariables implements INBTSerializable<CompoundTag> {
 		public boolean isFirst = false;
+		public boolean hasSucker = false;
 		public double screamAnimValue = 0;
 		public int bmaceSlot = -1;
+		public int suckCount = 0;
 
 		@Override
 		public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
 			CompoundTag nbt = new CompoundTag();
 			nbt.putBoolean("isFirst", isFirst);
+			nbt.putBoolean("hasSucker", hasSucker);
 			nbt.putDouble("screamAnimValue", screamAnimValue);
 			nbt.putInt("bmaceSlot", bmaceSlot);
+			nbt.putInt("suckCount", suckCount);
 			return nbt;
 		}
 
 		@Override
 		public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
 			isFirst = nbt.getBoolean("isFirst");
+			hasSucker = nbt.getBoolean("hasSucker");
 			screamAnimValue = nbt.getDouble("screamAnimValue");
 			bmaceSlot = nbt.getInt("bmaceSlot");
+			suckCount = nbt.getInt("suckCount");
 		}
 
 		public void syncPlayerVariables(Entity entity) {

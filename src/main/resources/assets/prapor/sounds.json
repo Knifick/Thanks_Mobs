@@ -398,5 +398,33 @@
         "stream": false
       }
     ]
+  },
+  "suck": {
+    "sounds": [
+      {
+        "name": "prapor:suck",
+        "stream": false
+      }
+    ]
+  },
+  "suck_start": {
+    "sounds": [
+      {
+        "name": "prapor:suck_start1",
+        "stream": false
+      },
+      {
+        "name": "prapor:suck_start2",
+        "stream": false
+      },
+      {
+        "name": "prapor:suck_start3",
+        "stream": false
+      },
+      {
+        "name": "prapor:suck_start4",
+        "stream": false
+      }
+    ]
   }
 }

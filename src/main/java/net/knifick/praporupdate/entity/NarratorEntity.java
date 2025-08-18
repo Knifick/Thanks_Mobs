@@ -1,6 +1,6 @@
-
 package net.knifick.praporupdate.entity;
 
+import net.knifick.praporupdate.init.PraporModItems;
 import net.knifick.praporupdate.util.narrator.MusicStopOnDeathHandler;
 import net.knifick.praporupdate.util.narrator.MusicStopOnDistanceHandler;
 import net.minecraft.core.BlockPos;
@@ -17,6 +17,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
@@ -65,22 +66,27 @@ import java.util.Set;
 import java.util.UUID;
 
 public class NarratorEntity extends TamableAnimal implements GeoEntity {
+	// -------------------- Synced data / legacy --------------------
 	public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.STRING);
-	public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.STRING);
+	public static final EntityDataAccessor<String>  ANIMATION = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.STRING); // legacy API compatibility
+	public static final EntityDataAccessor<String>  TEXTURE   = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.STRING);
+
+	public static final EntityDataAccessor<Boolean> DATA_IS_POWERED   = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Integer> DATA_POWER_TIMER  = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.INT);
+	public static final EntityDataAccessor<Boolean> DATA_IS_MUSIC     = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<BlockPos> DATA_MUSIC_POS   = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.BLOCK_POS);
+	public static final EntityDataAccessor<Integer> VARIANT           = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.INT);
+
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+	// swing-поддержка (если добавишь melee/жесты)
 	private boolean swinging;
-	private boolean lastloop;
 	private long lastSwing;
-	public String animationprocedure = "empty";
+
+	// геймплейные поля
 	private final Set<UUID> scaredPlayerUUIDs = new HashSet<>();
 	private int narratorState = 0;
 	private int fleeTicks = 0;
-	public static final EntityDataAccessor<Boolean> DATA_IS_POWERED = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<Integer> DATA_POWER_TIMER = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.INT);
-	public static final EntityDataAccessor<Boolean> DATA_IS_MUSIC = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<BlockPos> DATA_MUSIC_POS = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.BLOCK_POS);
-	public static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(NarratorEntity.class, EntityDataSerializers.INT);
 
 	public NarratorEntity(EntityType<NarratorEntity> type, Level world) {
 		super(type, world);
@@ -92,56 +98,60 @@ public class NarratorEntity extends TamableAnimal implements GeoEntity {
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(SHOOT, false);
-		builder.define(ANIMATION, "undefined");
+		builder.define(ANIMATION, "empty"); // важно: по умолчанию пусто
 		builder.define(TEXTURE, "narator_animated");
+
 		builder.define(DATA_IS_POWERED, true);
 		builder.define(DATA_POWER_TIMER, 24000);
 		builder.define(VARIANT, -1);
+
 		builder.define(DATA_IS_MUSIC, false);
 		builder.define(DATA_MUSIC_POS, new BlockPos(0,0,0));
 	}
 
-	public void setTexture(String texture) {
-		this.entityData.set(TEXTURE, texture);
-	}
+	// -------------------- Helpers --------------------
+	public void setTexture(String texture) { this.entityData.set(TEXTURE, texture); }
+	public String getTexture() { return this.entityData.get(TEXTURE); }
 
-	public String getTexture() {
-		return this.entityData.get(TEXTURE);
-	}
+	public boolean isPowered() { return entityData.get(DATA_IS_POWERED); }
+	public void setPowered(boolean powered) { entityData.set(DATA_IS_POWERED, powered); }
 
+	public int getPowerTimer() { return entityData.get(DATA_POWER_TIMER); }
+	public void setPowerTimer(int ticks) { entityData.set(DATA_POWER_TIMER, ticks); }
+
+	public int getVariant() { return entityData.get(VARIANT); }
+	public void setVariant(int variant) { entityData.set(VARIANT, variant); }
+
+	public boolean isMusic() { return entityData.get(DATA_IS_MUSIC); }
+	public void setMusic(boolean music) { entityData.set(DATA_IS_MUSIC, music); }
+
+	public BlockPos getMusicPos() { return entityData.get(DATA_MUSIC_POS); }
+	public void setMusicPos(BlockPos pos) { entityData.set(DATA_MUSIC_POS, pos); }
+
+	public Set<UUID> getScaredPlayers() { return scaredPlayerUUIDs; }
+
+	// -------------------- Goals --------------------
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
 		this.goalSelector.addGoal(0, new NarratorGoal(this));
+
 		this.goalSelector.addGoal(1, new RandomStrollGoal(this, 1){
-			@Override
-			public boolean canUse() {
-				return NarratorEntity.this.isPowered() && !NarratorEntity.this.isMusic() && super.canUse();
-			}
-
-			@Override
-			public boolean canContinueToUse() {
-				return NarratorEntity.this.isPowered() && !NarratorEntity.this.isMusic() && super.canContinueToUse();
-			}
+			@Override public boolean canUse() { return NarratorEntity.this.isPowered() && !NarratorEntity.this.isMusic() && super.canUse(); }
+			@Override public boolean canContinueToUse() { return NarratorEntity.this.isPowered() && !NarratorEntity.this.isMusic() && super.canContinueToUse(); }
 		});
-		this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 1, (float) 10, (float) 2){
-			@Override
-			public boolean canUse() {
-				return NarratorEntity.this.isPowered() && !NarratorEntity.this.isMusic() && super.canUse();
-			}
 
-			@Override
-			public boolean canContinueToUse() {
-				return NarratorEntity.this.isPowered() && !NarratorEntity.this.isMusic() && super.canContinueToUse();
-			}
+		this.goalSelector.addGoal(2, new FollowOwnerGoal(this, 1, 10f, 2f){
+			@Override public boolean canUse() { return NarratorEntity.this.isPowered() && !NarratorEntity.this.isMusic() && super.canUse(); }
+			@Override public boolean canContinueToUse() { return NarratorEntity.this.isPowered() && !NarratorEntity.this.isMusic() && super.canContinueToUse(); }
 		});
 	}
 
+	// -------------------- Sounds --------------------
 	@Override
 	public SoundEvent getHurtSound(DamageSource ds) {
 		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:narator_hit"));
 	}
-
 	@Override
 	public SoundEvent getDeathSound() {
 		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.generic.death"));
@@ -154,16 +164,14 @@ public class NarratorEntity extends TamableAnimal implements GeoEntity {
 		return super.hurt(source, amount);
 	}
 
+	// -------------------- Save / Load --------------------
 	@Override
 	public void addAdditionalSaveData(CompoundTag compound) {
 		super.addAdditionalSaveData(compound);
 		compound.putString("Texture", this.getTexture());
 
-		// Добавьте сохранение состояния
 		ListTag scaredPlayersTag = new ListTag();
-		for (UUID uuid : scaredPlayerUUIDs) {
-			scaredPlayersTag.add(NbtUtils.createUUID(uuid));
-		}
+		for (UUID uuid : scaredPlayerUUIDs) scaredPlayersTag.add(NbtUtils.createUUID(uuid));
 		compound.put("ScaredPlayers", scaredPlayersTag);
 		compound.putInt("NarratorState", narratorState);
 		compound.putInt("FleeTicks", fleeTicks);
@@ -172,7 +180,6 @@ public class NarratorEntity extends TamableAnimal implements GeoEntity {
 		compound.putInt("PowerTimer", getPowerTimer());
 
 		compound.putBoolean("IsMusic", isMusic());
-
 		compound.put("MusicPos", NbtUtils.writeBlockPos(getMusicPos()));
 		compound.putInt("Variant", getVariant());
 	}
@@ -180,15 +187,11 @@ public class NarratorEntity extends TamableAnimal implements GeoEntity {
 	@Override
 	public void readAdditionalSaveData(CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
-		if (compound.contains("Texture"))
-			this.setTexture(compound.getString("Texture"));
+		if (compound.contains("Texture")) this.setTexture(compound.getString("Texture"));
 
-		// Добавьте загрузку состояния
 		scaredPlayerUUIDs.clear();
 		ListTag scaredPlayersTag = compound.getList("ScaredPlayers", Tag.TAG_INT_ARRAY);
-		for (Tag entry : scaredPlayersTag) {
-			scaredPlayerUUIDs.add(NbtUtils.loadUUID(entry));
-		}
+		for (Tag entry : scaredPlayersTag) scaredPlayerUUIDs.add(NbtUtils.loadUUID(entry));
 		narratorState = compound.getInt("NarratorState");
 		fleeTicks = compound.getInt("FleeTicks");
 
@@ -196,60 +199,18 @@ public class NarratorEntity extends TamableAnimal implements GeoEntity {
 		setPowerTimer(compound.getInt("PowerTimer"));
 
 		setMusic(compound.getBoolean("IsMusic"));
-
-		if(compound.contains("MusicPos"))
-			setMusicPos(NbtUtils.readBlockPos(compound, "MusicPos").orElse(BlockPos.ZERO));
+		if (compound.contains("MusicPos")) setMusicPos(NbtUtils.readBlockPos(compound, "MusicPos").orElse(BlockPos.ZERO));
 		setVariant(compound.getInt("Variant"));
 	}
 
-	public Set<UUID> getScaredPlayers() {
-		return scaredPlayerUUIDs;
+	@Override
+	public boolean isFood(ItemStack itemStack) {
+		return false;
 	}
 
-	public boolean isPowered() {
-		return entityData.get(DATA_IS_POWERED);
-	}
-
-	public void setPowered(boolean powered) {
-		entityData.set(DATA_IS_POWERED, powered);
-	}
-
-	public int getPowerTimer() {
-		return entityData.get(DATA_POWER_TIMER);
-	}
-
-	public void setPowerTimer(int ticks) {
-		entityData.set(DATA_POWER_TIMER, ticks);
-	}
-
-	public int getVariant() {
-		return entityData.get(VARIANT);
-	}
-
-	public void setVariant(int variant) {
-		entityData.set(VARIANT, variant);
-	}
-
-	public boolean isMusic() {
-		return entityData.get(DATA_IS_MUSIC);
-	}
-
-	public void setMusic(boolean music) {
-		entityData.set(DATA_IS_MUSIC, music);
-	}
-
-	public BlockPos getMusicPos() {
-		return entityData.get(DATA_MUSIC_POS);
-	}
-
-	public void setMusicPos(BlockPos pos) {
-		entityData.set(DATA_MUSIC_POS, pos);
-	}
-
-	// В классе NarratorEntity
+	// -------------------- Death / Interact --------------------
 	@Override
 	public void die(DamageSource source) {
-		// Останавливаем музыку перед смертью
 		if (!this.level().isClientSide && this.isMusic()) {
 			MusicStopOnDeathHandler.stopMusicForNarrator(this);
 		}
@@ -299,60 +260,48 @@ public class NarratorEntity extends TamableAnimal implements GeoEntity {
 			}
 		}
 		if(isTame() && getOwner() != sourceentity) return InteractionResult.CONSUME;
-		double x = this.getX();
-		double y = this.getY();
-		double z = this.getZ();
-		Entity entity = this;
-		Level world = this.level();
-		System.out.println("Server: "+world.isClientSide);
+
 		if (this.level().isClientSide) {
-			return retval; // Только визуальный отклик
+			return retval;
 		}
-		NarratorToAdoptProcedure.execute(world, x, y, z, entity, sourceentity, itemstack);
+		NarratorToAdoptProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ(), this, sourceentity, itemstack);
 		return InteractionResult.CONSUME;
 	}
 
 	private void rejectDisk(){
 		MusicStopOnDistanceHandler.StopMusic(this);
 		this.setMusic(false);
-		this.setAnimation("empty");
+		this.setAnimation("empty"); // legacy вызов — станет no-op/сброс триггера
 		double xr = (RandomSource.create().nextDouble() * 0.2) - 0.1;
 		double zr = (RandomSource.create().nextDouble() * 0.2) - 0.1;
-		ItemEntity item = new ItemEntity(
-				(Level) this.level(),
-				this.getX(),
-				this.getY()+0.5,
-				this.getZ(),
-				this.getItemInHand(InteractionHand.MAIN_HAND).copy());
+		ItemEntity item = new ItemEntity(this.level(), this.getX(), this.getY()+0.5, this.getZ(), this.getItemInHand(InteractionHand.MAIN_HAND).copy());
 		item.setDeltaMovement(new Vec3(xr, 0.3, zr));
 		this.level().addFreshEntity(item);
 		this.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 	}
 
+	// -------------------- Ticking --------------------
 	@Override
 	public void baseTick() {
 		super.baseTick();
 
 		if(getPowerTimer() > 0) {
 			setPowerTimer(getPowerTimer()-1);
-		}
-		else {
+		} else {
 			setPowered(false);
 			rejectDisk();
-			this.setAnimation("BatteryChange");
+			if(this.getVariant()==1)
+				this.setTexture("narator_static");
+			else if(this.getVariant()==2)
+				this.setTexture("dictor_static");
+			this.setAnimation("BatteryChange"); // legacy: одноразовый клип → триггер
 		}
 
 		BlockPos blockPos = getMusicPos();
-		int mobX = (int) this.getX();
-		int mobY = (int) this.getY();
-		int mobZ = (int) this.getZ();
-		Vec3i mobPos = new Vec3i(mobX, mobY, mobZ);
+		Vec3i mobPos = new Vec3i((int)this.getX(), (int)this.getY(), (int)this.getZ());
+		double distance = Math.sqrt(blockPos.distSqr(mobPos));
 
-		double distanceSquared = blockPos.distSqr(mobPos); // последний параметр — учитывать высоту
-		double distance = Math.sqrt(distanceSquared);
-
-		if(isMusic() && distance > 5)
-		{
+		if(isMusic() && distance > 5) {
 			rejectDisk();
 		}
 
@@ -361,10 +310,25 @@ public class NarratorEntity extends TamableAnimal implements GeoEntity {
 	}
 
 	@Override
-	public EntityDimensions getDefaultDimensions(Pose pose) {
-		return super.getDefaultDimensions(pose).scale(1f);
+	public void aiStep() {
+		super.aiStep();
+		if (this.isMusic()) {
+			this.getNavigation().stop();
+			this.setDeltaMovement(new Vec3(0, this.getDeltaMovement().y, 0));
+		}
+		this.updateSwingTime();
 	}
 
+	@Override
+	protected void tickDeath() {
+		++this.deathTime;
+		if (this.deathTime == 20) {
+			this.remove(NarratorEntity.RemovalReason.KILLED);
+			this.dropExperience(this);
+		}
+	}
+
+	// -------------------- Spawning / Attributes --------------------
 	@Override
 	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata) {
 		SpawnGroupData retval = super.finalizeSpawn(world, difficulty, reason, livingdata);
@@ -372,42 +336,28 @@ public class NarratorEntity extends TamableAnimal implements GeoEntity {
 		Holder<Biome> biomeHolder = world.getBiome(pos);
 		ResourceKey<Biome> biomeKey = biomeHolder.getKey();
 		if(biomeKey.location().equals(ResourceLocation.fromNamespaceAndPath("minecraft", "snowy_slopes"))
-		|| biomeKey.location().equals(ResourceLocation.fromNamespaceAndPath("minecraft", "snowy_beach"))
-		|| biomeKey.location().equals(ResourceLocation.fromNamespaceAndPath("minecraft", "snowy_plains"))
-		|| biomeKey.location().equals(ResourceLocation.fromNamespaceAndPath("minecraft", "snowy_taiga"))
-		|| biomeKey.location().equals(ResourceLocation.fromNamespaceAndPath("minecraft", "ice_spikes")))
-		{
+				|| biomeKey.location().equals(ResourceLocation.fromNamespaceAndPath("minecraft", "snowy_beach"))
+				|| biomeKey.location().equals(ResourceLocation.fromNamespaceAndPath("minecraft", "snowy_plains"))
+				|| biomeKey.location().equals(ResourceLocation.fromNamespaceAndPath("minecraft", "snowy_taiga"))
+				|| biomeKey.location().equals(ResourceLocation.fromNamespaceAndPath("minecraft", "ice_spikes"))) {
 			setVariant(2);
+			this.setTexture("dictor_animated");
+		} else{
+			setVariant(1);
+			this.setTexture("narator_animated");
 		}
-		else setVariant(1);
 		return retval;
 	}
 
 	@Override
-	public AgeableMob getBreedOffspring(ServerLevel serverWorld, AgeableMob ageable) {
-		NarratorEntity retval = PraporModEntities.NARRATOR.get().create(serverWorld);
-		retval.finalizeSpawn(serverWorld, serverWorld.getCurrentDifficultyAt(retval.blockPosition()), MobSpawnType.BREEDING, null);
-		return retval;
-	}
-
-	@Override
-	public boolean isFood(ItemStack stack) {
-		return false;
-	}
-
-	@Override
-	public void aiStep() {
-		super.aiStep();
-		if (this.isMusic()) {
-			this.getNavigation().stop(); // Остановка навигации
-			this.setDeltaMovement(new Vec3(0, this.getDeltaMovement().y, 0)); // Обнуление скорости
-		}
-		this.updateSwingTime();
+	public @org.jetbrains.annotations.Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
+		return null;
 	}
 
 	public static void init(RegisterSpawnPlacementsEvent event) {
 		event.register(PraporModEntities.NARRATOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-				(entityType, world, reason, pos, random) -> (world.getBlockState(pos.below()).is(BlockTags.ANIMALS_SPAWNABLE_ON) && world.getRawBrightness(pos, 0) > 8), RegisterSpawnPlacementsEvent.Operation.REPLACE);
+				(entityType, world, reason, pos, random) -> (world.getBlockState(pos.below()).is(BlockTags.ANIMALS_SPAWNABLE_ON) && world.getRawBrightness(pos, 0) > 8),
+				RegisterSpawnPlacementsEvent.Operation.REPLACE);
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
@@ -421,64 +371,71 @@ public class NarratorEntity extends TamableAnimal implements GeoEntity {
 		return builder;
 	}
 
-	private PlayState movementPredicate(AnimationState event) {
-		if (this.animationprocedure.equals("empty")) {
-			if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F))
+	// -------------------- GeckoLib: predicates --------------------
+	private <E extends GeoAnimatable> PlayState movementPredicate(AnimationState<E> state) {
+		// Если идёт «состояние» (например, музыка), не мешаем ему
+		if (this.isMusic() || this.getPowerTimer() == 0) return PlayState.STOP;
 
-					&& !this.isSprinting()) {
-				return event.setAndContinue(RawAnimation.begin().thenLoop("walk"));
-			}
-			if (this.isShiftKeyDown()) {
-				return event.setAndContinue(RawAnimation.begin().thenLoop("walk"));
-			}
-			if (this.isSprinting()) {
-				return event.setAndContinue(RawAnimation.begin().thenLoop("walk"));
-			}
-			return event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
+		if (state.isMoving()) {
+			return state.setAndContinue(RawAnimation.begin().thenLoop("walk"));
+		}
+		return state.setAndContinue(RawAnimation.begin().thenLoop("idle"));
+	}
+
+	// Состояния-длительные циклы (пример: когда проигрывается музыка)
+	private <E extends GeoAnimatable> PlayState statePredicate(AnimationState<E> state) {
+		if (this.isMusic()) {
+			return state.setAndContinue(RawAnimation.begin().thenLoop("music"));
 		}
 		return PlayState.STOP;
 	}
 
-	String prevAnim = "empty";
-
-	private PlayState procedurePredicate(AnimationState event) {
-		if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED || (!this.animationprocedure.equals(prevAnim) && !this.animationprocedure.equals("empty"))) {
-			if (!this.animationprocedure.equals(prevAnim))
-				event.getController().forceAnimationReset();
-			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-			if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-				this.animationprocedure = "empty";
-				event.getController().forceAnimationReset();
-			}
-		} else if (animationprocedure.equals("empty")) {
-			prevAnim = "empty";
-			return PlayState.STOP;
-		}
-		prevAnim = this.animationprocedure;
-		return PlayState.CONTINUE;
-	}
-
-	@Override
-	protected void tickDeath() {
-		++this.deathTime;
-		if (this.deathTime == 20) {
-			this.remove(NarratorEntity.RemovalReason.KILLED);
-			this.dropExperience(this);
-		}
-	}
-
+	// -------------------- Legacy compatibility layer --------------------
+	/**
+	 * Старые вызовы продолжают работать:
+	 * setAnimation("BatteryChange") → одноразовый триггер на клиенте
+	 * setAnimation("empty")         → сброс (no-op для триггеров, но совместимость сохранена)
+	 */
 	public String getSyncedAnimation() {
 		return this.entityData.get(ANIMATION);
 	}
 
 	public void setAnimation(String animation) {
-		this.entityData.set(ANIMATION, animation);
+		// Не вызываем triggerAnim здесь напрямую, чтобы не словить двойной триггер.
+		// Просто кладём строку в синхронизируемые данные; клиент сам превратит это в trigger (см. onSyncedDataUpdated).
+		this.entityData.set(ANIMATION, animation == null ? "empty" : animation);
 	}
 
 	@Override
+	public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+		super.onSyncedDataUpdated(key);
+		if (key == ANIMATION && this.level().isClientSide) {
+			String anim = this.entityData.get(ANIMATION);
+			if (anim == null || anim.isBlank() || "empty".equals(anim) || "undefined".equals(anim)) {
+				return;
+			}
+			// Пробуем как одноразовый триггер (thenPlay). Если такого клипа нет — GeckoLib просто ничего не сыграет.
+			this.triggerAnim("triggers", anim);
+			// Авто-сброс, чтобы повторные апдейты не перезапускали снова
+			this.entityData.set(ANIMATION, "empty");
+		}
+	}
+
+	// -------------------- GeckoLib: controllers --------------------
+	@Override
 	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-		data.add(new AnimationController<>(this, "movement", 4, this::movementPredicate));
-		data.add(new AnimationController<>(this, "procedure", 4, this::procedurePredicate));
+		// порядок важен: move (низкий приоритет) -> state (средний) -> triggers (самый верхний, одноразовые клипы)
+		data.add(new AnimationController<>(this, "movement", 5, this::movementPredicate));
+		data.add(new AnimationController<>(this, "state",    0, this::statePredicate));
+
+		data.add(new AnimationController<>(this, "triggers", 0, s -> PlayState.STOP)
+				// Добавь здесь список всех одноразовых клипов, которые у тебя есть в .animation.json
+				// Старые setAnimation("Имя") попадут сюда автоматически через onSyncedDataUpdated.
+				.triggerableAnim("BatteryChange", RawAnimation.begin().thenPlay("BatteryChange"))
+				.triggerableAnim("dance",         RawAnimation.begin().thenPlay("dance"))
+				.triggerableAnim("hit",           RawAnimation.begin().thenPlay("hit"))
+				.triggerableAnim("BatteryEnd",           RawAnimation.begin().thenPlay("BatteryEnd"))
+		);
 	}
 
 	@Override

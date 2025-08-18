@@ -18,8 +18,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 public class NarratorRenderer extends GeoEntityRenderer<NarratorEntity> {
-	private static final ResourceLocation NARRATOR_DEFAULT_LOCATION = ResourceLocation.fromNamespaceAndPath("prapor","textures/entities/narator_animated.png");
-	private static final ResourceLocation NARRATOR_DICTOR_LOCATION = ResourceLocation.fromNamespaceAndPath("prapor","textures/entities/dictor_animated.png");
 	private static final ResourceLocation NARRATOR_OLD_LOCATION = ResourceLocation.fromNamespaceAndPath("prapor","textures/entities/narator_reanimated.png");
 	public NarratorRenderer(EntityRendererProvider.Context renderManager) {
 		super(renderManager, new NarratorModel());
@@ -37,16 +35,8 @@ public class NarratorRenderer extends GeoEntityRenderer<NarratorEntity> {
 		if ("Boombox".equals(s)) {
 			return NARRATOR_OLD_LOCATION;
 		}
-		else{
-			if(entity.getVariant() == 1){
-				return NARRATOR_DEFAULT_LOCATION;
-			}
-			else if(entity.getVariant() == 2){
-				return NARRATOR_DICTOR_LOCATION;
-			}
-			else return NARRATOR_DEFAULT_LOCATION;
-		}
-	}
+        return ResourceLocation.fromNamespaceAndPath("prapor","textures/entities/"+entity.getTexture()+".png");
+    }
 
 	@Override
 	public void preRender(PoseStack poseStack, NarratorEntity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {

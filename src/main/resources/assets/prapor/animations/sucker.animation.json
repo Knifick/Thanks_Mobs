@@ -414,27 +414,81 @@
 				"LSheka": {
 					"scale": {
 						"0.0": {
-							"vector": [1.05, 1.05, 1.05]
+							"vector": [1.2, 1.2, 1.2]
 						},
 						"0.125": {
 							"vector": [1, 1, 1]
 						},
 						"0.25": {
-							"vector": [1.05, 1.05, 1.05]
+							"vector": [1.2, 1.2, 1.2]
 						}
 					}
 				},
 				"RSheka": {
 					"scale": {
 						"0.0": {
-							"vector": [1.05, 1.05, 1.05]
+							"vector": [1.2, 1.2, 1.2]
 						},
 						"0.125": {
 							"vector": [1, 1, 1]
 						},
 						"0.25": {
-							"vector": [1.05, 1.05, 1.05]
+							"vector": [1.2, 1.2, 1.2]
 						}
+					}
+				},
+				"All": {
+					"position": {
+						"vector": [0, 1, 0]
+					}
+				},
+				"RLeg": {
+					"rotation": {
+						"0.0": {
+							"vector": [7.5, 0, 0]
+						},
+						"0.125": {
+							"vector": [2.5, 0, 0],
+							"easing": "easeInOutQuad"
+						},
+						"0.25": {
+							"vector": [7.5, 0, 0],
+							"easing": "easeInOutQuad"
+						}
+					}
+				},
+				"LLeg": {
+					"rotation": {
+						"0.0": {
+							"vector": [7.5, 0, 0]
+						},
+						"0.125": {
+							"vector": [2.5, 0, 0],
+							"easing": "easeInOutQuad"
+						},
+						"0.25": {
+							"vector": [7.5, 0, 0],
+							"easing": "easeInOutQuad"
+						}
+					}
+				},
+				"Toss": {
+					"rotation": {
+						"0.0": {
+							"vector": [-5.09602, -5, -1.32066],
+							"easing": "easeInOutQuad"
+						},
+						"0.125": {
+							"vector": [-5.09602, 5, -1.32066],
+							"easing": "easeInOutQuad"
+						},
+						"0.25": {
+							"vector": [-5.09602, -5, -1.32066],
+							"easing": "easeInOutQuad"
+						}
+					},
+					"position": {
+						"vector": [0, 0, -1]
 					}
 				}
 			}
@@ -506,6 +560,21 @@
 						},
 						"2.0": {
 							"vector": [19.56838, -26.12797, -8.89674],
+							"easing": "easeInOutCirc"
+						}
+					}
+				},
+				"Toss": {
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"1.25": {
+							"vector": [0, -1, 0],
+							"easing": "easeInOutCubic"
+						},
+						"2.0": {
+							"vector": [0, 0, 0],
 							"easing": "easeInOutCirc"
 						}
 					}

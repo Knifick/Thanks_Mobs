@@ -3,6 +3,7 @@ package net.knifick.praporupdate.event.sucker;
 import net.knifick.praporupdate.entity.SuckerEntity;
 import net.knifick.praporupdate.init.PraporModEntities;
 import net.knifick.praporupdate.init.PraporModSounds;
+import net.knifick.praporupdate.network.PraporModVariables;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -45,10 +46,14 @@ public class TossHandler {
     @SubscribeEvent
     public static void onItemTick(EntityTickEvent.Post event) {
         if (!(event.getEntity() instanceof ItemEntity entity)) return;
+        CompoundTag data = entity.getPersistentData();
+        if (data.contains("unsuck_timer")) {
+            data.putDouble("unsuck_timer", data.getDouble("unsuck_timer") + 1);
+            if (data.getDouble("unsuck_timer") >= 60)
+                data.remove("unsuck_timer");
+        }
 
         if (entity.getY() < 0) {
-            CompoundTag data = entity.getPersistentData();
-
             if (!data.hasUUID("OwnerUUID")) {
                 return; // Тега нет — выходим, чтобы не крашиться
             }
@@ -61,17 +66,22 @@ public class TossHandler {
             );
 
             if (ownerId != null) {
-                entity.level().getServer().sendSystemMessage(Component.literal(ownerId.toString()));
+//                entity.level().getServer().sendSystemMessage(Component.literal(ownerId.toString()));
                 ServerPlayer owner = (ServerPlayer) entity.level().getPlayerByUUID(ownerId);
-                if (owner != null) {
+                if(owner==null) return;
+                PraporModVariables.PlayerVariables vars = owner.getData(PraporModVariables.PLAYER_VARIABLES);
+                if (!vars.hasSucker) {
                     SuckerEntity sucker = PraporModEntities.SUCKER.get().create(entity.level());
                     entity.playSound(PraporModSounds.SUCKER_APPROACH.get(), 49, 1);
                     if (sucker != null) {
                         sucker.moveTo(entity.getX(), entity.getY(), entity.getZ(),
                                 owner.getYRot(), owner.getXRot());
+                        sucker.inventory.setItem(0, entity.getItem());
                         owner.level().addFreshEntity(sucker);
                         sucker.playerPos = ownerPos;
                         sucker.setPlayerUUID(ownerId);
+                        vars.hasSucker = true;
+                        vars.syncPlayerVariables(owner);
                     }
                     entity.discard();
                 }
@@ -125,7 +135,6 @@ public class TossHandler {
         } else {
             // Достигли игрока — приручаем
             CompoundTag data = entity.getPersistentData();
-            //ЗАВТРА ДОДЕЛАЮ СПАВН!!1!!!!!!11111!!!11!11
             data.putUUID("SuckerUUID", owner.getUUID());
             entity.tame(owner);
             entity.setPlayerUUID(null);

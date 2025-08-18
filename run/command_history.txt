@@ -1,50 +1,50 @@
-/locate structure minecraft:village_savanna
-/tp @s 0 ~ 896
-/effect give @e[type=prapor:bastard] minecraft:glowing 10 1 true
-/kill @e[type=#minecraft:illager]
-/locate structure minecraft:village_snowy
-/tp @s -1936 ~ -2368
-/effect give @e[type=prapor:bastard] minecraft:glowing 10 1 true
-/kill @e[type=#minecraft:illager]
-/effect give @e[type=prapor:bastard] minecraft:glowing 10 1 true
-/kill @e[type=#minecraft:illager]
-/effect give @e[type=prapor:bastard] minecraft:glowing 10 1 true
-/kill @e[type=#minecraft:illager]
-/effect give @e[type=prapor:bastard] minecraft:glowing 10 1 true
-/kill @e[type=#minecraft:illager]
-/effect give @e[type=prapor:bastard] minecraft:glowing 10 1 true
-/kill @e[type=#minecraft:illager]
-/effect give @e[type=prapor:bastard] minecraft:glowing 10 1 true
-/kill @e[type=#minecraft:illager]
+/data get entity @e[type=prapor:narrator,limit=1]
+/data merge entity @e[type=prapor:narrator,limit=1] {PowerTimer:1}
+/time set day
+/locate biome minecraft:snowy_taiga
+/tp @s -1283 93 -1154
+/data merge entity @e[type=prapor:narrator,limit=1] {PowerTimer:1}
+/kill @e[type=prapor:narrator]
+/execute as @e[type=prapor:narrator] run data merge entity @s {PowerTimer:1}
+/setblock ~ ~ ~ minecraft:end_portal
+/advancement grant @s only prapor:mouth_job
+/advancement revoke @s only prapor:mouth_job
+/kill
+/locate biome minecraft:flower_forest
+/tp @s -292 68 -519
+/time set midnight
+/summon prapor:pooker
+/time set day
+/setblock ~ ~ ~ minecraft:end_portal
+/time set day
+/data get entity 3f3d51c3-5a07-4b45-8696-b52d9ffcbe26
+/data get entity 0ce75182-ef18-43f7-a3d3-9e4486f526ec
+/setblock ~ ~ ~ minecraft:end_portal
+/particle minecraft:block
+/particle minecraft:effect
+/particle minecraft:end_rod
+/particle minecraft:dust
+/particle minecraft:dust_pillar
+/particle minecraft:dust_plume
+/particle minecraft:dust_color_transition
+/summon minecraft:item ~ ~ ~ \
+/summon minecraft:item ~ ~ ~
+/give Dev dirt 999999
+/give Dev dirt 6400
 /kill
 /time set day
-/give @s prapor:music_record_thanks_street
-/time set day
-/kill @e[type=prapor:soul]
-/summon prapor:sucker
-/give @s prapor:sucker_spawn_egg
-/setblock ~ ~ ~ minecraft:end_portal
+/setblock 37 68 19 minecraft:end_portal
 /kill
 /time set day
-/locate structure minecraft:village_plains
-/tp @s 240 ~ 64
-/setblock ~ ~ ~ minecraft:end_portal
+/spawnpoint
+/setblock 3 68 -123 minecraft:nether_portal
 /kill
-/tp @s 240 ~ 64
-/time set day
-/locate structure minecraft:village_snowy
-/tp @s -512 ~ -2320
-/setblock ~ ~ ~ minecraft:end_portal
-/data merge entity 0d358f6f-fcde-485b-b50f-69afde0426c2 {"Texture":"sucker_suck"}
-/setblock ~ ~ ~ minecraft:end_portal
-/data get entity @e[type=minecraft:item, limit=1]
-/data get entity @e[type=minecraft:item, distance=..5, limit=1]
-/setblock ~ ~ ~ minecraft:end_portal
-/time set day
-/setblock ~ ~ ~ minecraft:end_portal
-/give @a prapor:hat_helmet[tooltip_display={hide_tooltip:true}]
-/give @a prapor:hat_helmet[minecraft:hide_tooltip={hide_tooltip:true}]
-/give @a prapor:hat_helmet[minecraft:hide_additional_tooltip={hide_tooltip:true}]
-/give @a prapor:hat_helmet[minecraft:hide_additional_tooltip={hide_additional_tooltip:true}]
+/setblock 3 68 -123 minecraft:nether_portal
+/setblock ~ ~ ~ minecraft:nether_portal
 /kill
-/tp @s -512 ~ -2320
+/fill -61 128 -944
+/fill -61 128 -944 -37 128 -921 minecraft:netherrack
+/fill -61 128 -944
+/fill -61 128 -944 -9 128 -887 minecraft:netherrack
+/spawnpoint
+/kill @e

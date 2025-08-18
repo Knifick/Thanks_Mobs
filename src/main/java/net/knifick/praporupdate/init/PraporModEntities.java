@@ -46,6 +46,8 @@ public class PraporModEntities {
 	public static final DeferredHolder<EntityType<?>, EntityType<SuckerEntity>> SUCKER = register("sucker",
 			EntityType.Builder.<SuckerEntity>of(SuckerEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 					.sized(1.3f, 1.3f));
+	public static final DeferredHolder<EntityType<?>, EntityType<BobEntity>> BOB = register("bob",
+			EntityType.Builder.<BobEntity>of(BobEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).sized(5f, 23f));
 
 	// Start of user code block custom entities
 	// End of user code block custom entities
@@ -62,6 +64,7 @@ public class PraporModEntities {
 		BastardEntity.init(event);
 		BrolemEntity.init(event);
 		DarkironkinEntity.init(event);
+		BobEntity.init(event);
 	}
 
 	@SubscribeEvent
@@ -74,5 +77,6 @@ public class PraporModEntities {
 		event.put(BROLEM.get(), BrolemEntity.createAttributes().build());
 		event.put(DARKIRONKIN.get(), DarkironkinEntity.createAttributes().build());
 		event.put(SUCKER.get(), SuckerEntity.createAttributes().build());
+		event.put(BOB.get(), BobEntity.createAttributes().build());
 	}
 }
