@@ -1,6 +1,7 @@
 
 package net.knifick.praporupdate.client.renderer;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.knifick.praporupdate.entity.SuckerEntity;
@@ -12,6 +13,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
+import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 import software.bernie.geckolib.util.Color;
 
@@ -40,8 +42,21 @@ public class SuckerRenderer extends GeoEntityRenderer<SuckerEntity> {
 
 	@Override
 	protected float getDeathMaxRotation(SuckerEntity entityLivingBaseIn) {
-		return 0.0F;
+		return 90.0F;
 	}
+
+	@Override
+	public void renderRecursively(PoseStack poseStack, SuckerEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
+		if ("Eyes".equalsIgnoreCase(bone.getName()) || "Core".equalsIgnoreCase(bone.getName())) {
+			super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource,
+					buffer, isReRender, partialTick, packedLight, packedOverlay, 0xFFFFFFFF);
+		} else {
+			// Для остального — цвет сущности
+			super.renderRecursively(poseStack, animatable, bone, renderType, bufferSource,
+					buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
+		}
+	}
+
 
 	@Override
 	public Color getRenderColor(SuckerEntity animatable, float partialTick, int packedLight) {

@@ -1,63 +1,61 @@
 
 package net.knifick.praporupdate.entity;
 
-import net.knifick.praporupdate.goal.AlwaysLookAtPlayerGoal;
 import net.knifick.praporupdate.init.PraporModEntities;
-import net.knifick.praporupdate.init.PraporModSounds;
-import net.knifick.praporupdate.procedures.PookerPerTickProcedure;
 import net.knifick.praporupdate.procedures.SoulSpawnConditionProcedure;
-import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.util.DefaultRandomPos;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class BobEntity extends Monster implements GeoEntity {
-	public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(BobEntity.class, EntityDataSerializers.BOOLEAN);
-	public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(BobEntity.class, EntityDataSerializers.STRING);
-	public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(BobEntity.class, EntityDataSerializers.STRING);
+public class NymphEntity extends AgeableMob implements GeoEntity {
+	public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(NymphEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(NymphEntity.class, EntityDataSerializers.STRING);
+	public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(NymphEntity.class, EntityDataSerializers.STRING);
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 	private boolean swinging;
 	private boolean lastloop;
 	private long lastSwing;
 	public String animationprocedure = "empty";
 
-	public BobEntity(EntityType<BobEntity> type, Level world) {
+	public NymphEntity(EntityType<NymphEntity> type, Level world) {
 		super(type, world);
-		xpReward = 1;
+		xpReward = 0;
 		setNoAi(false);
+		this.moveControl = new FlyingMoveControl(this, 10, true);
 	}
 
 	@Override
@@ -65,7 +63,7 @@ public class BobEntity extends Monster implements GeoEntity {
 		super.defineSynchedData(builder);
 		builder.define(SHOOT, false);
 		builder.define(ANIMATION, "undefined");
-		builder.define(TEXTURE, "bob");
+		builder.define(TEXTURE, "nymph");
 	}
 
 	public void setTexture(String texture) {
@@ -77,14 +75,38 @@ public class BobEntity extends Monster implements GeoEntity {
 	}
 
 	@Override
+	protected PathNavigation createNavigation(Level world) {
+		return new FlyingPathNavigation(this, world);
+	}
+
+	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		this.goalSelector.addGoal(0, new RandomStrollGoal(this, 2){
+		this.goalSelector.addGoal(1, new RandomStrollGoal(this, 0.8, 20) {
 			@Override
 			protected Vec3 getPosition() {
-				return DefaultRandomPos.getPos(this.mob, 90, 5);
+				Level level = NymphEntity.this.level();
+				BlockPos pos = NymphEntity.this.blockPosition();
+				LevelChunk chunk = (LevelChunk) level.getChunk(pos);
+
+				int height = chunk.getHeight(
+						Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+						pos.getX(),
+						pos.getZ()
+				);
+				RandomSource random = NymphEntity.this.getRandom();
+				double dir_x = NymphEntity.this.getX() + ((random.nextFloat() * 2 - 1) * 50);
+				double dir_y = height + 30 + ((random.nextFloat() * 2 - 1) * 16);
+				double dir_z = NymphEntity.this.getZ() + ((random.nextFloat() * 2 - 1) * 50);
+				return new Vec3(dir_x, dir_y, dir_z);
 			}
 		});
+		this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
+	}
+
+	@Override
+	public SoundEvent getAmbientSound() {
+		return SoundEvents.ALLAY_AMBIENT_WITH_ITEM;
 	}
 
 	@Override
@@ -101,11 +123,20 @@ public class BobEntity extends Monster implements GeoEntity {
 	}
 
 	@Override
-	public void baseTick() {
-		super.baseTick();
-		if(tickCount%4==0)
-			this.playSound(PraporModSounds.BOB.get(),0.4f,1f);
-		this.refreshDimensions();
+	public void tick() {
+		super.tick();
+		double dx = (random.nextDouble() - 0.5) * 1.5;
+		double dy = (random.nextDouble() - 0.5) * 1.5;
+		double dz = (random.nextDouble() - 0.5) * 1.5;
+		this.level().addParticle(ParticleTypes.END_ROD,
+				getX()+dx, getY()+dy, getZ()+dz,
+				0,0,0);
+		dx = (random.nextDouble() - 0.5) * 1.5;
+		dy = (random.nextDouble() - 0.5) * 1.5;
+		dz = (random.nextDouble() - 0.5) * 1.5;
+		this.level().addParticle(ParticleTypes.PORTAL,
+				getX()+dx, getY()+dy, getZ()+dz,
+				0,0,0);
 	}
 
 	@Override
@@ -113,31 +144,61 @@ public class BobEntity extends Monster implements GeoEntity {
 		return super.getDefaultDimensions(pose).scale(1f);
 	}
 
+	@Override
+	protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
+	}
+
+	@Override
+	public void setNoGravity(boolean ignored) {
+		super.setNoGravity(true);
+	}
+
+	public void aiStep() {
+		super.aiStep();
+		this.setNoGravity(true);
+	}
+
+	@Override
+	public @Nullable SpawnGroupData finalizeSpawn(
+			ServerLevelAccessor world,
+			DifficultyInstance difficulty,
+			MobSpawnType spawnType,
+			@Nullable SpawnGroupData spawnData
+	) {
+		if (spawnType == MobSpawnType.NATURAL) {
+			// смещаем только при естественном спавне
+			this.setPos(this.getX(), this.getY() + 20, this.getZ());
+		}
+
+		return super.finalizeSpawn(world, difficulty, spawnType, spawnData);
+	}
+
+	@Override
+	public @Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
+		return null;
+	}
+
+
 	public static void init(RegisterSpawnPlacementsEvent event) {
 		event.register(
-				PraporModEntities.BOB.get(),
+				PraporModEntities.NYMPH.get(),
 				SpawnPlacementTypes.NO_RESTRICTIONS,
-				Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+				Heightmap.Types.WORLD_SURFACE,
 				(entityType, world, reason, pos, random) -> {
-					// 1) Проверяем, что это Незер
-					if (!world.getLevel().dimension().equals(Level.NETHER)) {
+					// проверяем что мы именно в Энде
+					if (!world.getLevel().dimension().equals(Level.END)) {
 						return false;
 					}
 
-					// 2) Проверяем высоту (крыша начинается на Y=128)
-					if (pos.getY() < 128) {
+					if (pos.getY() < 40) {
 						return false;
 					}
 
-					// 3) Проверяем блок под ногами
-					if (!world.getBlockState(pos.below()).isSolid()) {
-						return false;
-					}
-
-					// 4) Проверяем, что в радиусе 30 блоков нет другого BOB
-					double radius = 120.0;
-					if (!world.getEntitiesOfClass(BobEntity.class,
-							new AABB(pos).inflate(radius)).isEmpty()) {
+					// проверяем радиус от центра (0,0)
+					// если больше 1000 блоков — значит это удалённые острова
+					int distSq = pos.getX() * pos.getX() + pos.getZ() * pos.getZ();
+					if (distSq < 1000 * 1000) {
+						System.out.println("TOO CLOSE");
 						return false;
 					}
 
@@ -150,23 +211,25 @@ public class BobEntity extends Monster implements GeoEntity {
 
 	public static AttributeSupplier.Builder createAttributes() {
 		AttributeSupplier.Builder builder = Mob.createMobAttributes();
-		builder = builder.add(Attributes.MOVEMENT_SPEED, 0.1);
-		builder = builder.add(Attributes.MAX_HEALTH, 1040);
+		builder = builder.add(Attributes.MOVEMENT_SPEED, 0.9);
+		builder = builder.add(Attributes.MAX_HEALTH, 20);
 		builder = builder.add(Attributes.ARMOR, 0);
 		builder = builder.add(Attributes.ATTACK_DAMAGE, 0);
-		builder = builder.add(Attributes.STEP_HEIGHT, 1.6);
+		builder = builder.add(Attributes.FOLLOW_RANGE, 16);
+		builder = builder.add(Attributes.STEP_HEIGHT, 0.6);
+		builder = builder.add(Attributes.FLYING_SPEED, 0.8);
 		return builder;
 	}
 
 	private PlayState movementPredicate(AnimationState event) {
 		if (this.animationprocedure.equals("empty")) {
-			if ((event.isMoving() || !(event.getLimbSwingAmount() >= -0.01F && event.getLimbSwingAmount() <= 0.01F)) && this.onGround()) {
-				return event.setAndContinue(RawAnimation.begin().thenLoop("walk"));
+			if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.1F && event.getLimbSwingAmount() < 0.1F))) {
+				return event.setAndContinue(RawAnimation.begin().thenLoop("Fly"));
 			}
 			if (!this.onGround()) {
-				return event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
+				return event.setAndContinue(RawAnimation.begin().thenLoop("Idle"));
 			}
-			return event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
+			return event.setAndContinue(RawAnimation.begin().thenLoop("Idle"));
 		}
 		return PlayState.STOP;
 	}

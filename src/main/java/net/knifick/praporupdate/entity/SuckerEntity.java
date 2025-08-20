@@ -69,6 +69,7 @@ public class SuckerEntity extends TamableAnimal implements GeoEntity {
 	public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.STRING);
 	public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.STRING);
 	public static final EntityDataAccessor<Boolean> DATA_isTamed = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.BOOLEAN);
+	public static final EntityDataAccessor<Boolean> IS_SUCK = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<Optional<UUID>> PLAYER_UUID = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.OPTIONAL_UUID);
 	public static final EntityDataAccessor<Integer> COLOR = SynchedEntityData.defineId(SuckerEntity.class, EntityDataSerializers.INT);
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -93,6 +94,7 @@ public class SuckerEntity extends TamableAnimal implements GeoEntity {
 		builder.define(PLAYER_UUID, Optional.empty());
 		builder.define(DATA_isTamed, false);
 		builder.define(COLOR, -1);
+		builder.define(IS_SUCK, true);
 	}
 
 	public void setTexture(String texture) {
@@ -118,6 +120,14 @@ public class SuckerEntity extends TamableAnimal implements GeoEntity {
 
 	public void setColor(int color) {
 		this.entityData.set(COLOR, color);
+	}
+
+	public boolean isSuck() {
+		return this.entityData.get(IS_SUCK);
+	}
+
+	public void setSuck(boolean is) {
+		this.entityData.set(IS_SUCK, is);
 	}
 
 	@Override
@@ -195,6 +205,7 @@ public class SuckerEntity extends TamableAnimal implements GeoEntity {
 		if(this.getPlayerUUID() != null)
 			compound.putUUID("player_uuid", this.getPlayerUUID());
 		compound.putBoolean("DataisTamed", this.entityData.get(DATA_isTamed));
+		compound.putBoolean("is_suck", this.entityData.get(IS_SUCK));
 
 		// сохраняем инвентарь
 		compound.put("Inventory", inventory.createTag(this.level().registryAccess()));
@@ -209,6 +220,8 @@ public class SuckerEntity extends TamableAnimal implements GeoEntity {
 			this.entityData.set(DATA_isTamed, compound.getBoolean("DataisTamed"));
 		if (compound.contains("player_uuid"))
 			this.setPlayerUUID(compound.getUUID("player_uuid"));
+		if (compound.contains("is_suck"))
+			this.entityData.set(IS_SUCK, compound.getBoolean("is_suck"));
 
 		// загружаем инвентарь
 		if (compound.contains("Inventory")) {
@@ -306,6 +319,11 @@ public class SuckerEntity extends TamableAnimal implements GeoEntity {
 				if (retval == InteractionResult.SUCCESS || retval == InteractionResult.CONSUME)
 					this.setPersistenceRequired();
 			}
+		}
+
+		if(sourceentity.isShiftKeyDown()){
+			this.setSuck(!this.isSuck());
+			return retval;
 		}
 
 		byte result = isCleanItemStack(itemstack);
@@ -414,6 +432,11 @@ public class SuckerEntity extends TamableAnimal implements GeoEntity {
 			level().addParticle(new DustParticleOptions(new Vector3f(0f, 0f, 0f), 1.0F),
 					getX()+dx, getY()+dy+1, getZ()+dz,
 					dx, dy, dz);
+		}
+		if("jeb_".equals(getDisplayName().getString())){
+			float hue = (tickCount % 360) / 360.0F;
+			int rgb = java.awt.Color.HSBtoRGB(hue, 1.0F, 1.0F);
+			setColor(rgb);
 		}
 		this.refreshDimensions();
 	}

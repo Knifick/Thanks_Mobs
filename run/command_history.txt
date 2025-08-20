@@ -1,29 +1,3 @@
-/time set day
-/locate biome minecraft:snowy_taiga
-/tp @s -1283 93 -1154
-/data merge entity @e[type=prapor:narrator,limit=1] {PowerTimer:1}
-/kill @e[type=prapor:narrator]
-/execute as @e[type=prapor:narrator] run data merge entity @s {PowerTimer:1}
-/setblock ~ ~ ~ minecraft:end_portal
-/advancement grant @s only prapor:mouth_job
-/advancement revoke @s only prapor:mouth_job
-/kill
-/locate biome minecraft:flower_forest
-/tp @s -292 68 -519
-/time set midnight
-/summon prapor:pooker
-/time set day
-/setblock ~ ~ ~ minecraft:end_portal
-/time set day
-/data get entity 3f3d51c3-5a07-4b45-8696-b52d9ffcbe26
-/data get entity 0ce75182-ef18-43f7-a3d3-9e4486f526ec
-/setblock ~ ~ ~ minecraft:end_portal
-/particle minecraft:block
-/particle minecraft:effect
-/particle minecraft:end_rod
-/particle minecraft:dust
-/particle minecraft:dust_pillar
-/particle minecraft:dust_plume
 /particle minecraft:dust_color_transition
 /summon minecraft:item ~ ~ ~ \
 /summon minecraft:item ~ ~ ~
@@ -48,3 +22,29 @@
 /kill @e
 /kill
 /setblock 48 66 31 minecraft:nether_portal
+/kill
+/setblock 82 62 180 minecraft:nether_portal
+/setblock ~ ~ ~ minecraft:end_portal
+/time set day
+/kill @e[type=prapor:sucker]
+/time set day
+/advancement revoke @s only prapor:bob
+/time set day
+/kill afe66493-1e0d-4b0b-af64-97091e9068e5
+/kill @e[type=prapor:darkironkin]
+/time set day
+/kill @e[type=prapor:darkironkin]
+/summon prapor:nymph
+/kill 2a332d41-0062-4133-8752-dae052532edd
+/summon prapor:nymphs
+/summon prapor:nymph
+/summon prapor:bob
+/setblock 41 66 144 minecraft:end_portal
+/setblock ~ ~ ~ minecraft:end_portal
+/time set day
+/setblock ~ ~ ~ minecraft:end_portal
+/kill @e[type=prapor:sucker]
+/setblock 67 85 -9 minecraft:end_portal
+/tp 1000 ~ 0
+/spawnpoint
+/gamerule keepInventory true

@@ -32,12 +32,12 @@ public class SuckerSuckGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return updateTarget();
+        return updateTarget() && sucker.isSuck();
     }
 
     @Override
     public boolean canContinueToUse() {
-        return isValidTarget(targetItem);
+        return isValidTarget(targetItem) && sucker.isSuck();
     }
 
     @Override

@@ -110,6 +110,10 @@
   "advancements.mouth_job.title": "Mouth job",
   "advancements.mouth_job.descr": "Give the sucker 1000 items to suck in",
   "item.prapor.bob_spawn_egg": "Bob spawn egg",
+  "entity.prapor.bob": "Bob",
   "advancements.bob.title": "bob",
-  "advancements.bob.descr": "BOB"
+  "advancements.bob.descr": "BOB",
+  "enchantment.prapor.rage_of_souls": "Rage of souls",
+  "entity.prapor.nymph": "Nymph",
+  "item.prapor.nymph_spawn_egg": "Nymph spawn egg"
 }

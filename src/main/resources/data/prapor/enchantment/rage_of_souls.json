@@ -1,0 +1,27 @@
+{
+  "description": {
+    "translate": "enchantment.prapor.rage_of_souls"
+  },
+  "supported_items": [
+    "prapor:dark_mace",
+    "prapor:dark_mace_charged"
+  ],
+  "weight": 10,
+  "max_level": 3,
+  "min_cost": {
+    "base": 1,
+    "per_level_above_first": 10
+  },
+  "max_cost": {
+    "base": 6,
+    "per_level_above_first": 10
+  },
+  "anvil_cost": 2,
+  "slots": [
+    "any"
+  ],
+  "exclusive_set": [
+    "density",
+    "breach"
+  ]
+}

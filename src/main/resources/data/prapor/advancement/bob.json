@@ -16,12 +16,7 @@
   },
   "criteria": {
     "bob": {
-      "trigger": "minecraft:player_killed_entity",
-      "conditions": {
-        "entity": {
-          "type": "prapor:bat"
-        }
-      }
+      "trigger": "minecraft:impossible"
     }
   },
   "parent": "prapor:praporshik"

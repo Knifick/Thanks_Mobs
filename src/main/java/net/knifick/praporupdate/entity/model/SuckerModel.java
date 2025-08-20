@@ -26,10 +26,27 @@ public class SuckerModel extends GeoModel<SuckerEntity> {
 
 	@Override
 	public ResourceLocation getTextureResource(SuckerEntity entity) {
-		if(entity.getColor()==-1)
-			return ResourceLocation.parse("prapor:textures/entities/sucker/" + entity.getTexture() + "_colored.png");
-		return ResourceLocation.parse("prapor:textures/entities/sucker/" + entity.getTexture() + ".png");
+		String base = "prapor:textures/entities/sucker/";
+		String texture = entity.getTexture(); // базовое имя текстуры
+
+		String suffix;
+
+		if(entity.getColor() == -1) {
+			suffix = "_colored.png";
+		} else {
+			suffix = ".png";
+		}
+
+		// если сущность не сосёт, вставляем _unsuck перед _colored
+		if (!entity.isSuck() && suffix.equals("_colored.png")) {
+			suffix = "_unsuck_colored.png";
+		} else if (!entity.isSuck() && suffix.equals(".png")) {
+			suffix = "_unsuck.png";
+		}
+
+		return ResourceLocation.parse(base + texture + suffix);
 	}
+
 
 	@Override
 	public void setCustomAnimations(SuckerEntity animatable, long instanceId, AnimationState<SuckerEntity> animationState) {
