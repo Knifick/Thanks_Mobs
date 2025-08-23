@@ -1,6 +1,8 @@
 package net.knifick.praporupdate.event.pooker;
 
 import net.knifick.praporupdate.entity.PookerEntity;
+import net.knifick.praporupdate.item.GuideBookItem;
+import net.knifick.praporupdate.network.PraporModVariables;
 import net.knifick.praporupdate.procedures.FrameReturnerProcedure;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
@@ -13,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.SpyglassItem;
 import net.minecraft.world.level.GameType;
@@ -77,7 +80,7 @@ public class LookAtPookerHandler {
 				return false;
 			}
 		}.checkGamemode(player))) {
-			System.out.println("Screamer");
+			GuideBookItem.addToBook(player, pooker, 1);
 			if(player.isUsingItem() && player.getUseItem().getItem() instanceof SpyglassItem){
 				if (player instanceof ServerPlayer _plr0 && _plr0.level() instanceof ServerLevel && !_plr0.getAdvancements().getOrStartProgress(_plr0.server.getAdvancements().get(ResourceLocation.parse("prapor:pooker_achieve"))).isDone()) {
 					if (player instanceof ServerPlayer _player) {

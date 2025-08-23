@@ -1,6 +1,7 @@
 package net.knifick.praporupdate.entity;
 
 import net.knifick.praporupdate.init.PraporModItems;
+import net.knifick.praporupdate.item.GuideBookItem;
 import net.knifick.praporupdate.util.narrator.MusicStopOnDeathHandler;
 import net.knifick.praporupdate.util.narrator.MusicStopOnDistanceHandler;
 import net.minecraft.core.BlockPos;
@@ -222,6 +223,9 @@ public class NarratorEntity extends TamableAnimal implements GeoEntity {
 		ItemStack itemstack = sourceentity.getItemInHand(hand);
 		InteractionResult retval = InteractionResult.sidedSuccess(this.level().isClientSide());
 		Item item = itemstack.getItem();
+		if(itemstack.is(PraporModItems.GUIDE_BOOK)){
+			GuideBookItem.addToBook(sourceentity, this, 1);
+		}
 		if (itemstack.getItem() instanceof SpawnEggItem) {
 			retval = super.mobInteract(sourceentity, hand);
 		} else if (this.level().isClientSide()) {

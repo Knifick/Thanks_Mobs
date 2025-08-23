@@ -1,6 +1,7 @@
 
 package net.knifick.praporupdate.entity;
 
+import net.knifick.praporupdate.goal.FlyingBreedGoal;
 import net.knifick.praporupdate.init.PraporModEntities;
 import net.knifick.praporupdate.procedures.SoulSpawnConditionProcedure;
 import net.minecraft.core.BlockPos;
@@ -20,12 +21,14 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,7 +44,7 @@ import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class NymphEntity extends AgeableMob implements GeoEntity {
+public class NymphEntity extends Animal implements GeoEntity {
 	public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(NymphEntity.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(NymphEntity.class, EntityDataSerializers.STRING);
 	public static final EntityDataAccessor<String> TEXTURE = SynchedEntityData.defineId(NymphEntity.class, EntityDataSerializers.STRING);
@@ -82,7 +85,10 @@ public class NymphEntity extends AgeableMob implements GeoEntity {
 	@Override
 	protected void registerGoals() {
 		super.registerGoals();
-		this.goalSelector.addGoal(1, new RandomStrollGoal(this, 0.8, 20) {
+		this.goalSelector.addGoal(1,new FlyingBreedGoal(this,1));
+		this.goalSelector.addGoal(2, new TemptGoal(this, 1.1D, Ingredient.of(Items.POPPED_CHORUS_FRUIT), false));
+		this.goalSelector.addGoal(3, new FollowParentGoal(this, 1.1D));
+		this.goalSelector.addGoal(4, new RandomStrollGoal(this, 0.8, 20) {
 			@Override
 			protected Vec3 getPosition() {
 				Level level = NymphEntity.this.level();
@@ -101,7 +107,7 @@ public class NymphEntity extends AgeableMob implements GeoEntity {
 				return new Vec3(dir_x, dir_y, dir_z);
 			}
 		});
-		this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
+		this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
 	}
 
 	@Override
@@ -120,6 +126,11 @@ public class NymphEntity extends AgeableMob implements GeoEntity {
 		super.readAdditionalSaveData(compound);
 		if (compound.contains("Texture"))
 			this.setTexture(compound.getString("Texture"));
+	}
+
+	@Override
+	public boolean isFood(ItemStack stack) {
+		return stack.is(Items.POPPED_CHORUS_FRUIT);
 	}
 
 	@Override
@@ -174,10 +185,10 @@ public class NymphEntity extends AgeableMob implements GeoEntity {
 	}
 
 	@Override
-	public @Nullable AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob ageableMob) {
-		return null;
+	public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob partner) {
+		// Создание нового ребёнка при размножении
+		return PraporModEntities.NYMPH.get().create(serverLevel);
 	}
-
 
 	public static void init(RegisterSpawnPlacementsEvent event) {
 		event.register(
@@ -198,7 +209,6 @@ public class NymphEntity extends AgeableMob implements GeoEntity {
 					// если больше 1000 блоков — значит это удалённые острова
 					int distSq = pos.getX() * pos.getX() + pos.getZ() * pos.getZ();
 					if (distSq < 1000 * 1000) {
-						System.out.println("TOO CLOSE");
 						return false;
 					}
 

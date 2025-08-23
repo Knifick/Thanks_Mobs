@@ -1,5 +1,9 @@
 package net.knifick.praporupdate.network;
 
+import net.knifick.praporupdate.init.PraporModEntities;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -29,6 +33,10 @@ import net.minecraft.core.HolderLookup;
 
 import net.knifick.praporupdate.PraporMod;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
@@ -73,6 +81,7 @@ public class PraporModVariables {
 			clone.hasSucker = original.hasSucker;
 			clone.bmaceSlot = original.bmaceSlot;
 			clone.suckCount = original.suckCount;
+			clone.seenMobs = original.seenMobs;
 			event.getEntity().setData(PLAYER_VARIABLES, clone);
 		}
 
@@ -215,6 +224,19 @@ public class PraporModVariables {
 		public double screamAnimValue = 0;
 		public int bmaceSlot = -1;
 		public int suckCount = 0;
+		public Map<String, Integer> seenMobs = new HashMap<>() {{
+			put("prapor", 0);
+			put("pooker", 0);
+			put("soul", 0);
+			put("narrator", 0);
+			put("bastard", 0);
+			put("brolem", 0);
+			put("darkironkin", 0);
+			put("sucker", 0);
+			put("bob", 0);
+			put("nymph", 0);
+		}};
+
 
 		@Override
 		public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
@@ -224,6 +246,14 @@ public class PraporModVariables {
 			nbt.putDouble("screamAnimValue", screamAnimValue);
 			nbt.putInt("bmaceSlot", bmaceSlot);
 			nbt.putInt("suckCount", suckCount);
+			ListTag listTag = new ListTag();
+			for (Map.Entry<String, Integer> entry : seenMobs.entrySet()) {
+				CompoundTag tag = new CompoundTag();
+				tag.putString("entityType", entry.getKey());
+				tag.putInt("value", entry.getValue());
+				listTag.add(tag);
+			}
+			nbt.put("seenMobs", listTag);
 			return nbt;
 		}
 
@@ -234,6 +264,15 @@ public class PraporModVariables {
 			screamAnimValue = nbt.getDouble("screamAnimValue");
 			bmaceSlot = nbt.getInt("bmaceSlot");
 			suckCount = nbt.getInt("suckCount");
+			seenMobs.clear();
+			ListTag listTag = nbt.contains("seenMobs") ? nbt.getList("seenMobs", 10) : new ListTag();
+			for (int i = 0; i < listTag.size(); i++) {
+				CompoundTag tag = listTag.getCompound(i);
+				String typeName = tag.getString("entityType");
+				int value = tag.getInt("value");
+				seenMobs.put(typeName, value);
+			}
+
 		}
 
 		public void syncPlayerVariables(Entity entity) {

@@ -1,7 +1,10 @@
 
 package net.knifick.praporupdate.entity;
 
-import net.minecraft.world.item.Items;
+import net.knifick.praporupdate.client.screens.BookScreen;
+import net.knifick.praporupdate.item.GuideBookItem;
+import net.knifick.praporupdate.network.PraporModVariables;
+import net.minecraft.world.item.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
@@ -19,9 +22,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.SpawnEggItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.animal.Chicken;
@@ -217,6 +217,9 @@ public class PraporEntity extends TamableAnimal implements GeoEntity {
 		ItemStack itemstack = sourceentity.getItemInHand(hand);
 		InteractionResult retval = InteractionResult.sidedSuccess(this.level().isClientSide());
 		Item item = itemstack.getItem();
+		if(itemstack.is(PraporModItems.GUIDE_BOOK.get())){
+			GuideBookItem.addToBook(sourceentity, this, 1);
+		}
 		if (itemstack.getItem() instanceof SpawnEggItem) {
 			retval = super.mobInteract(sourceentity, hand);
 		} else if (this.level().isClientSide()) {

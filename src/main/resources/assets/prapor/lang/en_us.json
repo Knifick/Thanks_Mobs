@@ -115,5 +115,19 @@
   "advancements.bob.descr": "BOB",
   "enchantment.prapor.rage_of_souls": "Rage of souls",
   "entity.prapor.nymph": "Nymph",
-  "item.prapor.nymph_spawn_egg": "Nymph spawn egg"
+  "item.prapor.nymph_spawn_egg": "Nymph spawn egg",
+  "item.prapor.hotdog": "Hot dog",
+  "item.prapor.guide_book": "Guide book",
+  "guide.prapor.prapor": "Prapor is a bird that loves sand and is ready to give you a ride for it.",
+  "guide.prapor.pooker": "Pooker is a mysterious creature that likes to watch you from the dark.",
+  "guide.prapor.soul": "It flies around in a nether it can be placed in vessels.",
+  "guide.prapor.bastard": "Steals from villagers and resells their belongings at a strong discount",
+  "guide.prapor.narrator": "A broken robot that needs to be repaired with a board. Сan also play music discs.",
+  "guide.prapor.brolem": "He enjoys flowers until he is revived with a bottle of souls.",
+  "guide.prapor.guide1": "Interact with the thanks mob",
+  "guide.prapor.guide2": "with this item to record",
+  "guide.prapor.darkironkin": "He patrols the fortress and also stores upgrades that are activated by the heat.",
+  "guide.prapor.bob": "BOB",
+  "guide.prapor.nymph": "Circling in the sky looking for the fruits of Horus",
+  "guide.prapor.sucker": "Strives to clear the area of debris, if that's what you want."
 }

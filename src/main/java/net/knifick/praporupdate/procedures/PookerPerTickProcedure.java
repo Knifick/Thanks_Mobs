@@ -1,5 +1,8 @@
 package net.knifick.praporupdate.procedures;
 
+import net.knifick.praporupdate.item.GuideBookItem;
+import net.knifick.praporupdate.network.PraporModVariables;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.level.LevelAccessor;
@@ -49,6 +52,7 @@ public class PookerPerTickProcedure {
 			}
 		}.checkGamemode(plyr))) {
 			FrameReturnerProcedure.execute(plyr.level(), plyr, 400);
+			GuideBookItem.addToBook((Player) plyr, (LivingEntity) entity, 1);
 			if (world instanceof ServerLevel _level)
 				_level.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x, (y + 1.5), z, 300, 1, 1, 1, 0.05);
 			if (world instanceof Level _level) {

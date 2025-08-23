@@ -48,6 +48,8 @@ public class PraporModItems {
 	public static final DeferredItem<Item> SUCKER_SPAWN_EGG = REGISTRY.register("sucker_spawn_egg", () -> new CustomSpawnEggItem(PraporModEntities.SUCKER.get(), new Item.Properties()));
 	public static final DeferredItem<Item> BOB_SPAWN_EGG = REGISTRY.register("bob_spawn_egg", () -> new CustomSpawnEggItem(PraporModEntities.BOB.get(), new Item.Properties()));
 	public static final DeferredItem<Item> NYMPH_SPAWN_EGG = REGISTRY.register("nymph_spawn_egg", () -> new CustomSpawnEggItem(PraporModEntities.NYMPH.get(), new Item.Properties()));
+	public static final DeferredItem<Item> HOTDOG = REGISTRY.register("hotdog", HotDogItem::new);
+	public static final DeferredItem<Item> GUIDE_BOOK = REGISTRY.register("guide_book", GuideBookItem::new);
 
 	// Start of user code block custom items
 	// End of user code block custom items

@@ -31,6 +31,7 @@ public class NymphRenderer extends GeoEntityRenderer<NymphEntity> {
 	@Override
 	public void preRender(PoseStack poseStack, NymphEntity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
 		float scale = 1f;
+		if (entity.isBaby()) scale = 0.5f;
 		this.scaleHeight = scale;
 		this.scaleWidth = scale;
 		super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);

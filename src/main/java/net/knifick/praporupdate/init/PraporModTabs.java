@@ -40,6 +40,7 @@ public class PraporModTabs {
 			() -> CreativeModeTab.builder().title(Component.translatable("item_group.prapor.thanks_tab")).icon(() -> new ItemStack(PraporModItems.GOLD_TROPHY.get())).displayItems((parameters, tabData) -> {
 				var lookup = parameters.holders().lookup(Registries.ENCHANTMENT);
 				Holder<Enchantment> rage = getEnchantment(lookup, RAGE_OF_SOULS);
+				tabData.accept(PraporModItems.GUIDE_BOOK.get());
 				tabData.accept(PraporModItems.PRAPOR_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.POOKER_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.NARRATOR_SPAWN_EGG.get());
@@ -56,6 +57,7 @@ public class PraporModTabs {
 				tabData.accept(PraporModItems.OXIDIZEDCOPPERSHEET.get());
 				tabData.accept(PraporModItems.BOARD.get());
 				tabData.accept(PraporModItems.HAT_HELMET.get());
+				//tabData.accept(PraporModItems.HOTDOG.get());
 				tabData.accept(PraporModItems.MUSIC_RECORD_N_42.get());
 				//tabData.accept(PraporModItems.MUSIC_RECORD_THANKS_STREET.get());
 				tabData.accept(PraporModItems.SOUL_BOTTLE.get());

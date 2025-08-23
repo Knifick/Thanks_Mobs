@@ -1,6 +1,10 @@
 
 package net.knifick.praporupdate.entity;
 
+import net.knifick.praporupdate.client.screens.BookScreen;
+import net.knifick.praporupdate.init.PraporModItems;
+import net.knifick.praporupdate.item.GuideBookItem;
+import net.knifick.praporupdate.network.PraporModVariables;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.ai.goal.*;
@@ -209,6 +213,9 @@ public class BastardEntity extends Raider implements GeoEntity {
 		double z = this.getZ();
 		Entity entity = this;
 		Level world = this.level();
+		if(itemstack.is(PraporModItems.GUIDE_BOOK)){
+			GuideBookItem.addToBook(sourceentity, this, 1);
+		}
 
 		BastardRCMProcedure.execute(world, entity, sourceentity);
 		return retval;

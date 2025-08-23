@@ -2,7 +2,9 @@ package net.knifick.praporupdate.network;
 
 import net.knifick.praporupdate.PraporMod;
 import net.knifick.praporupdate.client.effects.RingSuckEffectD;
+import net.knifick.praporupdate.item.GuideBookItem;
 import net.knifick.praporupdate.network.payloads.RingSuckPayload;
+import net.knifick.praporupdate.network.payloads.ToastPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -24,6 +26,14 @@ public class PayloadRegister {
                     context.enqueueWork(()->RingSuckEffectD.trigger(
                             payload.x(), payload.y(), payload.z(),
                             payload.dx(), payload.dy(), payload.dz()));
+                }
+        );
+        registrar.playToClient(
+                ToastPayload.TYPE,
+                ToastPayload.STREAM_CODEC,
+                (payload, context) -> {
+                    // Вызов метода на клиенте
+                    context.enqueueWork(()-> GuideBookItem.showToast(payload.mob()));
                 }
         );
     }
