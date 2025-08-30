@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:book"
+    },
+    "title": {
+      "translate": "advancements.beginner_explorer.title"
+    },
+    "description": {
+      "translate": "advancements.beginner_explorer.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "beginner_explorer": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "prapor:praporshik"
+}

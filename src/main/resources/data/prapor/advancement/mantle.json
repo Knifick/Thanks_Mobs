@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "prapor:mantle"
+    },
+    "title": {
+      "translate": "advancements.mantle.title"
+    },
+    "description": {
+      "translate": "advancements.mantle.descr"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "mantle": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "prapor:pooker_achieve"
+}

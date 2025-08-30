@@ -3,6 +3,7 @@ package net.knifick.praporupdate.entity;
 
 import net.knifick.praporupdate.goal.FlyingBreedGoal;
 import net.knifick.praporupdate.init.PraporModEntities;
+import net.knifick.praporupdate.init.PraporModItems;
 import net.knifick.praporupdate.procedures.SoulSpawnConditionProcedure;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -25,6 +26,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -186,7 +188,13 @@ public class NymphEntity extends Animal implements GeoEntity {
 
 	@Override
 	public AgeableMob getBreedOffspring(ServerLevel serverLevel, AgeableMob partner) {
-		// Создание нового ребёнка при размножении
+		ItemStack stack = new ItemStack(PraporModItems.CAVIAR.get(), 1);
+		ItemEntity itemEntity = new ItemEntity(level(),
+				getX() + 0.5,
+				getY() + 0.5,
+				getZ() + 0.5,
+				stack);
+		level().addFreshEntity(itemEntity);
 		return PraporModEntities.NYMPH.get().create(serverLevel);
 	}
 
@@ -202,11 +210,10 @@ public class NymphEntity extends Animal implements GeoEntity {
 					}
 
 					if (pos.getY() < 40) {
-						return false;
+						System.out.println("TOO LOW");
+						return true;
 					}
 
-					// проверяем радиус от центра (0,0)
-					// если больше 1000 блоков — значит это удалённые острова
 					int distSq = pos.getX() * pos.getX() + pos.getZ() * pos.getZ();
 					if (distSq < 1000 * 1000) {
 						return false;

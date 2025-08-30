@@ -1,6 +1,7 @@
 
 package net.knifick.praporupdate.client.screens;
 
+import net.knifick.praporupdate.network.PraporModVariables;
 import org.checkerframework.checker.units.qual.h;
 
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
@@ -22,7 +23,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 
 @EventBusSubscriber({Dist.CLIENT})
 public class ScreamerOverlay {
-	@SubscribeEvent(priority = EventPriority.NORMAL)
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void eventHandler(RenderGuiEvent.Pre event) {
 		int w = event.getGuiGraphics().guiWidth();
 		int h = event.getGuiGraphics().guiHeight();
@@ -31,6 +32,7 @@ public class ScreamerOverlay {
 		double y = 0;
 		double z = 0;
 		Player entity = Minecraft.getInstance().player;
+		PraporModVariables.PlayerVariables vars = entity.getData(PraporModVariables.PLAYER_VARIABLES);
 		if (entity != null) {
 			world = entity.level();
 			x = entity.getX();
@@ -42,7 +44,7 @@ public class ScreamerOverlay {
 		RenderSystem.enableBlend();
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		RenderSystem.setShaderColor(1, 1, 1, 1);
+		RenderSystem.setShaderColor(1F, 1F, 1F, (float) ((10-vars.screamAnimValue)/10f));
 		if (IsScremerRProcedure.execute(entity)) {
 			event.getGuiGraphics().blit(ResourceLocation.parse("prapor:textures/screens/screamer1.png"), 0, 0, 0, 0, w, h, w, h);
 		}

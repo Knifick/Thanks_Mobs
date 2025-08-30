@@ -38,70 +38,71 @@ public class BookScreen extends Screen {
 					-40, -20, 30,
 					() -> PraporModEntities.PRAPOR.get().create(Minecraft.getInstance().level),
 					Component.translatable("entity.prapor.prapor"),
-					Component.translatable("guide.prapor.prapor")
+					List.of(Component.translatable("guide.prapor.prapor"))
 			),
 			new MobEntry(
 					"pooker",
 					30, -10, 20,
 					() -> PraporModEntities.POOKER.get().create(Minecraft.getInstance().level),
 					Component.translatable("entity.prapor.pooker"),
-					Component.translatable("guide.prapor.pooker")
+					List.of(Component.translatable("guide.prapor.pooker"),
+							Component.translatable("guide.prapor.addpooker"))
 			),
 			new MobEntry(
 					"soul",
 					-40, -20, 70,
 					() -> PraporModEntities.SOUL.get().create(Minecraft.getInstance().level),
 					Component.translatable("entity.prapor.soul"),
-					Component.translatable("guide.prapor.soul")
+					List.of(Component.translatable("guide.prapor.soul"))
 			),
 			new MobEntry(
 					"bastard",
 					30, -22, 30,
 					() -> PraporModEntities.BASTARD.get().create(Minecraft.getInstance().level),
 					Component.translatable("entity.prapor.bastard"),
-					Component.translatable("guide.prapor.bastard")
+					List.of(Component.translatable("guide.prapor.bastard"))
 			),
 			new MobEntry(
 					"narrator",
 					-30, -20, 40,
 					() -> PraporModEntities.NARRATOR.get().create(Minecraft.getInstance().level),
 					Component.translatable("entity.prapor.narrator"),
-					Component.translatable("guide.prapor.narrator")
+					List.of(Component.translatable("guide.prapor.narrator"))
 			),
 			new MobEntry(
 					"brolem",
 					30, -22, 20,
 					() -> PraporModEntities.BROLEM.get().create(Minecraft.getInstance().level),
 					Component.translatable("entity.prapor.brolem"),
-					Component.translatable("guide.prapor.brolem")
+					List.of(Component.translatable("guide.prapor.brolem"))
 			),
 			new MobEntry(
 					"bob",
 					-30, -20, 40,
 					() -> PraporModEntities.BOB.get().create(Minecraft.getInstance().level),
 					Component.translatable("entity.prapor.bob"),
-					Component.translatable("guide.prapor.bob")
+					List.of(Component.translatable("guide.prapor.bob"))
 			),
 			new MobEntry(
 					"darkironkin",
 					40, -18, 15,
 					() -> PraporModEntities.DARKIRONKIN.get().create(Minecraft.getInstance().level),
 					Component.translatable("entity.prapor.darkironkin"),
-					Component.translatable("guide.prapor.darkironkin")
+					List.of(Component.translatable("guide.prapor.darkironkin"))
 			),
 			new MobEntry(
 					"nymph",
 					-20, -20, 30,
 					() -> PraporModEntities.NYMPH.get().create(Minecraft.getInstance().level),
 					Component.translatable("entity.prapor.nymph"),
-					Component.translatable("guide.prapor.nymph")
+					List.of(Component.translatable("guide.prapor.nymph"))
 			),
 			new MobEntry(
 					"sucker",
 					30, -22, 30,
 					() -> PraporModEntities.SUCKER.get().create(Minecraft.getInstance().level),
 					Component.translatable("entity.prapor.sucker"),
-					Component.translatable("guide.prapor.sucker")
+					List.of(Component.translatable("guide.prapor.sucker"))
 			)
 	);
 
@@ -120,7 +121,7 @@ public class BookScreen extends Screen {
 				Minecraft.getInstance().player.getData(PraporModVariables.PLAYER_VARIABLES);
 		boolean hasWrites = false;
 		for (Map.Entry<String, Integer> entry : vars.seenMobs.entrySet()){
-			if(entry.getValue()==1){
+			if(entry.getValue()!=0){
 				hasWrites = true;
 				break;
 			}
@@ -184,17 +185,27 @@ public class BookScreen extends Screen {
 				}
 			}
 
-			// текст (на соответствующей странице)
-			if (seen) {
-				// для текста используем меньшую ширину на страницу (чтобы разделить лево/право)
+			int mobStage = vars.seenMobs.getOrDefault(entry.key, 0);
+			if (mobStage > 0) {
+				// индекс самой приоритетной (макс) записи, которую мы показываем как "доп.инфо"
+				int priorityIndex = Math.min(mobStage - 1, entry.descriptions.size() - 1);
+
+				// базовое (основное) описание — считаем, что это описание при seenMobs == 1 (индекс 0)
+				Component mainDescription = entry.descriptions.get(0);
+				Component priorityDescription = entry.descriptions.get(priorityIndex);
+
 				int textX = (pageSide == 0) ? (this.width / 2 - 120) : (this.width / 2 + 10);
 				int textY = this.height / 2 - 70;
 				int textWidth = 110;
 				int textHeight = 150;
-				renderWrappedText(guiGraphics, entry.title, entry.description,
-						textX, textY,
-						textWidth, textHeight, pageSide);
+
+				// Новый рендер: если mobStage == 1 — показываем только mainDescription как раньше.
+				// Если mobStage > 1 — показываем mainDescription уменьшенным/приглушённым,
+				// а под ним — priorityDescription крупнее и заметнее.
+				renderDescriptionsWithPriority(guiGraphics, entry.title, mainDescription, priorityDescription,
+						mobStage, textX, textY, textWidth, textHeight, pageSide);
 			}
+
 		}
 
 		// отрисуем простые стрелки навигации и индикатор страницы
@@ -207,7 +218,7 @@ public class BookScreen extends Screen {
 		// стрелки (серым если недоступны)
 		int arrowColor = 0x404040;
 		int disabledColor = 0xB0B0B0;
-        // вычисляем состояния
+		// вычисляем состояния
 		boolean canGoLeft = pageIndex > 0;
 		boolean canGoRight = pageIndex < totalPages - 1;
 
@@ -308,6 +319,7 @@ public class BookScreen extends Screen {
 
 	/**
 	 * Отрисовывает заголовок и описание, оборачивая текст по ширине
+	 * (Старый метод оставлен для совместимости — теперь используется renderDescriptionsWithPriority)
 	 */
 	private void renderWrappedText(GuiGraphics graphics, Component title, Component text,
 								   int x, int y, int maxWidth, int maxHeight, int page) {
@@ -327,11 +339,65 @@ public class BookScreen extends Screen {
 		}
 	}
 
+	/**
+	 * Новый метод: рендерит:
+	 * - заголовок (title)
+	 * - если mobStage == 1: просто mainDescription (как раньше)
+	 * - если mobStage > 1: mainDescription уменьшенным/приглушённым, а под ним priorityDescription большим/обычным цветом
+	 */
+	private void renderDescriptionsWithPriority(GuiGraphics graphics, Component title, Component mainDescription, Component priorityDescription,
+												int mobStage, int x, int y, int maxWidth, int maxHeight, int page) {
+		Font font = Minecraft.getInstance().font;
+
+		int nameOffset = 0;
+		if (page == 0) nameOffset = 40;
+		graphics.drawString(font, title, x + 5 + nameOffset, y, 0x404040, false);
+
+		// Если только базовая стадия — отрисуем её обычным способом
+		if (mobStage == 1 || priorityDescription == mainDescription) {
+			List<FormattedCharSequence> lines = font.split(mainDescription, maxWidth);
+			int lineY = y + 55;
+			for (int i = 0; i < lines.size() && lineY < y + maxHeight; i++) {
+				graphics.drawString(font, lines.get(i), x, lineY, 0x202020, false);
+				lineY += 10;
+			}
+			return;
+		}
+
+		// Иначе: есть дополнительная инфа (priorityDescription).
+		// 1) Отрисуем mainDescription уменьшенным и приглушённым
+		final float mainScale = 0.45f;
+		List<FormattedCharSequence> mainLines = font.split(mainDescription, (int) (maxWidth / mainScale));
+
+		graphics.pose().pushPose();
+		graphics.pose().scale(mainScale, mainScale, 1f);
+		int scaledXMain = (int) (x / mainScale);
+		int scaledYMain = (int) ((y + 50) / mainScale); // чуть выше, чтобы дополнительный текст был ниже
+		int lineYScaled = scaledYMain;
+		for (int i = 0; i < mainLines.size() && (lineYScaled * mainScale) < (y + maxHeight); i++) {
+			graphics.drawString(font, mainLines.get(i), scaledXMain, lineYScaled, 0x707070, false);
+			lineYScaled += (int) (10 / mainScale);
+		}
+		graphics.pose().popPose();
+
+		// 2) Вычислим реальную высоту блока mainLines (в исходных пикселях), чтобы знать, откуда рисовать дополнительный текст
+		int mainHeightPixels = mainLines.size() * (int) (10 * mainScale); // приблизительно
+		int extraStartY = y + 55 + mainHeightPixels + 4; // небольшой отступ
+
+		// 3) Отрисуем priorityDescription "побольше" (обычный размер) ниже
+		List<FormattedCharSequence> extraLines = font.split(priorityDescription, maxWidth);
+		int extraLineY = extraStartY;
+		for (int i = 0; i < extraLines.size() && extraLineY < y + maxHeight; i++) {
+			graphics.drawString(font, extraLines.get(i), x, extraLineY, 0x202020, false);
+			extraLineY += 10;
+		}
+	}
+
 	private record MobEntry(
 			String key,
 			int offsetX, int offsetY, int scale,
 			Supplier<LivingEntity> entitySupplier,
 			Component title,
-			Component description
+			List<Component> descriptions
 	) {}
 }

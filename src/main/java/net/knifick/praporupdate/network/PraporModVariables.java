@@ -77,6 +77,8 @@ public class PraporModVariables {
 			clone.isFirst = original.isFirst;
 			if (!event.isWasDeath()) {
 				clone.screamAnimValue = original.screamAnimValue;
+				clone.mantleTimer = original.mantleTimer;
+				clone.isSee = original.isSee;
 			}
 			clone.hasSucker = original.hasSucker;
 			clone.bmaceSlot = original.bmaceSlot;
@@ -236,7 +238,8 @@ public class PraporModVariables {
 			put("bob", 0);
 			put("nymph", 0);
 		}};
-
+		public int mantleTimer = 0;
+		public boolean isSee = false;
 
 		@Override
 		public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
@@ -254,6 +257,8 @@ public class PraporModVariables {
 				listTag.add(tag);
 			}
 			nbt.put("seenMobs", listTag);
+			nbt.putInt("mantleTimer", mantleTimer);
+			nbt.putBoolean("isSee", isSee);
 			return nbt;
 		}
 
@@ -272,7 +277,8 @@ public class PraporModVariables {
 				int value = tag.getInt("value");
 				seenMobs.put(typeName, value);
 			}
-
+			suckCount = nbt.getInt("mantleTimer");
+			isSee = nbt.getBoolean("isSee");
 		}
 
 		public void syncPlayerVariables(Entity entity) {

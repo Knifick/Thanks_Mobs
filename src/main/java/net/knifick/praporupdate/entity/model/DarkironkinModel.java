@@ -19,12 +19,18 @@ public class DarkironkinModel extends GeoModel<DarkironkinEntity> {
 
 	@Override
 	public ResourceLocation getModelResource(DarkironkinEntity entity) {
-		return ResourceLocation.parse("prapor:geo/dark_ironkin.geo.json");
+		ResourceLocation path = ResourceLocation.parse("prapor:geo/dark_ironkin.geo.json");
+		if(entity.getDisplayName().getString().equalsIgnoreCase("Mega knight"))
+			path = ResourceLocation.parse("prapor:geo/dark_ironkin_mega.geo.json");
+		return path;
 	}
 
 	@Override
 	public ResourceLocation getTextureResource(DarkironkinEntity entity) {
-		return ResourceLocation.parse("prapor:textures/entities/" + entity.getTexture() + ".png");
+		ResourceLocation path = ResourceLocation.parse("prapor:textures/entities/dark_ironkin.png");
+		if(entity.getDisplayName().getString().equalsIgnoreCase("Mega knight"))
+			path = ResourceLocation.parse("prapor:textures/entities/megagay.png");
+		return path;
 	}
 
 	@Override

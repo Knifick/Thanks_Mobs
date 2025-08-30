@@ -3,7 +3,7 @@ plugins {
     id 'net.neoforged.moddev' version '1.0.21'
 }
 
-version = '1.3.5'
+version = '1.5.0'
 base.archivesName = "thanks_mobs"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)

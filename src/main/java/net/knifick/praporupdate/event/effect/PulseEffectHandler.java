@@ -2,6 +2,7 @@ package net.knifick.praporupdate.event.effect;
 
 import net.knifick.praporupdate.init.PraporModMobEffects;
 import net.minecraft.client.Minecraft;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
@@ -14,7 +15,7 @@ public class PulseEffectHandler {
 	private static float pulseAlpha = 0.0f;
 	private static boolean fadingOut = false; // Флаг затухания эффекта
 
-	@SubscribeEvent
+	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void onRenderOverlay(RenderGuiLayerEvent.Post event) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player == null) return;

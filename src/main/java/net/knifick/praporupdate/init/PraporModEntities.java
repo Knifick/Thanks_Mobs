@@ -50,6 +50,14 @@ public class PraporModEntities {
 			EntityType.Builder.<BobEntity>of(BobEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).sized(1.5f, 7f));
 	public static final DeferredHolder<EntityType<?>, EntityType<NymphEntity>> NYMPH = register("nymph",
 			EntityType.Builder.<NymphEntity>of(NymphEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).fireImmune().sized(2f, 0.5f));
+	public static final DeferredHolder<EntityType<?>, EntityType<KillCloud>> KILL_CLOUD =
+			register("kill_cloud",
+                    EntityType.Builder.<KillCloud>of(KillCloud::new, MobCategory.MISC)
+                            .sized(0.25f, 0.25f)
+                            .clientTrackingRange(8)
+                            .updateInterval(20));
+	public static final DeferredHolder<EntityType<?>, EntityType<MunchsawEntity>> MUNCHSAW = register("munchsaw",
+			EntityType.Builder.<MunchsawEntity>of(MunchsawEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).fireImmune().sized(1.1f, 1.2f));
 
 	// Start of user code block custom entities
 	// End of user code block custom entities
@@ -82,5 +90,6 @@ public class PraporModEntities {
 		event.put(SUCKER.get(), SuckerEntity.createAttributes().build());
 		event.put(BOB.get(), BobEntity.createAttributes().build());
 		event.put(NYMPH.get(), NymphEntity.createAttributes().build());
+		//event.put(MUNCHSAW.get(), MunchsawEntity.createAttributes().build());
 	}
 }

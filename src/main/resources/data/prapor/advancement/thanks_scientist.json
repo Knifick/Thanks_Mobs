@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:enchanted_book"
+    },
+    "title": {
+      "translate": "advancements.thanks_scientist.title"
+    },
+    "description": {
+      "translate": "advancements.thanks_scientist.descr"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "thanks_scientist": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "prapor:beginner_explorer"
+}

@@ -25,5 +25,7 @@ public class PraporModEntityRenderers {
 		event.registerEntityRenderer(PraporModEntities.SUCKER.get(), SuckerRenderer::new);
 		event.registerEntityRenderer(PraporModEntities.BOB.get(), BobRenderer::new);
 		event.registerEntityRenderer(PraporModEntities.NYMPH.get(), NymphRenderer::new);
+		event.registerEntityRenderer(PraporModEntities.KILL_CLOUD.get(), NoopRenderer::new);
+		event.registerEntityRenderer(PraporModEntities.MUNCHSAW.get(), MunchsawRenderer::new);
 	}
 }

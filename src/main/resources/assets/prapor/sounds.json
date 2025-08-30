@@ -434,5 +434,13 @@
         "stream": false
       }
     ]
+  },
+  "mantle_use": {
+    "sounds": [
+      {
+        "name": "prapor:mantle_use",
+        "stream": false
+      }
+    ]
   }
 }

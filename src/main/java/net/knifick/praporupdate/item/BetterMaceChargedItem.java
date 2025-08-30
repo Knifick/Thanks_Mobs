@@ -92,7 +92,7 @@ public class BetterMaceChargedItem extends BetterMaceItem {
         int slot = player.getInventory().selected;
         ItemStack weapon = player.getWeaponItem();
         ItemStack newWeapon = new ItemStack(PraporModItems.BETTER_MACE.get());
-        if(player.isCreative())
+        if(!player.isCreative())
             newWeapon.setDamageValue(weapon.getDamageValue()+1);
         ItemEnchantments enchants = weapon.getEnchantments();
         EnchantmentHelper.setEnchantments(newWeapon, enchants);

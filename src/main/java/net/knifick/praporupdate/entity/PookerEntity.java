@@ -1,6 +1,19 @@
 
 package net.knifick.praporupdate.entity;
 
+import net.knifick.praporupdate.init.PraporModItems;
+import net.knifick.praporupdate.item.GuideBookItem;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ai.control.MoveControl;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
@@ -166,6 +179,33 @@ public class PookerEntity extends Monster implements GeoEntity {
 		super.baseTick();
 		PookerPerTickProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ(), this);
 		this.refreshDimensions();
+	}
+
+	@Override
+	protected InteractionResult mobInteract(Player player, InteractionHand hand) {
+		if(player.getItemInHand(hand).is(Items.SHEARS)){
+			PookerPerTickProcedure.spawnSmokeBurst(level(), getX(), getY(), getZ());
+			ItemStack shard = new ItemStack(PraporModItems.MANTLE.get(), 1);
+			ItemEntity itemEntity = new ItemEntity(level(),
+					getX() + 0.5,
+					getY() + 0.5,
+					getZ() + 0.5,
+					shard);
+			level().addFreshEntity(itemEntity);
+			discard();
+			playSound(SoundEvents.SHEEP_SHEAR);
+			if(player instanceof ServerPlayer serverPlayer) {
+				AdvancementHolder _adv = serverPlayer.server.getAdvancements().get(ResourceLocation.parse("prapor:mantle"));
+				AdvancementProgress _ap = serverPlayer.getAdvancements().getOrStartProgress(_adv);
+				if (!_ap.isDone()) {
+					for (String criteria : _ap.getRemainingCriteria())
+						serverPlayer.getAdvancements().award(_adv, criteria);
+				}
+			}
+			GuideBookItem.addToBook(player, this, 2);
+			return InteractionResult.sidedSuccess(player.level().isClientSide);
+		}
+		return super.mobInteract(player, hand);
 	}
 
 	@Override

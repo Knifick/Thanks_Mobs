@@ -49,7 +49,6 @@ public class GuideBookItem extends Item {
 		|| livingEntity instanceof DarkironkinEntity
 		|| livingEntity instanceof NarratorEntity
 		|| livingEntity instanceof NymphEntity
-		|| livingEntity instanceof PookerEntity
 		|| livingEntity instanceof PraporEntity
 		|| livingEntity instanceof SoulEntity
 		|| livingEntity instanceof SuckerEntity)) return InteractionResult.FAIL;
@@ -61,7 +60,7 @@ public class GuideBookItem extends Item {
 		PraporModVariables.PlayerVariables vars = player.getData(PraporModVariables.PLAYER_VARIABLES);
 		ResourceLocation id = entity.getType().builtInRegistryHolder().key().location();
 		String mobName = id.getPath(); // ← вернёт только "prapor"
-		if(vars.seenMobs.get(mobName)!=0) return;
+		if(vars.seenMobs.get(mobName)==value) return;
 		vars.seenMobs.put(mobName, value); // или add в Set
 		vars.syncPlayerVariables(player);
 		//System.out.println(vars.seenMobs);
@@ -70,12 +69,15 @@ public class GuideBookItem extends Item {
 	}
 
 	public static void showToast(String name){
-		System.out.println(name);
+		PraporModVariables.PlayerVariables vars = Minecraft.getInstance().player.getData(PraporModVariables.PLAYER_VARIABLES);
 		Minecraft mc = Minecraft.getInstance();
 		mc.player.playSound(SoundEvents.VILLAGER_WORK_CARTOGRAPHER);
 		ToastComponent toastGui = mc.getToasts();
 
-		toastGui.addToast(new MobToast(Component.literal("Новый моб: ").append(Component.translatable("entity.prapor."+name)), ResourceLocation.parse("prapor:textures/entity/prapor.png")));
+		String info = "Новый моб: ";
+		if(vars.seenMobs.get(name)>1)
+			info = "Обновлено: ";
+		toastGui.addToast(new MobToast(Component.literal(info).append(Component.translatable("entity.prapor."+name)), ResourceLocation.parse("prapor:textures/entity/prapor.png")));
 
 	}
 }

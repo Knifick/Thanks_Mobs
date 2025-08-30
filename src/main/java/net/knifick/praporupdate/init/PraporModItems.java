@@ -6,6 +6,7 @@ package net.knifick.praporupdate.init;
 
 import net.knifick.praporupdate.item.*;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Rarity;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -50,6 +51,9 @@ public class PraporModItems {
 	public static final DeferredItem<Item> NYMPH_SPAWN_EGG = REGISTRY.register("nymph_spawn_egg", () -> new CustomSpawnEggItem(PraporModEntities.NYMPH.get(), new Item.Properties()));
 	public static final DeferredItem<Item> HOTDOG = REGISTRY.register("hotdog", HotDogItem::new);
 	public static final DeferredItem<Item> GUIDE_BOOK = REGISTRY.register("guide_book", GuideBookItem::new);
+	public static final DeferredItem<Item> CAVIAR = REGISTRY.register("caviar", CaviarItem::new);
+	public static final DeferredItem<Item> MANTLE = REGISTRY.register("mantle", () -> new MantleItem(ArmorItem.Type.CHESTPLATE, new Item.Properties().durability(10).rarity(Rarity.EPIC)));
+	public static final DeferredItem<Item> MUCNHSAW_SPAWN_EGG = REGISTRY.register("munchsaw_spawn_egg", () -> new CustomSpawnEggItem(PraporModEntities.MUNCHSAW.get(), new Item.Properties()));
 
 	// Start of user code block custom items
 	// End of user code block custom items

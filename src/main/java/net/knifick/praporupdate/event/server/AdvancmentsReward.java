@@ -88,4 +88,6 @@ public class AdvancmentsReward {
         ResourceLocation recipeId = getRecipeIdForItem(stack, player, server);
         grantRecipe(player, server, recipeId);
     }
+
+
 }

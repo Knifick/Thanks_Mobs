@@ -16,4 +16,5 @@ import net.knifick.praporupdate.PraporMod;
 public class PraporModParticleTypes {
 	public static final DeferredRegister<ParticleType<?>> REGISTRY = DeferredRegister.create(Registries.PARTICLE_TYPE, PraporMod.MODID);
 	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> SPARKS = REGISTRY.register("sparks", () -> new SimpleParticleType(false));
+	public static final DeferredHolder<ParticleType<?>, SimpleParticleType> EYES = REGISTRY.register("eyes", () -> new SimpleParticleType(false));
 }

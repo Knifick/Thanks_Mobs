@@ -50,6 +50,7 @@ public class PraporModTabs {
 				tabData.accept(PraporModItems.SUCKER_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.BOB_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.NYMPH_SPAWN_EGG.get());
+				//tabData.accept(PraporModItems.MUCNHSAW_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.SOUL_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.PRAPORKA.get());
 				tabData.accept(PraporModItems.BATTERY.get());
@@ -61,6 +62,8 @@ public class PraporModTabs {
 				tabData.accept(PraporModItems.MUSIC_RECORD_N_42.get());
 				//tabData.accept(PraporModItems.MUSIC_RECORD_THANKS_STREET.get());
 				tabData.accept(PraporModItems.SOUL_BOTTLE.get());
+				tabData.accept(PraporModItems.CAVIAR.get());
+				tabData.accept(PraporModItems.MANTLE.get());
 				tabData.accept(PraporModItems.SPAWNER_SHARD.get());
 				tabData.accept(PraporModBlocks.CASKETOFSOULS.get().asItem());
 				tabData.accept(PraporModItems.UPGRADE_INACTIVE.get());

@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "prapor:guide_book"
+    },
+    "title": {
+      "translate": "advancements.mastermind.title"
+    },
+    "description": {
+      "translate": "advancements.mastermind.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "mastermind": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "prapor:beginner_explorer"
+}
