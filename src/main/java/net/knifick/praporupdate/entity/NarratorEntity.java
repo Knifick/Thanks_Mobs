@@ -209,6 +209,12 @@ public class NarratorEntity extends TamableAnimal implements GeoEntity {
 		return false;
 	}
 
+	@Override
+	public void tame(Player player) {
+		GuideBookItem.addToBook(player, this, 2);
+		super.tame(player);
+	}
+
 	// -------------------- Death / Interact --------------------
 	@Override
 	public void die(DamageSource source) {

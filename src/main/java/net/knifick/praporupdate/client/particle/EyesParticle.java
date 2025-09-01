@@ -33,7 +33,7 @@ public class EyesParticle extends TextureSheetParticle {
 		super(world, x, y, z);
 		this.spriteSet = spriteSet;
 		this.setSize(1.8f, 1.8f);
-		this.lifetime = Math.max(1, 300 + (this.random.nextInt(10) - 5));
+		this.lifetime = Math.max(1, 220 + (this.random.nextInt(10) - 5));
 		this.gravity = 0f;
 		this.hasPhysics = false;
 		this.xd = vx;

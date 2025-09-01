@@ -2,6 +2,7 @@
 package net.knifick.praporupdate.entity;
 
 import net.knifick.praporupdate.init.PraporModEntities;
+import net.knifick.praporupdate.item.GuideBookItem;
 import net.knifick.praporupdate.procedures.*;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
@@ -367,6 +368,13 @@ public class DarkironkinEntity extends Monster implements GeoEntity {
 		}
 		prevAnim = this.animationprocedure;
 		return PlayState.CONTINUE;
+	}
+
+	@Override
+	public void die(DamageSource source) {
+		if(source.getEntity() instanceof Player player)
+			GuideBookItem.addToBook(player, this, 2);
+		super.die(source);
 	}
 
 	@Override

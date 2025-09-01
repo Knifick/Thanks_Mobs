@@ -1,11 +1,13 @@
 package net.knifick.praporupdate.procedures;
 
 import net.knifick.praporupdate.init.PraporModItems;
+import net.knifick.praporupdate.item.GuideBookItem;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BookItem;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
@@ -89,6 +91,7 @@ public class BastardRCMProcedure {
 					System.out.println("usual");
 				}
 				System.out.println(randomItem.getDisplayName());
+				GuideBookItem.addToBook((Player) sourceentity, (LivingEntity) entity, 2);
 				throwDiamondTowardsPlayer(entity.level(), entity, plyr, randomItem);
 			}
 			if (player instanceof ServerPlayer _player) {

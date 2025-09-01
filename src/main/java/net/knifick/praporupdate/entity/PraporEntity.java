@@ -245,6 +245,7 @@ public class PraporEntity extends TamableAnimal implements GeoEntity {
 				this.usePlayerItem(sourceentity, hand, itemstack);
 				if (this.random.nextInt(3) == 0 && !EventHooks.onAnimalTame(this, sourceentity)) {
 					this.tame(sourceentity);
+					GuideBookItem.addToBook((Player) this.getOwner(), this, 2);
 					this.level().broadcastEntityEvent(this, (byte) 7);
 				} else {
 					this.level().broadcastEntityEvent(this, (byte) 6);

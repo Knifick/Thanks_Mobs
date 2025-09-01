@@ -4,6 +4,7 @@ package net.knifick.praporupdate.entity;
 import net.knifick.praporupdate.goal.AlwaysLookAtPlayerGoal;
 import net.knifick.praporupdate.init.PraporModEntities;
 import net.knifick.praporupdate.init.PraporModSounds;
+import net.knifick.praporupdate.item.GuideBookItem;
 import net.knifick.praporupdate.procedures.PookerPerTickProcedure;
 import net.knifick.praporupdate.procedures.SoulSpawnConditionProcedure;
 import net.minecraft.advancements.AdvancementHolder;
@@ -147,6 +148,19 @@ public class BobEntity extends Monster implements GeoEntity {
 		);
 	}
 
+	@Override
+	public boolean hurt(DamageSource source, float p_21017_) {
+		if(source.getEntity() instanceof Player player)
+			GuideBookItem.addToBook(player, this, 2);
+		return super.hurt(source, p_21017_);
+	}
+
+	@Override
+	public void die(DamageSource source) {
+		if(source.getEntity() instanceof Player player)
+			GuideBookItem.addToBook(player, this, 3);
+		super.die(source);
+	}
 
 	public static AttributeSupplier.Builder createAttributes() {
 		AttributeSupplier.Builder builder = Mob.createMobAttributes();

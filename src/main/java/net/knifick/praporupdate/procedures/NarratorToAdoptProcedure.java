@@ -2,6 +2,7 @@ package net.knifick.praporupdate.procedures;
 
 import net.knifick.praporupdate.entity.NarratorEntity;
 import net.knifick.praporupdate.init.PraporModSounds;
+import net.knifick.praporupdate.item.GuideBookItem;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -138,6 +139,7 @@ public class NarratorToAdoptProcedure {
 				world.playSound(null, BlockPos.containing(x, y, z),
 						PraporModSounds.PLUH.get(), SoundSource.BLOCKS, 1f, 1f);
 
+				GuideBookItem.addToBook((Player) livingEntity.getOwner(), livingEntity, 3);
 				// Вставка диска в руку моба
 				ItemStack copy = itemstack.copy();
 				copy.setCount(1);

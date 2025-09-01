@@ -1,14 +1,3 @@
-/time set midnight
-/time set day
-/time set midnight
-/summon minecraft:potion
-/summon minecraft:area_effect_cloud
-/summon area_effect_cloud ~ ~ ~ {Duration:200,Radius:3f,Effects:[{Id:19,Amplifier:0,Duration:200}]}
-/summon area_effect_cloud ~ ~ ~ {Duration:200,Radius:3f,Effects:[{Id:1,Amplifier:0,Duration:200}]}
-/summon area_effect_cloud ~ ~ ~ {Duration:200,Radius:10f,Effects:[{Id:1,Amplifier:0,Duration:200}]}
-/summon area_effect_cloud ~ ~ ~ {Duration:200,Radius:1000f,Effects:[{Id:1,Amplifier:0,Duration:200}]}
-/summon area_effect_cloud ~ ~ ~ {Duration:200,Radius:10000f,Effects:[{Id:1,Amplifier:0,Duration:200}]}
-/summon area_effect_cloud ~ ~ ~ {Duration:200,Radius:1f,Effects:[{Id:1,Amplifier:0,Duration:200}]}
 /summon area_effect_cloud ~ ~ ~ {Duration:200,Radius:0.1f,Effects:[{Id:1,Amplifier:0,Duration:200}]}
 /summon area_effect_cloud ~ ~ ~ {Duration:200,Radius:0.01f,Effects:[{Id:1,Amplifier:0,Duration:200}]}
 /summon area_effect_cloud ~ ~ ~ {Duration:200,Radius:0.01f}
@@ -48,3 +37,14 @@
 /kill 64619a29-8074-4a7e-bbd6-ced7bf0720da
 /time set day
 /time set midnight
+/time set day
+/time set midnight
+/weather clear
+/time set midnight
+/weather clear
+/time set day
+/summon prapor:munchsaw
+/time set midnight
+/time set day
+/particle prapor:kill_cloud ~ ~1 ~
+/particle prapor:kill_cloud ~ ~2 ~

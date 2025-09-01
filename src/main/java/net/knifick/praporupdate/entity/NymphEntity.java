@@ -4,16 +4,15 @@ package net.knifick.praporupdate.entity;
 import net.knifick.praporupdate.goal.FlyingBreedGoal;
 import net.knifick.praporupdate.init.PraporModEntities;
 import net.knifick.praporupdate.init.PraporModItems;
-import net.knifick.praporupdate.procedures.SoulSpawnConditionProcedure;
+import net.knifick.praporupdate.item.GuideBookItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
@@ -27,7 +26,7 @@ import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -36,7 +35,6 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import org.jetbrains.annotations.Nullable;
@@ -195,7 +193,19 @@ public class NymphEntity extends Animal implements GeoEntity {
 				getZ() + 0.5,
 				stack);
 		level().addFreshEntity(itemEntity);
+
 		return PraporModEntities.NYMPH.get().create(serverLevel);
+	}
+
+	@Override
+	public void spawnChildFromBreeding(ServerLevel level, Animal partner) {
+		super.spawnChildFromBreeding(level, partner);
+
+		Player player = this.getLoveCause(); // тот, кто кормил
+		if (player != null) {
+			// Выдаём ему второй уровень знания про моба
+			GuideBookItem.addToBook(player, this, 2);
+		}
 	}
 
 	public static void init(RegisterSpawnPlacementsEvent event) {

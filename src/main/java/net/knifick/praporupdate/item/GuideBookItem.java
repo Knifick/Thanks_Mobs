@@ -56,17 +56,31 @@ public class GuideBookItem extends Item {
 		return InteractionResult.sidedSuccess(false);
 	}
 
-	public static void addToBook(Player player, LivingEntity entity, int value){
+	public static void addToBook(Player player, LivingEntity entity, int value) {
 		PraporModVariables.PlayerVariables vars = player.getData(PraporModVariables.PLAYER_VARIABLES);
 		ResourceLocation id = entity.getType().builtInRegistryHolder().key().location();
-		String mobName = id.getPath(); // ← вернёт только "prapor"
-		if(vars.seenMobs.get(mobName)==value) return;
-		vars.seenMobs.put(mobName, value); // или add в Set
+		String mobName = id.getPath();
+
+		// текущее знание о мобе
+		int currentValue = vars.seenMobs.getOrDefault(mobName, 0);
+
+		// если уже есть этот уровень или выше → ничего не делаем
+		if (currentValue >= value) return;
+
+		// проверка последовательности:
+		// если хотим записать 2, а нет 1 → запрет
+		// если хотим записать 3, а нет 2 → запрет
+		if (value > currentValue + 1) return;
+
+		// запись нового уровня
+		vars.seenMobs.put(mobName, value);
 		vars.syncPlayerVariables(player);
-		//System.out.println(vars.seenMobs);
-		if(player instanceof ServerPlayer serverPlayer)
+
+		if (player instanceof ServerPlayer serverPlayer) {
 			PacketDistributor.sendToPlayer(serverPlayer, new ToastPayload(mobName));
+		}
 	}
+
 
 	public static void showToast(String name){
 		PraporModVariables.PlayerVariables vars = Minecraft.getInstance().player.getData(PraporModVariables.PLAYER_VARIABLES);

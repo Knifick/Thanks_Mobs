@@ -284,6 +284,7 @@ public class BrolemEntity extends TamableAnimal implements GeoEntity {
 
 	@Override
 	public void die(DamageSource source) {
+		GuideBookItem.addToBook((Player) this.getOwner(), this, 2);
 		super.die(source);
 		BrolemOnDeathProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ(), source, this);
 	}

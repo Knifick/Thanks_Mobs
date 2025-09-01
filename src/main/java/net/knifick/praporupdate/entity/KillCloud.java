@@ -74,7 +74,7 @@ public class KillCloud extends Entity {
         super.onAddedToLevel();
         if(level() instanceof ServerLevel level){
             level.sendParticles(PraporModParticleTypes.EYES.get(),
-                    getX(), getY()+0.3, getZ(), 10,
+                    getX(), getY()+0.3, getZ(), 6,
                     radius,0,radius, 0);
         }
     }
@@ -85,7 +85,7 @@ public class KillCloud extends Entity {
         if(tickCount>=duration) discard();
         if(level() instanceof ServerLevel level){
             if(tickCount<=duration-180){
-                level.sendParticles(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE,
+                level.sendParticles(PraporModParticleTypes.KILL_CLOUD.get(),
                         getX(), getY()+0.1, getZ(), 4,
                         radius,0,radius, 0);
             }

@@ -73,6 +73,14 @@
 					]
 				},
 				{
+					"name": "m5",
+					"parent": "m4",
+					"pivot": [0, 12, 2.7],
+					"cubes": [
+						{"origin": [-5, 9, 2.2], "size": [10, 3, 1], "uv": [56, 64]}
+					]
+				},
+				{
 					"name": "bipedRightArm",
 					"pivot": [-5, 22, 0]
 				},
