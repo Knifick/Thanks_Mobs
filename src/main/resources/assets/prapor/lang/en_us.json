@@ -161,5 +161,8 @@
   "guide.prapor.abob": "bob",
   "guide.prapor.bbob": "BOB",
   "guide.prapor.adddarkironkin": "His upgrade is useless, unless, of course, you turn up the heat.",
-  "guide.prapor.addnymph": "Nymph's caviar saves from bad effects"
+  "guide.prapor.addnymph": "Nymph's caviar saves from bad effects",
+  "gamerule.spawnWithoutWither": "Spawn thanks mobs without wither killing",
+  "painting.prapor.pooker.title": "Pooker",
+  "painting.prapor.pooker.author": "Kuper"
 }

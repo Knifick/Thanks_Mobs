@@ -7,7 +7,6 @@ import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BookItem;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
@@ -95,7 +94,7 @@ public class BastardRCMProcedure {
 				throwDiamondTowardsPlayer(entity.level(), entity, plyr, randomItem);
 			}
 			if (player instanceof ServerPlayer _player) {
-				AdvancementHolder _adv = _player.server.getAdvancements().get(ResourceLocation.parse("prapor:bustard_ach"));
+				AdvancementHolder _adv = _player.getServer().getAdvancements().get(ResourceLocation.parse("prapor:bustard_ach"));
 				AdvancementProgress _ap = _player.getAdvancements().getOrStartProgress(_adv);
 				if (!_ap.isDone()) {
 					for (String criteria : _ap.getRemainingCriteria())

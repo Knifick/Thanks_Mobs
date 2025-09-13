@@ -1,5 +1,7 @@
 package net.knifick.praporupdate.procedures;
 
+import net.knifick.praporupdate.init.PraporModSounds;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
@@ -54,9 +56,9 @@ public class DarkironkinOnRMCProcedure {
 			PraporMod.queueServerWork(27, () -> {
 				if (world instanceof Level _level) {
 					if (!_level.isClientSide()) {
-						_level.playSound(null, BlockPos.containing(x, y, z), BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:ironkin_ground_hit")), SoundSource.HOSTILE, 1, 1);
+						_level.playSound(null, BlockPos.containing(x, y, z), PraporModSounds.IRONKIN_GROUND_HIT.get(), SoundSource.HOSTILE, 1, 1);
 					} else {
-						_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:ironkin_ground_hit")), SoundSource.HOSTILE, 1, 1, false);
+						_level.playLocalSound(x, y, z, PraporModSounds.IRONKIN_GROUND_HIT.get(), SoundSource.HOSTILE, 1, 1, false);
 					}
 				}
 				// ЗАМЕНА СОЗДАНИЯ ЧАСТИЦ
@@ -120,7 +122,7 @@ public class DarkironkinOnRMCProcedure {
 							return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
 						}
 					}.compareDistOf(x, y, z)).findFirst().orElse(null)) instanceof LivingEntity _entity && !_entity.level().isClientSide())
-						_entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 300, 2, true, false));
+						_entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 300, 2, true, false));
 					((Entity) world.getEntitiesOfClass(Player.class, AABB.ofSize(new Vec3(x, y, z), 15, 15, 15), e -> true).stream().sorted(new Object() {
 						Comparator<Entity> compareDistOf(double _x, double _y, double _z) {
 							return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
@@ -142,7 +144,7 @@ public class DarkironkinOnRMCProcedure {
 							return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
 						}
 					}.compareDistOf(x, y, z)).findFirst().orElse(null)) instanceof LivingEntity _entity && !_entity.level().isClientSide())
-						_entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 2, true, false));
+						_entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 200, 2, true, false));
 					((Entity) world.getEntitiesOfClass(Player.class, AABB.ofSize(new Vec3(x, y, z), 15, 15, 15), e -> true).stream().sorted(new Object() {
 						Comparator<Entity> compareDistOf(double _x, double _y, double _z) {
 							return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
@@ -164,7 +166,7 @@ public class DarkironkinOnRMCProcedure {
 							return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
 						}
 					}.compareDistOf(x, y, z)).findFirst().orElse(null)) instanceof LivingEntity _entity && !_entity.level().isClientSide())
-						_entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 150, 1, true, false));
+						_entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 150, 1, true, false));
 					((Entity) world.getEntitiesOfClass(Player.class, AABB.ofSize(new Vec3(x, y, z), 15, 15, 15), e -> true).stream().sorted(new Object() {
 						Comparator<Entity> compareDistOf(double _x, double _y, double _z) {
 							return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
@@ -186,7 +188,7 @@ public class DarkironkinOnRMCProcedure {
 							return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
 						}
 					}.compareDistOf(x, y, z)).findFirst().orElse(null)) instanceof LivingEntity _entity && !_entity.level().isClientSide())
-						_entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 150, 1, true, false));
+						_entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 150, 1, true, false));
 					((Entity) world.getEntitiesOfClass(Player.class, AABB.ofSize(new Vec3(x, y, z), 15, 15, 15), e -> true).stream().sorted(new Object() {
 						Comparator<Entity> compareDistOf(double _x, double _y, double _z) {
 							return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
@@ -208,7 +210,7 @@ public class DarkironkinOnRMCProcedure {
 							return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
 						}
 					}.compareDistOf(x, y, z)).findFirst().orElse(null)) instanceof LivingEntity _entity && !_entity.level().isClientSide())
-						_entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 150, 1, true, false));
+						_entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 150, 1, true, false));
 					((Entity) world.getEntitiesOfClass(Player.class, AABB.ofSize(new Vec3(x, y, z), 15, 15, 15), e -> true).stream().sorted(new Object() {
 						Comparator<Entity> compareDistOf(double _x, double _y, double _z) {
 							return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
@@ -225,7 +227,7 @@ public class DarkironkinOnRMCProcedure {
 							return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
 						}
 					}.compareDistOf(x, y, z)).findFirst().orElse(null)) instanceof LivingEntity _entity && !_entity.level().isClientSide())
-						_entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 100, 1, true, false));
+						_entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 100, 1, true, false));
 					((Entity) world.getEntitiesOfClass(Player.class, AABB.ofSize(new Vec3(x, y, z), 20, 20, 20), e -> true).stream().sorted(new Object() {
 						Comparator<Entity> compareDistOf(double _x, double _y, double _z) {
 							return Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_x, _y, _z));
@@ -246,16 +248,16 @@ public class DarkironkinOnRMCProcedure {
 			PraporMod.queueServerWork(42, () -> {
 				if (world instanceof Level _level) {
 					if (!_level.isClientSide()) {
-						_level.playSound(null, BlockPos.containing(x, y, z), BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("event.raid.horn")), SoundSource.NEUTRAL, 1, 1);
+						_level.playSound(null, BlockPos.containing(x, y, z), SoundEvents.RAID_HORN.value(), SoundSource.NEUTRAL, 1, 1);
 					} else {
-						_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("event.raid.horn")), SoundSource.NEUTRAL, 1, 1, false);
+						_level.playLocalSound(x, y, z, SoundEvents.RAID_HORN.value(), SoundSource.NEUTRAL, 1, 1, false);
 					}
 				}
 				if (world instanceof Level _level) {
 					if (!_level.isClientSide()) {
-						_level.playSound(null, BlockPos.containing(x, y, z), BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:summon")), SoundSource.NEUTRAL, 1, 1);
+						_level.playSound(null, BlockPos.containing(x, y, z), PraporModSounds.SUMMON.get(), SoundSource.NEUTRAL, 1, 1);
 					} else {
-						_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:summon")), SoundSource.NEUTRAL, 1, 1, false);
+						_level.playLocalSound(x, y, z, PraporModSounds.SUMMON.get(), SoundSource.NEUTRAL, 1, 1, false);
 					}
 				}
 				Level _world = entity.level();
@@ -275,22 +277,34 @@ public class DarkironkinOnRMCProcedure {
 						double xd = entity.getX() + Math.cos(angle) * distance;
 						double zd = entity.getZ() + Math.sin(angle) * distance;
 						// Поиск подходящего Y
-						for (int yd = _world.getMaxBuildHeight(); yd >= _world.getMinBuildHeight(); yd--) {
+						for (int yd = _world.getMaxY(); yd >= _world.getMinY(); yd--) {
 							BlockPos pos = new BlockPos((int) xd, yd, (int) zd);
 							BlockState blockBelow = _world.getBlockState(pos.below());
+
 							if (blockBelow.isSolid()) {
 								WitherSkeleton skeleton = new WitherSkeleton(EntityType.WITHER_SKELETON, _world);
 								skeleton.setPos(xd + 0.5, yd, zd + 0.5);
+
 								// Проверка на отсутствие коллизий
 								if (_world.noCollision(skeleton)) {
 									_world.addFreshEntity(skeleton);
-									if (_world instanceof ServerLevel _level)
-										_level.sendParticles(ParticleTypes.SOUL_FIRE_FLAME, xd + 0.5, (yd + 1), zd + 0.5, 200, 0.5, 1, 0.5, 0.01);
+
+									if (_world instanceof ServerLevel serverLevel) {
+										serverLevel.sendParticles(
+												ParticleTypes.SOUL_FIRE_FLAME,
+												xd + 0.5, yd + 1, zd + 0.5,
+												200,
+												0.5, 1, 0.5,
+												0.01
+										);
+									}
+
 									spawned = true;
 									break;
 								}
 							}
 						}
+
 						attempts++;
 					}
 				}

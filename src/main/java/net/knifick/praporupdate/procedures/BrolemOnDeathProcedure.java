@@ -1,5 +1,6 @@
 package net.knifick.praporupdate.procedures;
 
+import net.knifick.praporupdate.init.PraporModSounds;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -42,9 +43,9 @@ public class BrolemOnDeathProcedure {
 		if (entity instanceof BrolemEntity && !damagesource.is(DamageTypes.GENERIC_KILL)) {
 			if (world instanceof Level _level) {
 				if (!_level.isClientSide()) {
-					_level.playSound(null, BlockPos.containing(x, y, z), BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:brolem_ruins")), SoundSource.NEUTRAL, 1, 1);
+					_level.playSound(null, BlockPos.containing(x, y, z), PraporModSounds.BROLEM_RUINS.get(), SoundSource.NEUTRAL, 1, 1);
 				} else {
-					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:brolem_ruins")), SoundSource.NEUTRAL, 1, 1, false);
+					_level.playLocalSound(x, y, z, PraporModSounds.BROLEM_RUINS.get(), SoundSource.NEUTRAL, 1, 1, false);
 				}
 			}
 			if (world instanceof ServerLevel _level)

@@ -24,7 +24,6 @@ import net.knifick.praporupdate.init.PraporModSounds;
 import net.knifick.praporupdate.init.PraporModParticleTypes;
 import net.knifick.praporupdate.init.PraporModMobEffects;
 import net.knifick.praporupdate.init.PraporModItems;
-import net.knifick.praporupdate.init.PraporModFeatures;
 import net.knifick.praporupdate.init.PraporModEntities;
 import net.knifick.praporupdate.init.PraporModBlocks;
 import net.knifick.praporupdate.init.PraporModBlockEntities;
@@ -53,7 +52,6 @@ public class PraporMod {
 		PraporModEntities.REGISTRY.register(modEventBus);
 		PraporModTabs.REGISTRY.register(modEventBus);
 		PraporModVariables.ATTACHMENT_TYPES.register(modEventBus);
-		PraporModFeatures.REGISTRY.register(modEventBus);
 
 		PraporModMobEffects.REGISTRY.register(modEventBus);
 

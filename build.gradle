@@ -3,13 +3,13 @@ plugins {
     id 'net.neoforged.moddev' version '1.0.21'
 }
 
-version = '1.6.3'
+version = '1.6.5'
 base.archivesName = "thanks_mobs"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 neoForge {
-    version = "21.1.65"
+    version = "21.8.46"
 
     runs {
         client {

@@ -1,5 +1,6 @@
 package net.knifick.praporupdate.procedures;
 
+import net.knifick.praporupdate.init.PraporModSounds;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.ItemStack;
@@ -45,23 +46,23 @@ public class BrolemOnRCMProcedure {
 			}
 			if (world instanceof Level _level) {
 				if (!_level.isClientSide()) {
-					_level.playSound(null, BlockPos.containing(x, y, z), BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:soul_sounds")), SoundSource.NEUTRAL, 1, 1);
+					_level.playSound(null, BlockPos.containing(x, y, z), PraporModSounds.SOUL_SOUNDS.get(), SoundSource.NEUTRAL, 1, 1);
 				} else {
-					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:soul_sounds")), SoundSource.NEUTRAL, 1, 1, false);
+					_level.playLocalSound(x, y, z, PraporModSounds.SOUL_SOUNDS.get(), SoundSource.NEUTRAL, 1, 1, false);
 				}
 			}
 			if (world instanceof Level _level) {
 				if (!_level.isClientSide()) {
-					_level.playSound(null, BlockPos.containing(x, y, z), BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:build_bro")), SoundSource.NEUTRAL, 1, 1);
+					_level.playSound(null, BlockPos.containing(x, y, z), PraporModSounds.BUILD_BRO.get(), SoundSource.NEUTRAL, 1, 1);
 				} else {
-					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:build_bro")), SoundSource.NEUTRAL, 1, 1, false);
+					_level.playLocalSound(x, y, z, PraporModSounds.BUILD_BRO.get(), SoundSource.NEUTRAL, 1, 1, false);
 				}
 			}
 			if (world instanceof ServerLevel _level)
 				_level.sendParticles(ParticleTypes.SOUL, x, y, z, 5, 1, 1, 1, 0.05);
 			PraporMod.queueServerWork(149, () -> {
 				if (sourceentity instanceof ServerPlayer _player) {
-					AdvancementHolder _adv = _player.server.getAdvancements().get(ResourceLocation.parse("prapor:brolem_ach"));
+					AdvancementHolder _adv = _player.getServer().getAdvancements().get(ResourceLocation.parse("prapor:brolem_ach"));
 					if (_adv != null) {
 						AdvancementProgress _ap = _player.getAdvancements().getOrStartProgress(_adv);
 						if (!_ap.isDone()) {

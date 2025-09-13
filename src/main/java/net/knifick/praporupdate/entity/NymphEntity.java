@@ -130,7 +130,8 @@ public class NymphEntity extends Animal implements GeoEntity {
 
 	@Override
 	public boolean isFood(ItemStack stack) {
-		return stack.is(Items.POPPED_CHORUS_FRUIT);
+		return stack.is(Items.POPPED_CHORUS_FRUIT)
+				|| stack.is(Items.CHORUS_FRUIT);
 	}
 
 	@Override
@@ -212,27 +213,30 @@ public class NymphEntity extends Animal implements GeoEntity {
 		event.register(
 				PraporModEntities.NYMPH.get(),
 				SpawnPlacementTypes.NO_RESTRICTIONS,
-				Heightmap.Types.WORLD_SURFACE,
+				Heightmap.Types.MOTION_BLOCKING,
 				(entityType, world, reason, pos, random) -> {
-					// проверяем что мы именно в Энде
-					if (!world.getLevel().dimension().equals(Level.END)) {
-						return false;
-					}
-
-					if (pos.getY() < 40) {
-						System.out.println("TOO LOW");
-						return true;
-					}
-
-					int distSq = pos.getX() * pos.getX() + pos.getZ() * pos.getZ();
-					if (distSq < 1000 * 1000) {
-						return false;
-					}
-
+//					if (!world.getLevel().dimension().equals(Level.END)) {
+//						System.out.println("NOT IN END");
+//						return false;
+//					}
+//
+//					if (pos.getY() < 40) {
+//						System.out.println("TOO LOW");
+//						return false;
+//					}
+//
+//					// Проверка, что не внутри блока
+//					if (!world.getBlockState(pos).isAir()) {
+//						System.out.println("BLOCKED");
+//						return false;
+//					}
+//
+//					System.out.println("SPAWN!");
 					return true;
 				},
 				RegisterSpawnPlacementsEvent.Operation.REPLACE
 		);
+
 	}
 
 

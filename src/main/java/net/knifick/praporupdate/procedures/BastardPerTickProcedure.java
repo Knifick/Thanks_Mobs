@@ -1,5 +1,6 @@
 package net.knifick.praporupdate.procedures;
 
+import net.minecraft.sounds.SoundEvents;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.capabilities.Capabilities;
 
@@ -48,9 +49,9 @@ public class BastardPerTickProcedure {
 			itemFromEnt = (itemEnt instanceof ItemEntity _itemEnt ? _itemEnt.getItem() : ItemStack.EMPTY).copy();
 			if (world instanceof Level _level) {
 				if (!_level.isClientSide()) {
-					_level.playSound(null, BlockPos.containing(x, y, z), BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.item.pickup")), SoundSource.NEUTRAL, 1, 1);
+					_level.playSound(null, BlockPos.containing(x, y, z), SoundEvents.ITEM_PICKUP, SoundSource.NEUTRAL, 1, 1);
 				} else {
-					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.item.pickup")), SoundSource.NEUTRAL, 1, 1, false);
+					_level.playLocalSound(x, y, z, SoundEvents.ITEM_PICKUP, SoundSource.NEUTRAL, 1, 1, false);
 				}
 			}
 			if (entity.getCapability(Capabilities.ItemHandler.ENTITY, null) instanceof IItemHandlerModifiable _modHandler) {

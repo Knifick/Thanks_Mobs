@@ -38,7 +38,7 @@ public class MusicStopOnDistanceHandler {
 			} else if (discStack.is(Tags.Items.MUSIC_DISCS)) {
 				var soundEvent = NarratorToAdoptProcedure.musics.get(discStack.getItem());
 				if (soundEvent != null) {
-					soundId = soundEvent.value().getLocation();
+					soundId = soundEvent.value().location();
 				}
 			}
 

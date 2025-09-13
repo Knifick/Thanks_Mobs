@@ -329,8 +329,10 @@ public class PraporEntity extends TamableAnimal implements GeoEntity {
 	}
 
 	public static void init(RegisterSpawnPlacementsEvent event) {
-		event.register(PraporModEntities.PRAPOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-				(entityType, world, reason, pos, random) -> (world.getBlockState(pos.below()).is(BlockTags.ANIMALS_SPAWNABLE_ON) && world.getRawBrightness(pos, 0) > 8), RegisterSpawnPlacementsEvent.Operation.REPLACE);
+		event.register(PraporModEntities.PRAPOR.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.WORLD_SURFACE,
+				(entityType, world, reason, pos, random) -> ((world.getBlockState(pos.below()).is(BlockTags.ANIMALS_SPAWNABLE_ON)
+				|| world.getBlockState(pos.below()).is(Blocks.SAND)
+				|| world.getBlockState(pos.below()).is(Blocks.SANDSTONE)) && world.getRawBrightness(pos, 0) > 8), RegisterSpawnPlacementsEvent.Operation.REPLACE);
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {

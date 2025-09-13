@@ -6,6 +6,6 @@ public class DanceRetirnerProcedure {
 	public static boolean execute(Entity entity) {
 		if (entity == null)
 			return false;
-		return !entity.getPersistentData().getBoolean("dance");
+		return !entity.getPersistentData().getBoolean("dance").get();
 	}
 }

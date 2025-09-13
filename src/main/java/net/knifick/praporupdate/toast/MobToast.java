@@ -1,19 +1,20 @@
 package net.knifick.praporupdate.toast;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class MobToast implements Toast {
     private final Component mobName;
-    private final ResourceLocation mobIcon; // текстура иконки моба
-    private long firstDrawTime = -1L;
+    private final ResourceLocation mobIcon;
     private static final ResourceLocation TOAST_BG =
             ResourceLocation.fromNamespaceAndPath("prapor","textures/screens/toast.png");
 
+    private long firstDrawTime = -1L;
+    private Toast.Visibility visibility = Toast.Visibility.SHOW;
 
     public MobToast(Component mobName, ResourceLocation mobIcon) {
         this.mobName = mobName;
@@ -21,31 +22,44 @@ public class MobToast implements Toast {
     }
 
     @Override
-    public Visibility render(GuiGraphics guiGraphics, ToastComponent toastGui, long delta) {
-        if (firstDrawTime == -1L) firstDrawTime = delta;
+    public void render(GuiGraphics guiGraphics, Font font, long timeSinceLastFrame) {
+        if (firstDrawTime == -1L) {
+            firstDrawTime = timeSinceLastFrame;
+        }
 
         // фон
         guiGraphics.blit(TOAST_BG,
                 0, 0,
                 0, 0,
-                160, 32,
+                this.width(), this.height(),
                 160, 32
         );
 
-        // название моба
-        var font = Minecraft.getInstance().font;
-
-        // ограничиваем по ширине: 120 px (чтобы влезло в тост)
+        // ограничиваем текст по ширине: 120 px
         var lines = font.split(mobName, 120);
 
-        int y = 8; // верхняя позиция текста
-        for (int i = 0; i < lines.size() && i < 2; i++) { // максимум 2 строки (иначе не влезет по высоте)
+        int y = 8;
+        for (int i = 0; i < lines.size() && i < 2; i++) {
             guiGraphics.drawString(font, lines.get(i), 30, y, 0xFFFFFF, false);
             y += 10;
         }
 
-        // показываем 5 секунд
-        return delta - firstDrawTime >= 5000L ? Visibility.HIDE : Visibility.SHOW;
+        // иконка (если нужна, например 16х16)
+        guiGraphics.blit(mobIcon, 8, 8, 0, 0, 16, 16, 16, 16);
     }
 
+    @Override
+    public void update(ToastManager manager, long currentTime) {
+        if (firstDrawTime == -1L) {
+            firstDrawTime = currentTime;
+        }
+        if (currentTime - firstDrawTime >= 5000L) { // 5 секунд
+            visibility = Toast.Visibility.HIDE;
+        }
+    }
+
+    @Override
+    public Visibility getWantedVisibility() {
+        return visibility;
+    }
 }

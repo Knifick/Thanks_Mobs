@@ -31,7 +31,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 
 import net.knifick.praporupdate.procedures.CasketofsoulsRCMProcedure;
-import net.knifick.praporupdate.procedures.CasketofsoulsPerTickProcedure;
+import net.knifick.praporupdate.procedures.CasketOfSoulsPerTickProcedure;
 import net.knifick.praporupdate.block.entity.CasketofsoulsBlockEntity;
 
 public class CasketofsoulsBlock extends Block implements EntityBlock {
@@ -55,11 +55,6 @@ public class CasketofsoulsBlock extends Block implements EntityBlock {
 			}
 		}.getLightLevel())).requiresCorrectToolForDrops());
 		this.registerDefaultState(this.stateDefinition.any().setValue(RESPAWN_ANCHOR_CHARGES, 0));
-	}
-
-	@Override
-	public int getLightBlock(BlockState state, BlockGetter worldIn, BlockPos pos) {
-		return 15;
 	}
 
 	@Override

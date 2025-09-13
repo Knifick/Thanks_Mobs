@@ -61,6 +61,8 @@ import net.knifick.praporupdate.procedures.PookerPerTickProcedure;
 import net.knifick.praporupdate.init.PraporModEntities;
 import net.knifick.praporupdate.goal.AlwaysLookAtPlayerGoal;
 
+import java.util.Random;
+
 public class PookerEntity extends Monster implements GeoEntity {
 	public static final EntityDataAccessor<Boolean> SHOOT = SynchedEntityData.defineId(PookerEntity.class, EntityDataSerializers.BOOLEAN);
 	public static final EntityDataAccessor<String> ANIMATION = SynchedEntityData.defineId(PookerEntity.class, EntityDataSerializers.STRING);
@@ -229,11 +231,11 @@ public class PookerEntity extends Monster implements GeoEntity {
 
 	public static void init(RegisterSpawnPlacementsEvent event) {
 		event.register(PraporModEntities.POOKER.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING, (entityType, world, reason, pos, random) -> {
-			int x = pos.getX();
-			int y = pos.getY();
-			int z = pos.getZ();
-			return SoulSpawnConditionProcedure.execute(world);
-		}, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+			if(SoulSpawnConditionProcedure.execute(world)){
+                return !world.getLevel().dimension().equals(Level.END);
+			}
+            return false;
+        }, RegisterSpawnPlacementsEvent.Operation.REPLACE);
 	}
 
 	public static AttributeSupplier.Builder createAttributes() {
