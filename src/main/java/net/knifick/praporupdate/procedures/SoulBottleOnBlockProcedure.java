@@ -1,6 +1,7 @@
 package net.knifick.praporupdate.procedures;
 
 import net.knifick.praporupdate.init.PraporModItems;
+import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -32,67 +33,76 @@ import javax.annotation.Nullable;
 public class SoulBottleOnBlockProcedure {
 	@SubscribeEvent
 	public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-		if (event.getHand() != event.getEntity().getUsedItemHand())
-			return;
-		execute(event, event.getLevel(), event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(), event.getEntity());
+		if (event.getHand() != event.getEntity().getUsedItemHand()) return;
+		execute(event, event.getLevel(),
+				event.getPos().getX(), event.getPos().getY(), event.getPos().getZ(),
+				event.getEntity());
 	}
 
 	public static void execute(LevelAccessor world, double x, double y, double z, Entity entity) {
 		execute(null, world, x, y, z, entity);
 	}
 
-	private static void execute(@Nullable Event event, LevelAccessor world, double x, double y, double z, Entity entity) {
-		if (entity == null)
-			return;
-		if ((world.getBlockState(BlockPos.containing(x, y, z))).getBlock() == Blocks.CAMPFIRE
-		&& entity instanceof Player player && player.getItemInHand(InteractionHand.MAIN_HAND).getItem() == PraporModItems.SOUL_BOTTLE.get()) {
-			{
-				BlockPos _bp = BlockPos.containing(x, y, z);
-				BlockState _bs = Blocks.SOUL_CAMPFIRE.defaultBlockState();
-				BlockState _bso = world.getBlockState(_bp);
-				for (Property<?> _propertyOld : _bso.getProperties()) {
-					Property _propertyNew = _bs.getBlock().getStateDefinition().getProperty(_propertyOld.getName());
-					if (_propertyNew != null && _bs.getValue(_propertyNew) != null)
-						try {
-							_bs = _bs.setValue(_propertyNew, _bso.getValue(_propertyOld));
-						} catch (Exception e) {
-						}
+	private static void execute(@Nullable net.neoforged.bus.api.Event event,
+								LevelAccessor world, double x, double y, double z, Entity entity) {
+		if (entity == null) return;
+
+		BlockPos pos = BlockPos.containing(x, y, z);
+
+		if (world.getBlockState(pos).getBlock() == Blocks.CAMPFIRE
+				&& entity instanceof Player player
+				&& player.getItemInHand(InteractionHand.MAIN_HAND).is(PraporModItems.SOUL_BOTTLE.get())) {
+
+			// === Меняем блок, переносим только свойства ===
+			BlockState newState = Blocks.SOUL_CAMPFIRE.defaultBlockState();
+			BlockState oldState = world.getBlockState(pos);
+
+			for (Property<?> pOld : oldState.getProperties()) {
+				Property<?> pNew = newState.getBlock().getStateDefinition().getProperty(pOld.getName());
+				if (pNew != null) {
+					try {
+						newState = copyProperty(newState, oldState, pOld, pNew);
+					} catch (Exception ignored) {}
 				}
-				BlockEntity _be = world.getBlockEntity(_bp);
-				CompoundTag _bnbt = null;
-				if (_be != null) {
-					_bnbt = _be.saveWithFullMetadata(world.registryAccess());
-					_be.setRemoved();
-				}
-				world.setBlock(_bp, _bs, 3);
-				if (_bnbt != null) {
-					_be = world.getBlockEntity(_bp);
-					if (_be != null) {
-						try {
-							_be.loadWithComponents(_bnbt, world.registryAccess());
-						} catch (Exception ignored) {
-						}
+			}
+
+			// НИКАКОГО сохранения/загрузки NBT BlockEntity — это и ломает сборку на 1.21.8
+			world.setBlock(pos, newState, 3);
+
+			// Частицы
+			if (world instanceof ServerLevel sl)
+				sl.sendParticles(ParticleTypes.SOUL, x, y, z, 5, 0.5, 0.5, 0.5, 0.05);
+
+			// Звук (нужен именно SoundEvent, а не Holder/Optional)
+			if (world instanceof Level level) {
+				var soundOpt = level.registryAccess()
+						.lookupOrThrow(Registries.SOUND_EVENT)
+						.get(ResourceLocation.parse("prapor:soul_sounds"));
+
+				soundOpt.ifPresent(holder -> {
+					var sound = holder.value(); // SoundEvent
+					if (!level.isClientSide()) {
+						level.playSound(null, pos, sound, SoundSource.AMBIENT, 1.0F, 1.0F);
+					} else {
+						level.playLocalSound(x, y, z, sound, SoundSource.AMBIENT, 1.0F, 1.0F, false);
 					}
-				}
+				});
 			}
-			if (world instanceof ServerLevel _level)
-				_level.sendParticles(ParticleTypes.SOUL, x, y, z, 5, 0.5, 0.5, 0.5, 0.05);
-			if (world instanceof Level _level) {
-				if (!_level.isClientSide()) {
-					_level.playSound(null, BlockPos.containing(x, y, z), BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:soul_sounds")), SoundSource.AMBIENT, 1, 1);
-				} else {
-					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:soul_sounds")), SoundSource.AMBIENT, 1, 1, false);
-				}
-			}
-			if (!(entity instanceof Player _plr ? _plr.getAbilities().instabuild : false)) {
-				if (entity instanceof LivingEntity _entity) {
-					ItemStack _setstack = new ItemStack(Items.GLASS_BOTTLE).copy();
-					_setstack.setCount(1);
-					_entity.setItemInHand(InteractionHand.MAIN_HAND, _setstack);
-					if (_entity instanceof Player _player)
-						_player.getInventory().setChanged();
+
+			// Замена бутылки в руке
+			if (!(entity instanceof Player p && p.getAbilities().instabuild)) {
+				if (entity instanceof LivingEntity le) {
+					le.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.GLASS_BOTTLE));
+					if (le instanceof Player p) p.getInventory().setChanged();
 				}
 			}
 		}
+	}
+
+	// Типобезопасная копия значения свойства из oldState -> в newState
+	@SuppressWarnings({"unchecked","rawtypes"})
+	private static <T extends Comparable<T>> BlockState copyProperty(BlockState newState, BlockState oldState,
+																	 Property oldP, Property newP) {
+		return newState.setValue(newP, (Comparable) oldState.getValue(oldP));
 	}
 }

@@ -1,6 +1,9 @@
 
 package net.knifick.praporupdate.item;
 
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.api.distmarker.Dist;
 
@@ -14,13 +17,6 @@ import java.util.List;
 
 public class PraporkaItem extends Item {
 	public PraporkaItem() {
-		super(new Item.Properties().stacksTo(1).rarity(Rarity.COMMON));
-	}
-
-	@Override
-	@OnlyIn(Dist.CLIENT)
-	public void appendHoverText(ItemStack itemstack, Item.TooltipContext context, List<Component> list, TooltipFlag flag) {
-		super.appendHoverText(itemstack, context, list, flag);
-		list.add(Component.translatable("item.prapor.praporka.description_0"));
+		super(new Properties().stacksTo(1).rarity(Rarity.COMMON));
 	}
 }

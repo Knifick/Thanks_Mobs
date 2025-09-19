@@ -1,82 +1,99 @@
 package net.knifick.praporupdate.block.entity;
 
-import software.bernie.geckolib.util.GeckoLibUtil;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animatable.GeoBlockEntity;
+import net.knifick.praporupdate.block.GoldTrophyBlock;
+import net.knifick.praporupdate.init.PraporModBlockEntities;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.network.chat.Component;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-
-import net.knifick.praporupdate.init.PraporModBlockEntities;
-import net.knifick.praporupdate.block.GoldTrophyBlock;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
+import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animatable.processing.AnimationTest;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import javax.annotation.Nullable;
-
 import java.util.stream.IntStream;
 
-public class GoldTrophyTileEntity extends RandomizableContainerBlockEntity implements GeoBlockEntity, WorldlyContainer {
+public class GoldTrophyTileEntity extends RandomizableContainerBlockEntity implements GeoBlockEntity, net.minecraft.world.WorldlyContainer {
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-	private NonNullList<ItemStack> stacks = NonNullList.<ItemStack>withSize(9, ItemStack.EMPTY);
+	private NonNullList<ItemStack> stacks = NonNullList.withSize(9, ItemStack.EMPTY);
 	private final SidedInvWrapper handler = new SidedInvWrapper(this, null);
 
 	public GoldTrophyTileEntity(BlockPos pos, BlockState state) {
 		super(PraporModBlockEntities.GOLD_TROPHY.get(), pos, state);
 	}
 
-	private PlayState predicate(AnimationState event) {
-		String animationprocedure = ("" + this.getBlockState().getValue(GoldTrophyBlock.ANIMATION));
-		if (animationprocedure.equals("0")) {
-			return event.setAndContinue(RawAnimation.begin().thenLoop(animationprocedure));
-		}
-		return PlayState.STOP;
+	// ===== GeckoLib 5: предикаты =====
+
+	private PlayState loopPredicate(AnimationTest<GoldTrophyTileEntity> test) {
+		// Читаем числовое состояние из блока и играем одноимённый луп "0"/"1"/... если 0 — стопим
+		String anim = String.valueOf(this.getBlockState().getValue(GoldTrophyBlock.ANIMATION));
+		if ("0".equals(anim)) return PlayState.STOP;
+		return test.setAndContinue(RawAnimation.begin().thenLoop(anim));
 	}
 
-	String prevAnim = "0";
+	private String prevAnim = "0";
 
-	private PlayState procedurePredicate(AnimationState event) {
-		String animationprocedure = ("" + this.getBlockState().getValue(GoldTrophyBlock.ANIMATION));
-		if (!animationprocedure.equals("0") && event.getController().getAnimationState() == AnimationController.State.STOPPED || (!animationprocedure.equals(prevAnim) && !animationprocedure.equals("0"))) {
-			if (!animationprocedure.equals(prevAnim))
-				event.getController().forceAnimationReset();
-			event.getController().setAnimation(RawAnimation.begin().thenPlay(animationprocedure));
-			if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-				if (this.getBlockState().getBlock().getStateDefinition().getProperty("animation") instanceof IntegerProperty _integerProp)
-					level.setBlock(this.getBlockPos(), this.getBlockState().setValue(_integerProp, 0), 3);
-				event.getController().forceAnimationReset();
+	private PlayState procedurePredicate(AnimationTest<GoldTrophyTileEntity> test) {
+		String anim = String.valueOf(this.getBlockState().getValue(GoldTrophyBlock.ANIMATION));
+
+		// Если пришёл новый клип (не "0") или предыдущий завершился — проигрываем одноразово
+		boolean newAnim = !anim.equals(prevAnim) && !"0".equals(anim);
+		boolean stopped = test.controller().getAnimationState() == AnimationController.State.STOPPED;
+
+		if (newAnim || (!"0".equals(anim) && stopped)) {
+			if (newAnim) test.resetCurrentAnimation();
+			test.setAnimation(RawAnimation.begin().thenPlay(anim));
+			// Если клип завершился — сбрасываем property обратно в 0
+			if (test.controller().getAnimationState() == AnimationController.State.STOPPED) {
+				if (this.level != null && this.level.isClientSide) {
+					// клиент сам не меняет blockstate — ждём сервер
+				} else if (this.level != null) {
+					IntegerProperty prop = this.getBlockState().getBlock().getStateDefinition().getProperty("animation") instanceof IntegerProperty ip ? ip : null;
+					if (prop != null) {
+						this.level.setBlock(this.getBlockPos(), this.getBlockState().setValue(prop, 0), 3);
+					}
+				}
+				test.resetCurrentAnimation();
 			}
-		} else if (animationprocedure.equals("0")) {
+			prevAnim = anim;
+			return PlayState.CONTINUE;
+		}
+
+		if ("0".equals(anim)) {
 			prevAnim = "0";
 			return PlayState.STOP;
 		}
-		prevAnim = animationprocedure;
+
+		prevAnim = anim;
 		return PlayState.CONTINUE;
 	}
 
 	@Override
 	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-		data.add(new AnimationController<GoldTrophyTileEntity>(this, "controller", 0, this::predicate));
-		data.add(new AnimationController<GoldTrophyTileEntity>(this, "procedurecontroller", 0, this::procedurePredicate));
+		data.add(new AnimationController<>("controller", 0, this::loopPredicate));
+		data.add(new AnimationController<>("procedurecontroller", 0, this::procedurePredicate));
 	}
 
 	@Override
@@ -84,19 +101,22 @@ public class GoldTrophyTileEntity extends RandomizableContainerBlockEntity imple
 		return this.cache;
 	}
 
+	// ====== NBT (BlockEntity продолжает работать через CompoundTag) ======
+
 	@Override
-	public void loadAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
-		super.loadAdditional(compound, lookupProvider);
-		if (!this.tryLoadLootTable(compound))
+	public void loadAdditional(ValueInput input) {
+		super.loadAdditional(input);
+		if (!this.tryLoadLootTable(input)) {
 			this.stacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-		ContainerHelper.loadAllItems(compound, this.stacks, lookupProvider);
+			ContainerHelper.loadAllItems(input, this.stacks);
+		}
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag compound, HolderLookup.Provider lookupProvider) {
-		super.saveAdditional(compound, lookupProvider);
-		if (!this.trySaveLootTable(compound)) {
-			ContainerHelper.saveAllItems(compound, this.stacks, lookupProvider);
+	public void saveAdditional(ValueOutput output) {
+		super.saveAdditional(output);
+		if (!this.trySaveLootTable(output)) {
+			ContainerHelper.saveAllItems(output, this.stacks);
 		}
 	}
 
@@ -106,9 +126,11 @@ public class GoldTrophyTileEntity extends RandomizableContainerBlockEntity imple
 	}
 
 	@Override
-	public CompoundTag getUpdateTag(HolderLookup.Provider lookupProvider) {
-		return this.saveWithFullMetadata(lookupProvider);
+	public net.minecraft.nbt.CompoundTag getUpdateTag(HolderLookup.Provider lookup) {
+		return this.saveWithFullMetadata(lookup);
 	}
+
+	// ====== Инвентарь/GUI ======
 
 	@Override
 	public int getContainerSize() {
@@ -117,9 +139,7 @@ public class GoldTrophyTileEntity extends RandomizableContainerBlockEntity imple
 
 	@Override
 	public boolean isEmpty() {
-		for (ItemStack itemstack : this.stacks)
-			if (!itemstack.isEmpty())
-				return false;
+		for (ItemStack s : this.stacks) if (!s.isEmpty()) return false;
 		return true;
 	}
 
@@ -134,8 +154,10 @@ public class GoldTrophyTileEntity extends RandomizableContainerBlockEntity imple
 	}
 
 	@Override
-	public AbstractContainerMenu createMenu(int id, Inventory inventory) {
-		return ChestMenu.threeRows(id, inventory);
+	public AbstractContainerMenu createMenu(int id, Inventory inv) {
+		// если хочешь, чтобы GUI реально работал с этим BE-инвентарём, лучше сделать свой Menu,
+		// но для теста подойдёт generic 9x3:
+		return ChestMenu.threeRows(id, inv);
 	}
 
 	@Override
@@ -164,12 +186,12 @@ public class GoldTrophyTileEntity extends RandomizableContainerBlockEntity imple
 	}
 
 	@Override
-	public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
+	public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction dir) {
 		return this.canPlaceItem(index, stack);
 	}
 
 	@Override
-	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
+	public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction dir) {
 		return true;
 	}
 

@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 import net.knifick.praporupdate.block.model.GoldTrophyBlockModel;
 import net.knifick.praporupdate.block.entity.GoldTrophyTileEntity;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
 public class GoldTrophyTileRenderer extends GeoBlockRenderer<GoldTrophyTileEntity> {
 	public GoldTrophyTileRenderer() {
@@ -15,7 +16,7 @@ public class GoldTrophyTileRenderer extends GeoBlockRenderer<GoldTrophyTileEntit
 	}
 
 	@Override
-	public RenderType getRenderType(GoldTrophyTileEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
-		return RenderType.entityTranslucent(getTextureLocation(animatable));
+	public RenderType getRenderType(GeoRenderState animatable, ResourceLocation texture) {
+		return RenderType.entityTranslucent(texture);
 	}
 }

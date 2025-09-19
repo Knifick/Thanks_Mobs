@@ -4,10 +4,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -32,14 +31,16 @@ public class CustomSpawnEggItem extends Item {
         ItemStack stack = context.getItemInHand();
         BlockPos pos = context.getClickedPos().relative(context.getClickedFace());
 
-        type.spawn(serverLevel, stack, context.getPlayer(), pos, MobSpawnType.SPAWN_EGG, true, false);
+        // Новый enum: EntitySpawnReason.SPAWN_EGG
+        type.spawn(serverLevel, stack, context.getPlayer(), pos, EntitySpawnReason.SPAWN_ITEM_USE, true, false);
 
         stack.shrink(1);
         return InteractionResult.CONSUME;
     }
 
+
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         // аналогично SpawnEggItem.use, если хочешь спавн в воде
         return super.use(level, player, hand);
     }

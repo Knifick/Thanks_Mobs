@@ -1,48 +1,45 @@
 package net.knifick.praporupdate.network;
 
-import net.knifick.praporupdate.init.PraporModEntities;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.common.util.INBTSerializable;
-import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.bus.api.SubscribeEvent;
-
-import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.network.protocol.PacketFlow;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.HolderLookup;
-
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.knifick.praporupdate.PraporMod;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.level.saveddata.SavedDataType;
+import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.attachment.AttachmentType;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class PraporModVariables {
-	public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, PraporMod.MODID);
-	public static final Supplier<AttachmentType<PlayerVariables>> PLAYER_VARIABLES = ATTACHMENT_TYPES.register("player_variables", () -> AttachmentType.serializable(() -> new PlayerVariables()).build());
+	public static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
+			DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, PraporMod.MODID);
+
+	public static final Supplier<AttachmentType<PlayerVariables>> PLAYER_VARIABLES =
+			ATTACHMENT_TYPES.register("player_variables", () ->
+					AttachmentType.builder(PlayerVariables::new).build()
+			);
 
 	@SubscribeEvent
 	public static void init(FMLCommonSetupEvent event) {
@@ -55,25 +52,26 @@ public class PraporModVariables {
 		@SubscribeEvent
 		public static void onPlayerLoggedInSyncPlayerVariables(PlayerEvent.PlayerLoggedInEvent event) {
 			if (event.getEntity() instanceof ServerPlayer player)
-				player.getData(PLAYER_VARIABLES).syncPlayerVariables(event.getEntity());
+				player.getData(PLAYER_VARIABLES).syncPlayerVariables(player);
 		}
 
 		@SubscribeEvent
 		public static void onPlayerRespawnedSyncPlayerVariables(PlayerEvent.PlayerRespawnEvent event) {
 			if (event.getEntity() instanceof ServerPlayer player)
-				player.getData(PLAYER_VARIABLES).syncPlayerVariables(event.getEntity());
+				player.getData(PLAYER_VARIABLES).syncPlayerVariables(player);
 		}
 
 		@SubscribeEvent
 		public static void onPlayerChangedDimensionSyncPlayerVariables(PlayerEvent.PlayerChangedDimensionEvent event) {
 			if (event.getEntity() instanceof ServerPlayer player)
-				player.getData(PLAYER_VARIABLES).syncPlayerVariables(event.getEntity());
+				player.getData(PLAYER_VARIABLES).syncPlayerVariables(player);
 		}
 
 		@SubscribeEvent
 		public static void clonePlayer(PlayerEvent.Clone event) {
 			PlayerVariables original = event.getOriginal().getData(PLAYER_VARIABLES);
 			PlayerVariables clone = new PlayerVariables();
+
 			clone.isFirst = original.isFirst;
 			if (!event.isWasDeath()) {
 				clone.screamAnimValue = original.screamAnimValue;
@@ -83,144 +81,127 @@ public class PraporModVariables {
 			clone.hasSucker = original.hasSucker;
 			clone.bmaceSlot = original.bmaceSlot;
 			clone.suckCount = original.suckCount;
-			clone.seenMobs = original.seenMobs;
+			clone.seenMobs = new HashMap<>(original.seenMobs);
+
 			event.getEntity().setData(PLAYER_VARIABLES, clone);
 		}
 
 		@SubscribeEvent
 		public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
 			if (event.getEntity() instanceof ServerPlayer player) {
-				SavedData mapdata = MapVariables.get(event.getEntity().level());
-				SavedData worlddata = WorldVariables.get(event.getEntity().level());
+				MapVariables mapdata = MapVariables.get(player.level());
+				WorldVariables worlddata = WorldVariables.get(player.level());
 				if (mapdata != null)
-					PacketDistributor.sendToPlayer(player, new SavedDataSyncMessage(0, mapdata));
+					PacketDistributor.sendToPlayer(player, new SavedDataSyncMessage(0, mapdata.isWitherDead));
 				if (worlddata != null)
-					PacketDistributor.sendToPlayer(player, new SavedDataSyncMessage(1, worlddata));
+					PacketDistributor.sendToPlayer(player, new SavedDataSyncMessage(1, false));
 			}
 		}
 
 		@SubscribeEvent
 		public static void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
 			if (event.getEntity() instanceof ServerPlayer player) {
-				SavedData worlddata = WorldVariables.get(event.getEntity().level());
+				WorldVariables worlddata = WorldVariables.get(player.level());
 				if (worlddata != null)
-					PacketDistributor.sendToPlayer(player, new SavedDataSyncMessage(1, worlddata));
+					PacketDistributor.sendToPlayer(player, new SavedDataSyncMessage(1, false));
 			}
 		}
 	}
 
+	// ---------- WORLD VARIABLES ----------
 	public static class WorldVariables extends SavedData {
 		public static final String DATA_NAME = "prapor_worldvars";
 
-		public static WorldVariables load(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-			WorldVariables data = new WorldVariables();
-			data.read(tag, lookupProvider);
-			return data;
-		}
-
-		public void read(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
-		}
-
-		@Override
-		public CompoundTag save(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
-			return nbt;
-		}
-
-		public void syncData(LevelAccessor world) {
-			this.setDirty();
-			if (world instanceof ServerLevel level)
-				PacketDistributor.sendToPlayersInDimension(level, new SavedDataSyncMessage(1, this));
-		}
+		public static final SavedDataType<WorldVariables> ID =
+				new SavedDataType<>(DATA_NAME, WorldVariables::new, Codec.unit(new WorldVariables()));
 
 		static WorldVariables clientSide = new WorldVariables();
 
+		public void syncData(LevelAccessor world) {
+			this.setDirty();
+			if (world instanceof ServerLevel level) {
+				PacketDistributor.sendToPlayersInDimension(level, new SavedDataSyncMessage(1, false));
+			}
+		}
+
 		public static WorldVariables get(LevelAccessor world) {
 			if (world instanceof ServerLevel level) {
-				return level.getDataStorage().computeIfAbsent(new SavedData.Factory<>(WorldVariables::new, WorldVariables::load), DATA_NAME);
+				DimensionDataStorage ds = level.getDataStorage();
+				return ds.computeIfAbsent(ID);
 			} else {
 				return clientSide;
 			}
 		}
 	}
 
+	// ---------- MAP VARIABLES ----------
 	public static class MapVariables extends SavedData {
 		public static final String DATA_NAME = "prapor_mapvars";
 		public boolean isWitherDead = false;
 
-		public static MapVariables load(CompoundTag tag, HolderLookup.Provider lookupProvider) {
-			MapVariables data = new MapVariables();
-			data.read(tag, lookupProvider);
-			return data;
-		}
-
-		public void read(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
-			isWitherDead = nbt.getBoolean("isWitherDead");
-		}
-
-		@Override
-		public CompoundTag save(CompoundTag nbt, HolderLookup.Provider lookupProvider) {
-			nbt.putBoolean("isWitherDead", isWitherDead);
-			return nbt;
-		}
-
-		public void syncData(LevelAccessor world) {
-			this.setDirty();
-			if (world instanceof Level && !world.isClientSide())
-				PacketDistributor.sendToAllPlayers(new SavedDataSyncMessage(0, this));
-		}
+		public static final SavedDataType<MapVariables> ID =
+				new SavedDataType<>(DATA_NAME, MapVariables::new,
+						RecordCodecBuilder.create(i -> i.group(
+								Codec.BOOL.fieldOf("isWitherDead").forGetter(v -> v.isWitherDead)
+						).apply(i, b -> {
+							MapVariables v = new MapVariables();
+							v.isWitherDead = b;
+							return v;
+						})));
 
 		static MapVariables clientSide = new MapVariables();
 
+		public void syncData(LevelAccessor world) {
+			this.setDirty();
+			if (world instanceof Level lvl && !lvl.isClientSide()) {
+				PacketDistributor.sendToAllPlayers(new SavedDataSyncMessage(0, this.isWitherDead));
+			}
+		}
+
 		public static MapVariables get(LevelAccessor world) {
-			if (world instanceof ServerLevelAccessor serverLevelAcc) {
-				return serverLevelAcc.getLevel().getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(new SavedData.Factory<>(MapVariables::new, MapVariables::load), DATA_NAME);
+			if (world instanceof ServerLevel serverLevel) {
+				return serverLevel.getServer().overworld().getDataStorage().computeIfAbsent(ID);
 			} else {
 				return clientSide;
 			}
 		}
 	}
 
-	public record SavedDataSyncMessage(int dataType, SavedData data) implements CustomPacketPayload {
-		public static final Type<SavedDataSyncMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(PraporMod.MODID, "saved_data_sync"));
-		public static final StreamCodec<RegistryFriendlyByteBuf, SavedDataSyncMessage> STREAM_CODEC = StreamCodec.of((RegistryFriendlyByteBuf buffer, SavedDataSyncMessage message) -> {
-			buffer.writeInt(message.dataType);
-			if (message.data != null)
-				buffer.writeNbt(message.data.save(new CompoundTag(), buffer.registryAccess()));
-		}, (RegistryFriendlyByteBuf buffer) -> {
-			int dataType = buffer.readInt();
-			CompoundTag nbt = buffer.readNbt();
-			SavedData data = null;
-			if (nbt != null) {
-				data = dataType == 0 ? new MapVariables() : new WorldVariables();
-				if (data instanceof MapVariables mapVariables)
-					mapVariables.read(nbt, buffer.registryAccess());
-				else if (data instanceof WorldVariables worldVariables)
-					worldVariables.read(nbt, buffer.registryAccess());
-			}
-			return new SavedDataSyncMessage(dataType, data);
-		});
+	// ---------- SAVED DATA SYNC PACKET ----------
+	public record SavedDataSyncMessage(int dataType, boolean isWitherDead) implements CustomPacketPayload {
+		public static final Type<SavedDataSyncMessage> TYPE =
+				new Type<>(ResourceLocation.fromNamespaceAndPath(PraporMod.MODID, "saved_data_sync"));
+
+		public static final StreamCodec<RegistryFriendlyByteBuf, SavedDataSyncMessage> STREAM_CODEC =
+				StreamCodec.of(
+						(buf, msg) -> {
+							buf.writeInt(msg.dataType);
+							buf.writeBoolean(msg.isWitherDead);
+						},
+						buf -> new SavedDataSyncMessage(buf.readInt(), buf.readBoolean())
+				);
 
 		@Override
-		public Type<SavedDataSyncMessage> type() {
-			return TYPE;
-		}
+		public Type<SavedDataSyncMessage> type() { return TYPE; }
 
-		public static void handleData(final SavedDataSyncMessage message, final IPayloadContext context) {
-			if (context.flow() == PacketFlow.CLIENTBOUND && message.data != null) {
-				context.enqueueWork(() -> {
-					if (message.dataType == 0)
-						MapVariables.clientSide.read(message.data.save(new CompoundTag(), context.player().registryAccess()), context.player().registryAccess());
-					else
-						WorldVariables.clientSide.read(message.data.save(new CompoundTag(), context.player().registryAccess()), context.player().registryAccess());
+		public static void handleData(final SavedDataSyncMessage msg, final IPayloadContext ctx) {
+			if (ctx.flow() == PacketFlow.CLIENTBOUND) {
+				ctx.enqueueWork(() -> {
+					if (msg.dataType == 0) {
+						MapVariables.clientSide.isWitherDead = msg.isWitherDead;
+					} else {
+						// world vars пока пустые
+					}
 				}).exceptionally(e -> {
-					context.connection().disconnect(Component.literal(e.getMessage()));
+					ctx.connection().disconnect(Component.literal(e.getMessage()));
 					return null;
 				});
 			}
 		}
 	}
 
-	public static class PlayerVariables implements INBTSerializable<CompoundTag> {
+	// ---------- PLAYER VARIABLES ----------
+	public static class PlayerVariables {
 		public boolean isFirst = false;
 		public boolean hasSucker = false;
 		public double screamAnimValue = 0;
@@ -241,70 +222,68 @@ public class PraporModVariables {
 		public int mantleTimer = 0;
 		public boolean isSee = false;
 
-		@Override
-		public CompoundTag serializeNBT(HolderLookup.Provider lookupProvider) {
-			CompoundTag nbt = new CompoundTag();
-			nbt.putBoolean("isFirst", isFirst);
-			nbt.putBoolean("hasSucker", hasSucker);
-			nbt.putDouble("screamAnimValue", screamAnimValue);
-			nbt.putInt("bmaceSlot", bmaceSlot);
-			nbt.putInt("suckCount", suckCount);
-			ListTag listTag = new ListTag();
-			for (Map.Entry<String, Integer> entry : seenMobs.entrySet()) {
-				CompoundTag tag = new CompoundTag();
-				tag.putString("entityType", entry.getKey());
-				tag.putInt("value", entry.getValue());
-				listTag.add(tag);
-			}
-			nbt.put("seenMobs", listTag);
-			nbt.putInt("mantleTimer", mantleTimer);
-			nbt.putBoolean("isSee", isSee);
-			return nbt;
-		}
-
-		@Override
-		public void deserializeNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
-			isFirst = nbt.getBoolean("isFirst");
-			hasSucker = nbt.getBoolean("hasSucker");
-			screamAnimValue = nbt.getDouble("screamAnimValue");
-			bmaceSlot = nbt.getInt("bmaceSlot");
-			suckCount = nbt.getInt("suckCount");
-			seenMobs.clear();
-			ListTag listTag = nbt.contains("seenMobs") ? nbt.getList("seenMobs", 10) : new ListTag();
-			for (int i = 0; i < listTag.size(); i++) {
-				CompoundTag tag = listTag.getCompound(i);
-				String typeName = tag.getString("entityType");
-				int value = tag.getInt("value");
-				seenMobs.put(typeName, value);
-			}
-			suckCount = nbt.getInt("mantleTimer");
-			isSee = nbt.getBoolean("isSee");
-		}
-
 		public void syncPlayerVariables(Entity entity) {
-			if (entity instanceof ServerPlayer serverPlayer)
-				PacketDistributor.sendToPlayer(serverPlayer, new PlayerVariablesSyncMessage(this));
+			if (entity instanceof ServerPlayer sp)
+				PacketDistributor.sendToPlayer(sp, new PlayerVariablesSyncMessage(this));
 		}
 	}
 
+	// ---------- PLAYER VARIABLES SYNC PACKET ----------
 	public record PlayerVariablesSyncMessage(PlayerVariables data) implements CustomPacketPayload {
-		public static final Type<PlayerVariablesSyncMessage> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(PraporMod.MODID, "player_variables_sync"));
-		public static final StreamCodec<RegistryFriendlyByteBuf, PlayerVariablesSyncMessage> STREAM_CODEC = StreamCodec
-				.of((RegistryFriendlyByteBuf buffer, PlayerVariablesSyncMessage message) -> buffer.writeNbt(message.data().serializeNBT(buffer.registryAccess())), (RegistryFriendlyByteBuf buffer) -> {
-					PlayerVariablesSyncMessage message = new PlayerVariablesSyncMessage(new PlayerVariables());
-					message.data.deserializeNBT(buffer.registryAccess(), buffer.readNbt());
-					return message;
-				});
+		public static final Type<PlayerVariablesSyncMessage> TYPE =
+				new Type<>(ResourceLocation.fromNamespaceAndPath(PraporMod.MODID, "player_variables_sync"));
+
+		public static final StreamCodec<RegistryFriendlyByteBuf, PlayerVariablesSyncMessage> STREAM_CODEC =
+				StreamCodec.of(
+						(buf, msg) -> {
+							var d = msg.data();
+							buf.writeBoolean(d.isFirst);
+							buf.writeBoolean(d.hasSucker);
+							buf.writeDouble(d.screamAnimValue);
+							buf.writeInt(d.bmaceSlot);
+							buf.writeInt(d.suckCount);
+							buf.writeVarInt(d.seenMobs.size());
+							d.seenMobs.forEach((k, v) -> {
+								buf.writeUtf(k);
+								buf.writeInt(v);
+							});
+							buf.writeInt(d.mantleTimer);
+							buf.writeBoolean(d.isSee);
+						},
+						buf -> {
+							PlayerVariables d = new PlayerVariables();
+							d.isFirst = buf.readBoolean();
+							d.hasSucker = buf.readBoolean();
+							d.screamAnimValue = buf.readDouble();
+							d.bmaceSlot = buf.readInt();
+							d.suckCount = buf.readInt();
+							int n = buf.readVarInt();
+							d.seenMobs.clear();
+							for (int i = 0; i < n; i++) d.seenMobs.put(buf.readUtf(), buf.readInt());
+							d.mantleTimer = buf.readInt();
+							d.isSee = buf.readBoolean();
+							return new PlayerVariablesSyncMessage(d);
+						}
+				);
 
 		@Override
-		public Type<PlayerVariablesSyncMessage> type() {
-			return TYPE;
-		}
+		public Type<PlayerVariablesSyncMessage> type() { return TYPE; }
 
-		public static void handleData(final PlayerVariablesSyncMessage message, final IPayloadContext context) {
-			if (context.flow() == PacketFlow.CLIENTBOUND && message.data != null) {
-				context.enqueueWork(() -> context.player().getData(PLAYER_VARIABLES).deserializeNBT(context.player().registryAccess(), message.data.serializeNBT(context.player().registryAccess()))).exceptionally(e -> {
-					context.connection().disconnect(Component.literal(e.getMessage()));
+		public static void handleData(final PlayerVariablesSyncMessage msg, final IPayloadContext ctx) {
+			if (ctx.flow() == PacketFlow.CLIENTBOUND && msg.data != null) {
+				ctx.enqueueWork(() -> {
+					var pv = ctx.player().getData(PLAYER_VARIABLES);
+					pv.isFirst = msg.data.isFirst;
+					pv.hasSucker = msg.data.hasSucker;
+					pv.screamAnimValue = msg.data.screamAnimValue;
+					pv.bmaceSlot = msg.data.bmaceSlot;
+					pv.suckCount = msg.data.suckCount;
+					pv.seenMobs.clear();
+					pv.seenMobs.putAll(msg.data.seenMobs);
+					pv.mantleTimer = msg.data.mantleTimer;
+					pv.isSee = msg.data.isSee;
+				}).exceptionally(e -> {
+					ctx.connection().disconnect(Component.literal(e.getMessage()));
 					return null;
 				});
 			}

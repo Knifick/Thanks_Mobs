@@ -14,7 +14,7 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.lwjgl.glfw.GLFW;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = {Dist.CLIENT})
+@EventBusSubscriber(value = {Dist.CLIENT})
 public class PraporModKeyMappings {
 	public static final KeyMapping MANTLE_KEYBIND = new KeyMapping("key.prapor.mantle_keybind", GLFW.GLFW_KEY_R, "key.categories.prapor") {
 		private boolean isDownOld = false;

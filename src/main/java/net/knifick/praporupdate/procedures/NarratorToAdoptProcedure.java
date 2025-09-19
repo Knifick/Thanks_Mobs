@@ -103,7 +103,7 @@ public class NarratorToAdoptProcedure {
 			if (world instanceof Level _level) {
 				if (!_level.isClientSide()) {
 					_level.playSound(null, BlockPos.containing(x, y, z),
-							BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:adopt")),
+							PraporModSounds.ADOPT.get(),
 							SoundSource.NEUTRAL, 1, 1);
 				}
 			}
@@ -206,10 +206,10 @@ public class NarratorToAdoptProcedure {
 					ResourceLocation soundId = null;
 
 					if (extractedDisc.is(Tags.Items.MUSIC_DISCS)) {
-						soundId = musics.get(extractedDisc.getItem()).value().getLocation();
+						soundId = musics.get(extractedDisc.getItem()).value().location();
 					}
 					else if (extractedDisc.getItem() == PraporModItems.MUSIC_RECORD_N_42.get()) {
-						soundId = PraporModSounds.SOUND_TRACK.get().getLocation();
+						soundId = PraporModSounds.SOUND_TRACK.get().location();
 					}
 					else if (extractedDisc.getItem() == PraporModItems.MUSIC_RECORD_THANKS_STREET.get()) {
 						//soundId = PraporModSounds.THANKS_STREET.get().getLocation();

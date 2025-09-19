@@ -17,7 +17,7 @@ public class SoulBottlePriZaviershieniiIspolzovaniiaProcedure {
 		if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
 			_entity.addEffect(new MobEffectInstance(PraporModMobEffects.FEAR, 4200, 0, true, true));
 		if (entity instanceof ServerPlayer _player) {
-			AdvancementHolder _adv = _player.server.getAdvancements().get(ResourceLocation.parse("prapor:soul_bottle_ach"));
+			AdvancementHolder _adv = _player.getServer().getAdvancements().get(ResourceLocation.parse("prapor:soul_bottle_ach"));
 			if (_adv != null) {
 				AdvancementProgress _ap = _player.getAdvancements().getOrStartProgress(_adv);
 				if (!_ap.isDone()) {

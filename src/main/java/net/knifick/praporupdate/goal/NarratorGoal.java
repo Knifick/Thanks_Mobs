@@ -1,5 +1,6 @@
 package net.knifick.praporupdate.goal;
 
+import net.knifick.praporupdate.init.PraporModSounds;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -99,9 +100,7 @@ public class NarratorGoal extends Goal {
 		if (targetPlayer != null) {
 			if(mob.getVariant()==1){
 				mob.playSound(
-						BuiltInRegistries.SOUND_EVENT.get(
-								ResourceLocation.parse("prapor:pleaswwfthenarrator")
-						),
+						PraporModSounds.PLEASWWFTHENARRATOR.get(),
 						3.0F,
 						1.0F
 				);
@@ -109,9 +108,7 @@ public class NarratorGoal extends Goal {
 			else if(mob.getVariant()==2)
 			{
 				mob.playSound(
-						BuiltInRegistries.SOUND_EVENT.get(
-								ResourceLocation.parse("prapor:dictor_sound")
-						),
+						PraporModSounds.PLEASWWFTHENARRATOR.get(),
 						3.0F,
 						1.0F
 				);
@@ -136,7 +133,7 @@ public class NarratorGoal extends Goal {
 
 	private void grantAdvancement() {
 		if (targetPlayer instanceof ServerPlayer serverPlayer) {
-			AdvancementHolder advancement = serverPlayer.server.getAdvancements()
+			AdvancementHolder advancement = serverPlayer.getServer().getAdvancements()
 					.get(ResourceLocation.parse("prapor:narator_ach"));
 
 			if (advancement != null) {

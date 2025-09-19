@@ -1,6 +1,6 @@
 package net.knifick.praporupdate.event.pooker;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.knifick.praporupdate.entity.PookerEntity;
 import net.knifick.praporupdate.init.PraporModMobEffects;
@@ -10,11 +10,13 @@ import net.knifick.praporupdate.network.PraporModVariables;
 import net.knifick.praporupdate.procedures.FrameReturnerProcedure;
 import net.knifick.praporupdate.procedures.PookerPerTickProcedure;
 import net.knifick.praporupdate.util.ironkin.ScreenShakeUtil;
+import net.knifick.praporupdate.util.misc.UIHelper;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,6 +25,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -35,12 +38,11 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.client.pipeline.PipelineModifier;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import software.bernie.geckolib.util.Color;
 
 import java.awt.*;
 import java.util.List;
-import java.util.Random;
 
 @EventBusSubscriber
 public class LookAtPookerHandler {
@@ -135,7 +137,7 @@ public class LookAtPookerHandler {
 		PraporModVariables.PlayerVariables vars = player.getData(PraporModVariables.PLAYER_VARIABLES);
 		vars.isSee = true;
 		vars.syncPlayerVariables(player);
-		player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 2, 2));
+		player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 2, 2));
 //		screamer(pooker, player);
 	}
 
@@ -146,7 +148,7 @@ public class LookAtPookerHandler {
 	private static void grantAdvancement(Player player, ResourceLocation id) {
 		if (!(player instanceof ServerPlayer sp) || !(sp.level() instanceof ServerLevel)) return;
 
-		AdvancementHolder adv = sp.server.getAdvancements().get(id);
+		AdvancementHolder adv = sp.getServer().getAdvancements().get(id);
 		AdvancementProgress progress = sp.getAdvancements().getOrStartProgress(adv);
 
 		if (!progress.isDone()) {
@@ -156,20 +158,7 @@ public class LookAtPookerHandler {
 		}
 	}
 
-	/**
-	 * Проигрывание звука (разное на клиенте и сервере)
-	 */
-	private static void playSound(Player player, double x, double y, double z, ResourceLocation sound) {
-		if (!player.level().isClientSide()) {
-			player.level().playSound(null, BlockPos.containing(x, y, z),
-					BuiltInRegistries.SOUND_EVENT.get(sound),
-					SoundSource.MASTER, 1f, 1f);
-		} else {
-			player.level().playLocalSound(x, y, z,
-					BuiltInRegistries.SOUND_EVENT.get(sound),
-					SoundSource.MASTER, 1f, 1f, false);
-		}
-	}
+
 
 	public static void screamer(PookerEntity pooker, Player player){
 		// Визуальные эффекты
@@ -228,18 +217,12 @@ public class LookAtPookerHandler {
 			pulseAlpha = Math.max(targetAlpha, pulseAlpha - FADE_SPEED);
 		}
 
-		if (pulseAlpha > 0.01f) { // рисуем только если заметно
-			RenderSystem.disableDepthTest();
-			RenderSystem.depthMask(false);
-			RenderSystem.enableBlend();
-			RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		if (pulseAlpha > 0.01f) {
+			int a = Mth.clamp((int)(pulseAlpha * 255f), 0, 255);
+			int color = UIHelper.rgbaToColor(255, 255, 255, a);
 
-			RenderSystem.setShaderColor(1f, 1f, 1f, pulseAlpha);
-			gui.blit(VIGNETTE_TEXTURE, 0, 0, 0, 0, w, h, w, h);
-
-			RenderSystem.disableBlend();
-			RenderSystem.depthMask(true);
-			RenderSystem.enableDepthTest();
+			// x=0, y=0, u=0, v=0, w,h, texW=w, texH=h
+			gui.blit(RenderPipelines.GUI_TEXTURED, VIGNETTE_TEXTURE, 0, 0, 0, 0, w, h, w, h, color);
 		}
 	}
 
@@ -262,7 +245,7 @@ public class LookAtPookerHandler {
 				mult -= fade*4;
 			}
 		}
-		double fov = event.getFOV();
+		float fov = event.getFOV();
 
 		// Например, уменьшим его на 20%
 		fov -= mult;

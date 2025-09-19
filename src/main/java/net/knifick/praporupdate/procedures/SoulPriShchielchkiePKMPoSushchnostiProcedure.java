@@ -1,5 +1,6 @@
 package net.knifick.praporupdate.procedures;
 
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.item.Items;
@@ -48,12 +49,19 @@ public class SoulPriShchielchkiePKMPoSushchnostiProcedure {
 
 		// Проигрываем звук
 		if (world instanceof Level level) {
-			var sound = BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:soul_sounds"));
-			if (!level.isClientSide()) {
-				level.playSound(null, BlockPos.containing(x, y, z), sound, SoundSource.AMBIENT, 1.0F, 1.0F);
-			} else {
-				level.playLocalSound(x, y, z, sound, SoundSource.AMBIENT, 1.0F, 1.0F, false);
-			}
+			level.registryAccess()
+					.lookupOrThrow(Registries.SOUND_EVENT)
+					.get(ResourceLocation.parse("prapor:soul_sounds")) // Optional<Holder.Reference<SoundEvent>>
+					.ifPresent(holder -> {
+						var soundEvent = holder.value(); // <- извлекаем SoundEvent
+						if (!level.isClientSide()) {
+							level.playSound(null, BlockPos.containing(x, y, z),
+									soundEvent, SoundSource.AMBIENT, 1.0F, 1.0F);
+						} else {
+							level.playLocalSound(x, y, z,
+									soundEvent, SoundSource.AMBIENT, 1.0F, 1.0F, false);
+						}
+					});
 		}
 	}
 }

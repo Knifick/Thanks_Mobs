@@ -6,6 +6,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.enchantment.Enchantable;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 
@@ -19,13 +20,8 @@ public class BetterMaceItem extends MaceItem {
                 .rarity(Rarity.EPIC)
                 .durability(500)
                 .component(DataComponents.TOOL, createToolProperties())
+                .component(DataComponents.ENCHANTABLE, new Enchantable(5))
                 .attributes(createAttributes()));
-    }
-
-    // Возвращает enchantability (аналог enchantable(...))
-    @Override
-    public int getEnchantmentValue() {
-        return 5;
     }
 
     @Override

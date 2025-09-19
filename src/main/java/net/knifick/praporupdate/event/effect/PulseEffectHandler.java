@@ -7,7 +7,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
 
-@EventBusSubscriber(modid = "prapor", bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = "prapor")
 public class PulseEffectHandler {
 	private static final float SPEED = 1.0f; // Скорость пульсации (циклы в секунду)
 	private static final float FADE_SPEED = 1f; // Скорость затухания

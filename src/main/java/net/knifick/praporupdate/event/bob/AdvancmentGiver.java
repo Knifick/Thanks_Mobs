@@ -17,7 +17,7 @@ public class AdvancmentGiver {
     public static void onBobKill(LivingDeathEvent event){
         if (!(event.getEntity() instanceof BobEntity)) return;
         if(event.getSource().getEntity() instanceof ServerPlayer player){
-            AdvancementHolder _adv = player.server.getAdvancements().get(ResourceLocation.parse("prapor:bob"));
+            AdvancementHolder _adv = player.getServer().getAdvancements().get(ResourceLocation.parse("prapor:bob"));
             AdvancementProgress _ap = player.getAdvancements().getOrStartProgress(_adv);
             if (!_ap.isDone()) {
                 for (String criteria : _ap.getRemainingCriteria())

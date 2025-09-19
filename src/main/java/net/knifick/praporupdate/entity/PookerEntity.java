@@ -5,6 +5,7 @@ import net.knifick.praporupdate.init.PraporModItems;
 import net.knifick.praporupdate.item.GuideBookItem;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementProgress;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -14,12 +15,14 @@ import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
+import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animatable.processing.AnimationTest;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animatable.GeoEntity;
 
@@ -30,7 +33,6 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.monster.Monster;
@@ -109,48 +111,41 @@ public class PookerEntity extends Monster implements GeoEntity {
 
 	@Override
 	public SoundEvent getAmbientSound() {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:pooker_idle"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:pooker_idle")).get().value();
 	}
 
 	@Override
 	public void playStepSound(BlockPos pos, BlockState blockIn) {
-		this.playSound(BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:pooker_idle")), 0.15f, 1);
+		this.playSound(BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:pooker_idle")).get().value(), 0.15f, 1);
 	}
 
 	@Override
-	public boolean causeFallDamage(float l, float d, DamageSource source) {
-		return false;
-	}
-
-	@Override
-	public boolean hurt(DamageSource source, float amount) {
+	protected void actuallyHurt(ServerLevel p_376745_, DamageSource source, float p_21241_) {
 		if (source.is(DamageTypes.IN_FIRE))
-			return false;
+			return;
 		if (source.getDirectEntity() instanceof AbstractArrow)
-			return false;
+			return;
 		if (source.getDirectEntity() instanceof Player)
-			return false;
-		if (source.getDirectEntity() instanceof ThrownPotion || source.getDirectEntity() instanceof AreaEffectCloud || source.typeHolder().is(NeoForgeMod.POISON_DAMAGE))
-			return false;
+			return;
 		if (source.is(DamageTypes.FALL))
-			return false;
+			return;
 		if (source.is(DamageTypes.CACTUS))
-			return false;
+			return;
 		if (source.is(DamageTypes.DROWN))
-			return false;
+			return;
 		if (source.is(DamageTypes.LIGHTNING_BOLT))
-			return false;
+			return;
 		if (source.is(DamageTypes.EXPLOSION) || source.is(DamageTypes.PLAYER_EXPLOSION))
-			return false;
+			return;
 		if (source.is(DamageTypes.TRIDENT))
-			return false;
+			return;
 		if (source.is(DamageTypes.FALLING_ANVIL))
-			return false;
+			return;
 		if (source.is(DamageTypes.DRAGON_BREATH))
-			return false;
+			return;
 		if (source.is(DamageTypes.WITHER) || source.is(DamageTypes.WITHER_SKULL))
-			return false;
-		return super.hurt(source, amount);
+			return;
+		super.actuallyHurt(p_376745_, source, p_21241_);
 	}
 
 	@Override
@@ -164,16 +159,16 @@ public class PookerEntity extends Monster implements GeoEntity {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
+	public void addAdditionalSaveData(ValueOutput compound) {
 		super.addAdditionalSaveData(compound);
 		compound.putString("Texture", this.getTexture());
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
+	public void readAdditionalSaveData(ValueInput compound) {
 		super.readAdditionalSaveData(compound);
-		if (compound.contains("Texture"))
-			this.setTexture(compound.getString("Texture"));
+		compound.getString("Texture")
+				.ifPresent(this::setTexture);
 	}
 
 	@Override
@@ -197,7 +192,7 @@ public class PookerEntity extends Monster implements GeoEntity {
 			discard();
 			playSound(SoundEvents.SHEEP_SHEAR);
 			if(player instanceof ServerPlayer serverPlayer) {
-				AdvancementHolder _adv = serverPlayer.server.getAdvancements().get(ResourceLocation.parse("prapor:mantle"));
+				AdvancementHolder _adv = serverPlayer.getServer().getAdvancements().get(ResourceLocation.parse("prapor:mantle"));
 				AdvancementProgress _ap = serverPlayer.getAdvancements().getOrStartProgress(_adv);
 				if (!_ap.isDone()) {
 					for (String criteria : _ap.getRemainingCriteria())
@@ -205,7 +200,9 @@ public class PookerEntity extends Monster implements GeoEntity {
 				}
 			}
 			GuideBookItem.addToBook(player, this, 2);
-			return InteractionResult.sidedSuccess(player.level().isClientSide);
+			if(player.level().isClientSide)
+				return InteractionResult.SUCCESS;
+			else return InteractionResult.SUCCESS_SERVER;
 		}
 		return super.mobInteract(player, hand);
 	}
@@ -250,9 +247,9 @@ public class PookerEntity extends Monster implements GeoEntity {
 		return builder;
 	}
 
-	private PlayState movementPredicate(AnimationState event) {
+	private PlayState movementPredicate(AnimationTest<PookerEntity> event) {
 		if (this.animationprocedure.equals("empty")) {
-			if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) && this.onGround()) {
+			if (event.isMoving() && this.onGround()) {
 				return event.setAndContinue(RawAnimation.begin().thenLoop("walk"));
 			}
 			if (!this.onGround()) {
@@ -265,14 +262,14 @@ public class PookerEntity extends Monster implements GeoEntity {
 
 	String prevAnim = "empty";
 
-	private PlayState procedurePredicate(AnimationState event) {
-		if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED || (!this.animationprocedure.equals(prevAnim) && !this.animationprocedure.equals("empty"))) {
+	private PlayState procedurePredicate(AnimationTest<PookerEntity> event) {
+		if (!animationprocedure.equals("empty") && event.controller().getAnimationState() == AnimationController.State.STOPPED || (!this.animationprocedure.equals(prevAnim) && !this.animationprocedure.equals("empty"))) {
 			if (!this.animationprocedure.equals(prevAnim))
-				event.getController().forceAnimationReset();
-			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-			if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+				event.controller().forceAnimationReset();
+			event.controller().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+			if (event.controller().getAnimationState() == AnimationController.State.STOPPED) {
 				this.animationprocedure = "empty";
-				event.getController().forceAnimationReset();
+				event.controller().forceAnimationReset();
 			}
 		} else if (animationprocedure.equals("empty")) {
 			prevAnim = "empty";
@@ -287,7 +284,6 @@ public class PookerEntity extends Monster implements GeoEntity {
 		++this.deathTime;
 		if (this.deathTime == 20) {
 			this.remove(PookerEntity.RemovalReason.KILLED);
-			this.dropExperience(this);
 		}
 	}
 
@@ -301,8 +297,8 @@ public class PookerEntity extends Monster implements GeoEntity {
 
 	@Override
 	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-		data.add(new AnimationController<>(this, "movement", 4, this::movementPredicate));
-		data.add(new AnimationController<>(this, "procedure", 4, this::procedurePredicate));
+		data.add(new AnimationController<>("movement", 4, this::movementPredicate));
+		data.add(new AnimationController<>("procedure", 4, this::procedurePredicate));
 	}
 
 	@Override

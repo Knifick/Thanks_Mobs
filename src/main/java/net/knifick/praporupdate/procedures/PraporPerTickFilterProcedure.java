@@ -27,7 +27,7 @@ public class PraporPerTickFilterProcedure {
 		if (entity == null)
 			return;
 		if (entity instanceof PraporEntity) {
-			if (entity.getPersistentData().getBoolean("dance")) {
+			if (entity.getPersistentData().getBoolean("dance").get()) {
 				if (entity instanceof Mob _entity)
 					_entity.getNavigation().stop();
 			}

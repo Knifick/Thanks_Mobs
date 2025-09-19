@@ -8,7 +8,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 
 import java.util.Random;
 
-@EventBusSubscriber(modid = "prapor", bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = "prapor")
 public class OnBreakEvent {
 	private static final Random random = new Random();
 

@@ -9,7 +9,7 @@ import net.neoforged.api.distmarker.Dist;
 
 import net.knifick.praporupdate.client.particle.SparksParticle;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(value = Dist.CLIENT)
 public class PraporModParticles {
 	@SubscribeEvent
 	public static void registerParticles(RegisterParticleProvidersEvent event) {

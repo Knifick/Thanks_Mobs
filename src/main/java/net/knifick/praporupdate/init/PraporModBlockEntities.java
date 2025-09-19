@@ -1,7 +1,3 @@
-
-/*
- *    MCreator note: This file will be REGENERATED on each build.
- */
 package net.knifick.praporupdate.init;
 
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -19,20 +15,37 @@ import net.knifick.praporupdate.block.entity.GoldTrophyTileEntity;
 import net.knifick.praporupdate.block.entity.CasketofsoulsBlockEntity;
 import net.knifick.praporupdate.PraporMod;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+import java.util.Set;
+
+@EventBusSubscriber
 public class PraporModBlockEntities {
-	public static final DeferredRegister<BlockEntityType<?>> REGISTRY = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, PraporMod.MODID);
-	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<?>> CASKETOFSOULS = register("casketofsouls", PraporModBlocks.CASKETOFSOULS, CasketofsoulsBlockEntity::new);
-	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<?>> GOLD_TROPHY = register("gold_trophy", PraporModBlocks.GOLD_TROPHY, GoldTrophyTileEntity::new);
+	public static final DeferredRegister<BlockEntityType<?>> REGISTRY =
+			DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, PraporMod.MODID);
+
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<?>> CASKETOFSOULS =
+			register("casketofsouls", PraporModBlocks.CASKETOFSOULS, CasketofsoulsBlockEntity::new);
+
+	public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<?>> GOLD_TROPHY =
+			register("gold_trophy", PraporModBlocks.GOLD_TROPHY, GoldTrophyTileEntity::new);
 
 	// Start of user code block custom block entities
 	// End of user code block custom block entities
-	private static DeferredHolder<BlockEntityType<?>, BlockEntityType<?>> register(String registryname, DeferredHolder<Block, Block> block, BlockEntityType.BlockEntitySupplier<?> supplier) {
-		return REGISTRY.register(registryname, () -> BlockEntityType.Builder.of(supplier, block.get()).build(null));
+
+	private static DeferredHolder<BlockEntityType<?>, BlockEntityType<?>> register(
+			String registryName,
+			DeferredHolder<Block, Block> block,
+			BlockEntityType.BlockEntitySupplier<?> supplier
+	) {
+		return REGISTRY.register(registryName,
+				() -> new BlockEntityType<>(supplier, Set.of(block.get())));
 	}
 
 	@SubscribeEvent
 	public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-		event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, CASKETOFSOULS.get(), (blockEntity, side) -> ((CasketofsoulsBlockEntity) blockEntity).getItemHandler());
+		event.registerBlockEntity(
+				Capabilities.ItemHandler.BLOCK,
+				CASKETOFSOULS.get(),
+				(blockEntity, side) -> ((CasketofsoulsBlockEntity) blockEntity).getItemHandler()
+		);
 	}
 }

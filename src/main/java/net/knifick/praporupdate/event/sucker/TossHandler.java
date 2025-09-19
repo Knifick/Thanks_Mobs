@@ -11,6 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Creeper;
@@ -36,7 +37,7 @@ public class TossHandler {
         if (!level.isClientSide && level.dimension() == Level.END) {
             ItemEntity itemEntity = event.getEntity();
             CompoundTag data = itemEntity.getPersistentData();
-            data.putUUID("OwnerUUID", player.getUUID());
+            data.putString("OwnerUUID", player.getUUID().toString());
             data.putDouble("OwnerX", player.getX());
             data.putDouble("OwnerY", player.getY());
             data.putDouble("OwnerZ", player.getZ());
@@ -48,21 +49,21 @@ public class TossHandler {
         if (!(event.getEntity() instanceof ItemEntity entity)) return;
         CompoundTag data = entity.getPersistentData();
         if (data.contains("unsuck_timer")) {
-            data.putDouble("unsuck_timer", data.getDouble("unsuck_timer") + 1);
-            if (data.getDouble("unsuck_timer") >= 60)
+            data.putDouble("unsuck_timer", data.getDouble("unsuck_timer").get() + 1);
+            if (data.getDouble("unsuck_timer").get() >= 60)
                 data.remove("unsuck_timer");
         }
 
         if (entity.getY() < 0) {
-            if (!data.hasUUID("OwnerUUID")) {
+            if (data.getString("OwnerUUID").isEmpty()) {
                 return; // Тега нет — выходим, чтобы не крашиться
             }
 
-            UUID ownerId = data.getUUID("OwnerUUID");
+            UUID ownerId = UUID.fromString(data.getString("OwnerUUID").get());
             Vec3 ownerPos = new Vec3(
-                    data.getDouble("OwnerX"),
-                    data.getDouble("OwnerY"),
-                    data.getDouble("OwnerZ")
+                    data.getDouble("OwnerX").get(),
+                    data.getDouble("OwnerY").get(),
+                    data.getDouble("OwnerZ").get()
             );
 
             if (ownerId != null) {
@@ -71,12 +72,12 @@ public class TossHandler {
                 if(owner==null) return;
                 PraporModVariables.PlayerVariables vars = owner.getData(PraporModVariables.PLAYER_VARIABLES);
                 if (!vars.hasSucker) {
-                    SuckerEntity sucker = PraporModEntities.SUCKER.get().create(entity.level());
+                    SuckerEntity sucker = PraporModEntities.SUCKER.get().create(entity.level(), EntitySpawnReason.EVENT);
                     entity.playSound(PraporModSounds.SUCKER_APPROACH.get(), 49, 1);
                     if (sucker != null) {
-                        sucker.moveTo(entity.getX(), entity.getY(), entity.getZ(),
-                                owner.getYRot(), owner.getXRot());
-                        sucker.inventory.setItem(0, entity.getItem());
+                        sucker.setPos(entity.getX(), entity.getY(), entity.getZ());
+                        sucker.lookAt(entity, 360,360);
+                        sucker.getInventory().setItem(0, entity.getItem());
                         owner.level().addFreshEntity(sucker);
                         sucker.playerPos = ownerPos;
                         sucker.setPlayerUUID(ownerId);
@@ -135,7 +136,7 @@ public class TossHandler {
         } else {
             // Достигли игрока — приручаем
             CompoundTag data = entity.getPersistentData();
-            data.putUUID("SuckerUUID", owner.getUUID());
+            data.putString("SuckerUUID", owner.getUUID().toString());
             entity.tame(owner);
             entity.setPlayerUUID(null);
             entity.setDeltaMovement(Vec3.ZERO);

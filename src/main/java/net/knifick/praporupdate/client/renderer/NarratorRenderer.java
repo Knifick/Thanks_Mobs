@@ -1,48 +1,43 @@
 
 package net.knifick.praporupdate.client.renderer;
 
+import net.knifick.praporupdate.init.PraporModTickets;
 import net.minecraft.ChatFormatting;
-import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
-import software.bernie.geckolib.cache.object.BakedGeoModel;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.MultiBufferSource;
 
 import net.knifick.praporupdate.entity.model.NarratorModel;
 import net.knifick.praporupdate.entity.NarratorEntity;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.PoseStack;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
-public class NarratorRenderer extends GeoEntityRenderer<NarratorEntity> {
-	private static final ResourceLocation NARRATOR_OLD_LOCATION = ResourceLocation.fromNamespaceAndPath("prapor","textures/entities/narator_reanimated.png");
+public class NarratorRenderer<R extends LivingEntityRenderState & GeoRenderState> extends GeoEntityRenderer<NarratorEntity, R> {
+	private static final String NARRATOR_OLD_LOCATION = "narator_reanimated";
 	public NarratorRenderer(EntityRendererProvider.Context renderManager) {
 		super(renderManager, new NarratorModel());
 		this.shadowRadius = 0.8f;
 	}
 
 	@Override
-	public RenderType getRenderType(NarratorEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
-		return RenderType.entityTranslucent(getTextureLocation(animatable));
+	public @Nullable RenderType getRenderType(R renderState, ResourceLocation texture) {
+		return RenderType.entityTranslucent(texture);
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(NarratorEntity entity) {
+	public void extractRenderState(NarratorEntity entity, @NotNull R entityRenderState, float partialTick) {
 		String s = ChatFormatting.stripFormatting(entity.getName().getString());
 		if ("Boombox".equals(s)) {
-			return NARRATOR_OLD_LOCATION;
+			entityRenderState.addGeckolibData(PraporModTickets.ENTITY_TEXTURE, NARRATOR_OLD_LOCATION);
 		}
-        return ResourceLocation.fromNamespaceAndPath("prapor","textures/entities/"+entity.getTexture()+".png");
-    }
-
-	@Override
-	public void preRender(PoseStack poseStack, NarratorEntity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
-		float scale = 1f;
-		this.scaleHeight = scale;
-		this.scaleWidth = scale;
-		super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
+		else {
+			entityRenderState.addGeckolibData(PraporModTickets.ENTITY_TEXTURE, entity.getTexture());
+		}
+		entityRenderState.addGeckolibData(PraporModTickets.ENTITY_TAME, entity.isTame());
 	}
 }

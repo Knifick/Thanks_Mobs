@@ -10,10 +10,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -48,7 +47,7 @@ public class SoulBucket extends Item{
                 SoundSource.PLAYERS,
                 1f,
                 1f);
-        type.spawn(serverLevel, stack, context.getPlayer(), pos, MobSpawnType.SPAWN_EGG, true, false);
+        type.spawn(serverLevel, stack, context.getPlayer(), pos, EntitySpawnReason.SPAWN_ITEM_USE, true, false);
         if(player instanceof ServerPlayer serverPlayer
         && !serverPlayer.gameMode.isCreative())
             player.setItemInHand(context.getHand(), new ItemStack(Items.BUCKET));
@@ -56,7 +55,7 @@ public class SoulBucket extends Item{
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
         // аналогично SpawnEggItem.use, если хочешь спавн в воде
         return super.use(level, player, hand);
     }

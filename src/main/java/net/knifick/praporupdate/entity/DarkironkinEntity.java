@@ -4,16 +4,20 @@ package net.knifick.praporupdate.entity;
 import net.knifick.praporupdate.init.PraporModEntities;
 import net.knifick.praporupdate.item.GuideBookItem;
 import net.knifick.praporupdate.procedures.*;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
+import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animatable.processing.AnimationTest;
+import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animatable.GeoEntity;
 
@@ -89,7 +93,7 @@ public class DarkironkinEntity extends Monster implements GeoEntity {
 	}
 
 	@Override
-	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, MobSpawnType reason, @Nullable SpawnGroupData livingdata) {
+	public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficulty, EntitySpawnReason reason, @Nullable SpawnGroupData livingdata) {
 		SpawnGroupData retval = super.finalizeSpawn(world, difficulty, reason, livingdata);
 		BrolemOnSpawnProcedure.execute(this);
 		return retval;
@@ -213,35 +217,34 @@ public class DarkironkinEntity extends Monster implements GeoEntity {
 
 	@Override
 	public SoundEvent getAmbientSound() {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:idle_iron"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:idle_iron")).get().value();
 	}
 
 	@Override
 	public void playStepSound(BlockPos pos, BlockState blockIn) {
-		this.playSound(BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:golem_steps")), 0.15f, 1);
+		this.playSound(BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:golem_steps")).get().value(), 0.15f, 1);
 	}
 
 	@Override
 	public SoundEvent getHurtSound(DamageSource ds) {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.blaze.hurt"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.blaze.hurt")).get().value();
 	}
 
 	@Override
 	public SoundEvent getDeathSound() {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:golem_death"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:golem_death")).get().value();
 	}
 
 	@Override
-	public boolean hurt(DamageSource source, float amount) {
+	public void actuallyHurt(ServerLevel serverLevel, DamageSource source, float amount) {
 		DarkironkinOnRMCProcedure.execute(this.level(), this.getX(), this.getY(), this.getZ(), this);
-		Entity immediatesourceentity = source.getDirectEntity();
 		if (source.is(DamageTypes.IN_FIRE))
-			return false;
+			return;
 		if (source.getDirectEntity() instanceof AbstractArrow)
-			return false;
+			return;
 		if (source.is(DamageTypes.FALL))
-			return false;
-		return super.hurt(source, amount);
+			return;
+		super.actuallyHurt(serverLevel, source, amount);
 	}
 
 	@Override
@@ -250,7 +253,7 @@ public class DarkironkinEntity extends Monster implements GeoEntity {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
+	public void addAdditionalSaveData(ValueOutput compound) {
 		super.addAdditionalSaveData(compound);
 		compound.putString("Texture", this.getTexture());
 		compound.putBoolean("DataIsGrAttack", this.entityData.get(DATA_IsGrAttack));
@@ -262,23 +265,18 @@ public class DarkironkinEntity extends Monster implements GeoEntity {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
-		super.readAdditionalSaveData(compound);
-		if (compound.contains("Texture"))
-			this.setTexture(compound.getString("Texture"));
-		if (compound.contains("DataIsGrAttack"))
-			this.entityData.set(DATA_IsGrAttack, compound.getBoolean("DataIsGrAttack"));
-		if (compound.contains("DataGrTimer"))
-			this.entityData.set(DATA_GrTimer, compound.getInt("DataGrTimer"));
-		if (compound.contains("DataIsSmAttack"))
-			this.entityData.set(DATA_IsSmAttack, compound.getBoolean("DataIsSmAttack"));
-		if (compound.contains("DataSmSwitcher"))
-			this.entityData.set(DATA_SmSwitcher, compound.getBoolean("DataSmSwitcher"));
-		if (compound.contains("DataGrSwitchTimer"))
-			this.entityData.set(DATA_GrSwitchTimer, compound.getInt("DataGrSwitchTimer"));
-		if (compound.contains("DataSmSwitchTimer"))
-			this.entityData.set(DATA_SmSwitchTimer, compound.getInt("DataSmSwitchTimer"));
+	protected void readAdditionalSaveData(ValueInput input) {
+		super.readAdditionalSaveData(input);
+
+		this.setTexture(input.getStringOr("Texture", this.getTexture()));
+		this.entityData.set(DATA_IsGrAttack, input.getBooleanOr("DataIsGrAttack", this.entityData.get(DATA_IsGrAttack)));
+		this.entityData.set(DATA_GrTimer, input.getIntOr("DataGrTimer", this.entityData.get(DATA_GrTimer)));
+		this.entityData.set(DATA_IsSmAttack, input.getBooleanOr("DataIsSmAttack", this.entityData.get(DATA_IsSmAttack)));
+		this.entityData.set(DATA_SmSwitcher, input.getBooleanOr("DataSmSwitcher", this.entityData.get(DATA_SmSwitcher)));
+		this.entityData.set(DATA_GrSwitchTimer, input.getIntOr("DataGrSwitchTimer", this.entityData.get(DATA_GrSwitchTimer)));
+		this.entityData.set(DATA_SmSwitchTimer, input.getIntOr("DataSmSwitchTimer", this.entityData.get(DATA_SmSwitchTimer)));
 	}
+
 
 	@Override
 	public void baseTick() {
@@ -311,9 +309,9 @@ public class DarkironkinEntity extends Monster implements GeoEntity {
 		return builder;
 	}
 
-	private PlayState movementPredicate(AnimationState event) {
+	private PlayState movementPredicate(AnimationTest<DarkironkinEntity> event) {
 		if (this.animationprocedure.equals("empty")) {
-			if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F)) && this.onGround() && !this.isAggressive() && !this.isSprinting()) {
+			if ((event.isMoving() && this.onGround() && !this.isAggressive() && !this.isSprinting())) {
 				return event.setAndContinue(RawAnimation.begin().thenLoop("walk"));
 			}
 			if (this.isDeadOrDying()) {
@@ -333,19 +331,19 @@ public class DarkironkinEntity extends Monster implements GeoEntity {
 		return PlayState.STOP;
 	}
 
-	private PlayState attackingPredicate(AnimationState event) {
+	private PlayState attackingPredicate(AnimationTest<DarkironkinEntity> event) {
 		double d1 = this.getX() - this.xOld;
 		double d0 = this.getZ() - this.zOld;
 		float velocity = (float) Math.sqrt(d1 * d1 + d0 * d0);
-		if (getAttackAnim(event.getPartialTick()) > 0f && !this.swinging) {
+		if (getAttackAnim(event.getData(DataTickets.PARTIAL_TICK)) > 0f && !this.swinging) {
 			this.swinging = true;
 			this.lastSwing = level().getGameTime();
 		}
 		if (this.swinging && this.lastSwing + 7L <= level().getGameTime()) {
 			this.swinging = false;
 		}
-		if (this.swinging && event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-			event.getController().forceAnimationReset();
+		if (this.swinging && event.controller().getAnimationState() == AnimationController.State.STOPPED) {
+			event.controller().forceAnimationReset();
 			return event.setAndContinue(RawAnimation.begin().thenPlay("hit"));
 		}
 		return PlayState.CONTINUE;
@@ -353,14 +351,14 @@ public class DarkironkinEntity extends Monster implements GeoEntity {
 
 	String prevAnim = "empty";
 
-	private PlayState procedurePredicate(AnimationState event) {
-		if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED || (!this.animationprocedure.equals(prevAnim) && !this.animationprocedure.equals("empty"))) {
+	private PlayState procedurePredicate(AnimationTest<DarkironkinEntity> event) {
+		if (!animationprocedure.equals("empty") && event.controller().getAnimationState() == AnimationController.State.STOPPED || (!this.animationprocedure.equals(prevAnim) && !this.animationprocedure.equals("empty"))) {
 			if (!this.animationprocedure.equals(prevAnim))
-				event.getController().forceAnimationReset();
-			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-			if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
+				event.controller().forceAnimationReset();
+			event.controller().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+			if (event.controller().getAnimationState() == AnimationController.State.STOPPED) {
 				this.animationprocedure = "empty";
-				event.getController().forceAnimationReset();
+				event.controller().forceAnimationReset();
 			}
 		} else if (animationprocedure.equals("empty")) {
 			prevAnim = "empty";
@@ -382,7 +380,6 @@ public class DarkironkinEntity extends Monster implements GeoEntity {
 		++this.deathTime;
 		if (this.deathTime == 104) {
 			this.remove(DarkironkinEntity.RemovalReason.KILLED);
-			this.dropExperience(this);
 		}
 	}
 
@@ -396,9 +393,9 @@ public class DarkironkinEntity extends Monster implements GeoEntity {
 
 	@Override
 	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-		data.add(new AnimationController<>(this, "movement", 4, this::movementPredicate));
-		data.add(new AnimationController<>(this, "attacking", 4, this::attackingPredicate));
-		data.add(new AnimationController<>(this, "procedure", 4, this::procedurePredicate));
+		data.add(new AnimationController<>("movement", 4, this::movementPredicate));
+		data.add(new AnimationController<>("attacking", 4, this::attackingPredicate));
+		data.add(new AnimationController<>("procedure", 4, this::procedurePredicate));
 	}
 
 	@Override

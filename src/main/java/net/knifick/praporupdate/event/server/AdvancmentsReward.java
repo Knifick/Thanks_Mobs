@@ -2,12 +2,16 @@ package net.knifick.praporupdate.event.server;
 
 import net.knifick.praporupdate.PraporMod;
 import net.knifick.praporupdate.init.PraporModItems;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.item.crafting.Recipe;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
@@ -66,12 +70,11 @@ public class AdvancmentsReward {
     /**
      * Универсальная выдача рецепта
      */
-    public static void grantRecipe(Player player, MinecraftServer server, ResourceLocation recipeId) {
-        if (recipeId == null || server == null) return;
+    public static void grantRecipe(ServerPlayer player, ResourceLocation recipeId) {
+        if (player == null || recipeId == null) return;
 
-        server.getRecipeManager().byKey(recipeId).ifPresent(recipe -> {
-            player.awardRecipes(List.of(recipe));
-        });
+        ResourceKey<Recipe<?>> key = ResourceKey.create(Registries.RECIPE, recipeId);
+        player.awardRecipesByKey(List.of(key)); // сервер сам проверит существование
     }
 
     @SubscribeEvent
@@ -86,7 +89,8 @@ public class AdvancmentsReward {
 
         // --- вызываем общую логику ---
         ResourceLocation recipeId = getRecipeIdForItem(stack, player, server);
-        grantRecipe(player, server, recipeId);
+        if (player instanceof ServerPlayer serverPlayer)
+        grantRecipe(serverPlayer, recipeId);
     }
 
 

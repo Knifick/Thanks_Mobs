@@ -24,7 +24,7 @@ public class BMaceKillEvent {
     public static void onAttack(AttackEntityEvent e) {
         Player player = e.getEntity();
         // сохраняем выбранный слот (0‑8) прямо перед ударом
-        LAST_HOTBAR_SLOT.put(player.getUUID(), player.getInventory().selected);
+        LAST_HOTBAR_SLOT.put(player.getUUID(), player.getInventory().getSelectedSlot());
     }
 
     @SubscribeEvent

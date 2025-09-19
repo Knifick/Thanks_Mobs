@@ -59,17 +59,17 @@ public class MantleTrigger {
         ItemStack itemStack = player.getInventory().getItem(38);
         if (itemStack.is(PraporModItems.MANTLE)) {
             PraporModVariables.PlayerVariables vars = player.getData(PraporModVariables.PLAYER_VARIABLES);
-            if(vars.mantleTimer == 0 && !player.getCooldowns().isOnCooldown(PraporModItems.MANTLE.get())) {
+            if(vars.mantleTimer == 0 && !player.getCooldowns().isOnCooldown(PraporModItems.MANTLE.get().getDefaultInstance())) {
                 direction = player.getViewVector(0);
                 variant = new Random().nextInt(0,3);
                 vars.mantleTimer = 1;
                 vars.syncPlayerVariables(player);
-                player.getCooldowns().addCooldown(PraporModItems.MANTLE.get(), COOLDOWN+MAX_TIME);
+                player.getCooldowns().addCooldown(PraporModItems.MANTLE.get().getDefaultInstance(), COOLDOWN+MAX_TIME);
                 if(!player.isCreative())
                     itemStack.setDamageValue(itemStack.getDamageValue()+1);
                 System.out.println(itemStack.getDamageValue());
                 if(itemStack.getDamageValue()==10) {
-                    player.playSound(SoundEvents.ITEM_BREAK);
+                    player.playSound(SoundEvents.ITEM_BREAK.value());
                     player.getInventory().setItem(38, ItemStack.EMPTY);
                 }
                 if(player.level() instanceof ServerLevel level){

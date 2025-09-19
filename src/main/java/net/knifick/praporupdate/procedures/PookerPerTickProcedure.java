@@ -3,6 +3,8 @@ package net.knifick.praporupdate.procedures;
 import net.knifick.praporupdate.entity.PookerEntity;
 import net.knifick.praporupdate.event.pooker.LookAtPookerHandler;
 import net.knifick.praporupdate.item.GuideBookItem;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.LivingEntity;
@@ -57,7 +59,7 @@ public class PookerPerTickProcedure {
 	/** Проверка: сущность должна исчезнуть днём */
 	private static boolean shouldVanishInDay(LevelAccessor world) {
 		if (world instanceof Level level) {
-			return level.isDay() && !world.getLevelData().isThundering();
+			return !level.dimensionType().hasFixedTime() && level.getSkyDarken() < 4 && !world.getLevelData().isThundering();
 		}
 		return false;
 	}
@@ -119,19 +121,27 @@ public class PookerPerTickProcedure {
 	}
 
 	/** Воспроизведение звука (учитываем клиент/сервер) */
-	private static void playSound(LevelAccessor world, double x, double y, double z, ResourceLocation sound) {
-		if (world instanceof Level level) {
-			if (!level.isClientSide()) {
-				level.playSound(null, BlockPos.containing(x, y, z),
-						BuiltInRegistries.SOUND_EVENT.get(sound),
-						SoundSource.MASTER, 1, 1);
-			} else {
-				level.playLocalSound(x, y, z,
-						BuiltInRegistries.SOUND_EVENT.get(sound),
-						SoundSource.MASTER, 1, 1, false);
-			}
+	private static void playSound(LevelAccessor world, double x, double y, double z, ResourceLocation soundId) {
+		if (!(world instanceof Level level)) return;
+
+		BlockPos pos = BlockPos.containing(x, y, z);
+
+		// Берём звук из реестра
+		var opt = level.registryAccess()
+				.lookupOrThrow(Registries.SOUND_EVENT)
+				.get(soundId); // Optional<Holder.Reference<SoundEvent>>
+
+		if (opt.isEmpty()) return;
+
+		var soundEvent = opt.get().value(); // <-- извлекаем SoundEvent из Holder
+
+		if (!level.isClientSide()) {
+			level.playSound(null, pos, soundEvent, SoundSource.MASTER, 1.0F, 1.0F);
+		} else {
+			level.playLocalSound(x, y, z, soundEvent, SoundSource.MASTER, 1.0F, 1.0F, false);
 		}
 	}
+
 
 	/** Удаление сущности */
 	private static void discardEntity(Entity entity) {

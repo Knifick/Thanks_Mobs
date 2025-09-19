@@ -1,14 +1,7 @@
-
 package net.knifick.praporupdate.entity;
 
 import net.knifick.praporupdate.init.PraporModEntities;
-import net.knifick.praporupdate.network.PraporModVariables;
-import net.knifick.praporupdate.procedures.PraporSlowFallingProcedure;
-import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.AdvancementProgress;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.BlockParticleOption;
-import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -17,15 +10,9 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.*;
@@ -35,25 +22,23 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.AmphibiousPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.animal.Squid;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
-import org.joml.Vector3f;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
+import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animatable.processing.AnimationTest;
 import software.bernie.geckolib.animation.*;
-import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class MunchsawEntity extends Monster implements GeoEntity {
@@ -261,24 +246,24 @@ public class MunchsawEntity extends Monster implements GeoEntity {
 
 	@Override
 	public SoundEvent getAmbientSound() {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:sucker_idle"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:sucker_idle")).get().value();
 	}
 
 	@Override
 	public SoundEvent getHurtSound(DamageSource ds) {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:sucker_hurt"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:sucker_hurt")).get().value();
 	}
 
 	@Override
 	public SoundEvent getDeathSound() {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:sucker_hurt"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:sucker_hurt")).get().value();
 	}
 
 	@Override
-	public boolean hurt(DamageSource source, float amount) {
+	protected void actuallyHurt(ServerLevel serverLevel, DamageSource source, float amount) {
 		if (source.is(DamageTypes.FALL))
-			return false;
-		return super.hurt(source, amount);
+			return;
+		super.actuallyHurt(serverLevel, source, amount);
 	}
 
 	@Override
@@ -301,20 +286,21 @@ public class MunchsawEntity extends Monster implements GeoEntity {
 //	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
+	public void addAdditionalSaveData(ValueOutput compound) {
 		super.addAdditionalSaveData(compound);
 		compound.putString("Texture", this.getTexture());
 		compound.putBoolean("saw", this.entityData.get(SAW));
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
-		super.readAdditionalSaveData(compound);
-		if (compound.contains("Texture"))
-			this.setTexture(compound.getString("Texture"));
-		if (compound.contains("saw"))
-			this.entityData.set(SAW, compound.getBoolean("saw"));
+	protected void readAdditionalSaveData(ValueInput input) {
+		super.readAdditionalSaveData(input);
+
+		// если ключа нет, оставляем текущее значение
+		this.setTexture(input.getStringOr("Texture", this.getTexture()));
+		this.entityData.set(SAW, input.getBooleanOr("saw", this.entityData.get(SAW)));
 	}
+
 
 	@Override
 	public EntityDimensions getDefaultDimensions(Pose pose) {
@@ -324,7 +310,7 @@ public class MunchsawEntity extends Monster implements GeoEntity {
 	@Override
 	public void aiStep() {
 		super.aiStep();
-		if (this.isInWaterOrBubble()) {
+		if (this.isInWater()) {
 			this.setAirSupply(300); // 300 — стандартный максимальный запас воздуха (5 секунд * 20 тиков)
 		}
 		this.updateSwingTime();
@@ -352,16 +338,16 @@ public class MunchsawEntity extends Monster implements GeoEntity {
 		return builder;
 	}
 
-	private <E extends GeoAnimatable> PlayState movementPredicate(AnimationState<E> state) {
+	private PlayState movementPredicate(AnimationTest<MunchsawEntity> state) {
 		// Если моб в воде
-		if (this.isInWaterOrBubble()) {
+		if (this.isInWater()) {
 			return state.setAndContinue(RawAnimation.begin().thenLoop("swim"));
 		}
 
 		if (this.isSprinting() || (this.isAggressive() && state.isMoving())) {
 			return state.setAndContinue(RawAnimation.begin().thenLoop("run"));
 		}
-		if ((state.isMoving() || !(state.getLimbSwingAmount() >= -0.1F && state.getLimbSwingAmount() <= 0.1F))
+		if ((state.isMoving())
 				&& this.onGround() && !this.isAggressive() && !this.isSprinting()) {
 			return state.setAndContinue(RawAnimation.begin().thenLoop("walk"));
 		}
@@ -369,9 +355,9 @@ public class MunchsawEntity extends Monster implements GeoEntity {
 	}
 
 
-	private <E extends GeoAnimatable> PlayState attackPredicate(AnimationState<E> state) {
+	private PlayState attackPredicate(AnimationTest<MunchsawEntity> state) {
 		if (this.swinging) {
-			state.getController().forceAnimationReset();
+			state.controller().forceAnimationReset();
 			return state.setAndContinue(RawAnimation.begin().thenPlay("attack"));
 		}
 		return PlayState.STOP;
@@ -394,11 +380,11 @@ public class MunchsawEntity extends Monster implements GeoEntity {
 
 	@Override
 	public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-		controllers.add(new AnimationController<>(this, "move",   5, this::movementPredicate));
-		controllers.add(new AnimationController<>(this, "attack", 0, this::attackPredicate));
+		controllers.add(new AnimationController<>("move",   5, this::movementPredicate));
+		controllers.add(new AnimationController<>("attack", 0, this::attackPredicate));
 		//controllers.add(new AnimationController<>(this, "suck",   5, this::suckPredicate));
 
-		controllers.add(new AnimationController<>(this, "triggers", 0, s -> PlayState.STOP)
+		controllers.add(new AnimationController<>("triggers", 0, s -> PlayState.STOP)
 				.triggerableAnim("dance", RawAnimation.begin().thenPlay("dance")));
 	}
 
@@ -418,7 +404,7 @@ public class MunchsawEntity extends Monster implements GeoEntity {
 
 		@Override
 		public boolean canUse() {
-			return mob.isInWaterOrBubble();
+			return mob.isInWater();
 		}
 
 		@Override

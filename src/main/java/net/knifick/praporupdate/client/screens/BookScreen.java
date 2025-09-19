@@ -11,11 +11,13 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.joml.Quaternionf;
@@ -46,7 +48,7 @@ public class BookScreen extends Screen {
 			new MobEntry(
 					"prapor",
 					-40, -20, 30,
-					() -> PraporModEntities.PRAPOR.get().create(Minecraft.getInstance().level),
+					() -> PraporModEntities.PRAPOR.get().create(Minecraft.getInstance().level, EntitySpawnReason.TRIGGERED),
 					Component.translatable("entity.prapor.prapor"),
 					List.of(Component.translatable("guide.prapor.prapor"),
 							Component.translatable("guide.prapor.addprapor"))
@@ -54,7 +56,7 @@ public class BookScreen extends Screen {
 			new MobEntry(
 					"pooker",
 					30, -10, 20,
-					() -> PraporModEntities.POOKER.get().create(Minecraft.getInstance().level),
+					() -> PraporModEntities.POOKER.get().create(Minecraft.getInstance().level, EntitySpawnReason.TRIGGERED),
 					Component.translatable("entity.prapor.pooker"),
 					List.of(Component.translatable("guide.prapor.pooker"),
 							Component.translatable("guide.prapor.addpooker"))
@@ -62,14 +64,14 @@ public class BookScreen extends Screen {
 			new MobEntry(
 					"soul",
 					-40, -20, 70,
-					() -> PraporModEntities.SOUL.get().create(Minecraft.getInstance().level),
+					() -> PraporModEntities.SOUL.get().create(Minecraft.getInstance().level, EntitySpawnReason.TRIGGERED),
 					Component.translatable("entity.prapor.soul"),
 					List.of(Component.translatable("guide.prapor.soul"))
 			),
 			new MobEntry(
 					"bastard",
 					30, -22, 30,
-					() -> PraporModEntities.BASTARD.get().create(Minecraft.getInstance().level),
+					() -> PraporModEntities.BASTARD.get().create(Minecraft.getInstance().level, EntitySpawnReason.TRIGGERED),
 					Component.translatable("entity.prapor.bastard"),
 					List.of(Component.translatable("guide.prapor.bastard"),
 							Component.translatable("guide.prapor.addbastard"))
@@ -77,7 +79,7 @@ public class BookScreen extends Screen {
 			new MobEntry(
 					"narrator",
 					-30, -20, 40,
-					() -> PraporModEntities.NARRATOR.get().create(Minecraft.getInstance().level),
+					() -> PraporModEntities.NARRATOR.get().create(Minecraft.getInstance().level, EntitySpawnReason.TRIGGERED),
 					Component.translatable("entity.prapor.narrator"),
 					List.of(Component.translatable("guide.prapor.narrator"),
 							Component.translatable("guide.prapor.addnarrator"),
@@ -86,7 +88,7 @@ public class BookScreen extends Screen {
 			new MobEntry(
 					"brolem",
 					30, -22, 20,
-					() -> PraporModEntities.BROLEM.get().create(Minecraft.getInstance().level),
+					() -> PraporModEntities.BROLEM.get().create(Minecraft.getInstance().level, EntitySpawnReason.TRIGGERED),
 					Component.translatable("entity.prapor.brolem"),
 					List.of(Component.translatable("guide.prapor.brolem"),
 							Component.translatable("guide.prapor.addbrolem"))
@@ -94,7 +96,7 @@ public class BookScreen extends Screen {
 			new MobEntry(
 					"bob",
 					-30, -20, 40,
-					() -> PraporModEntities.BOB.get().create(Minecraft.getInstance().level),
+					() -> PraporModEntities.BOB.get().create(Minecraft.getInstance().level, EntitySpawnReason.TRIGGERED),
 					Component.translatable("entity.prapor.bob"),
 					List.of(Component.translatable("guide.prapor.bob"),
 							Component.translatable("guide.prapor.abob").withStyle(ChatFormatting.ITALIC),
@@ -103,7 +105,7 @@ public class BookScreen extends Screen {
 			new MobEntry(
 					"darkironkin",
 					40, -18, 15,
-					() -> PraporModEntities.DARKIRONKIN.get().create(Minecraft.getInstance().level),
+					() -> PraporModEntities.DARKIRONKIN.get().create(Minecraft.getInstance().level, EntitySpawnReason.TRIGGERED),
 					Component.translatable("entity.prapor.darkironkin"),
 					List.of(Component.translatable("guide.prapor.darkironkin"),
 							Component.translatable("guide.prapor.adddarkironkin"))
@@ -111,7 +113,7 @@ public class BookScreen extends Screen {
 			new MobEntry(
 					"nymph",
 					-20, -20, 30,
-					() -> PraporModEntities.NYMPH.get().create(Minecraft.getInstance().level),
+					() -> PraporModEntities.NYMPH.get().create(Minecraft.getInstance().level, EntitySpawnReason.TRIGGERED),
 					Component.translatable("entity.prapor.nymph"),
 					List.of(Component.translatable("guide.prapor.nymph"),
 							Component.translatable("guide.prapor.addnymph"))
@@ -119,7 +121,7 @@ public class BookScreen extends Screen {
 			new MobEntry(
 					"sucker",
 					30, -22, 30,
-					() -> PraporModEntities.SUCKER.get().create(Minecraft.getInstance().level),
+					() -> PraporModEntities.SUCKER.get().create(Minecraft.getInstance().level, EntitySpawnReason.TRIGGERED),
 					Component.translatable("entity.prapor.sucker"),
 					List.of(Component.translatable("guide.prapor.sucker"))
 			)
@@ -139,164 +141,148 @@ public class BookScreen extends Screen {
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
-		super.render(guiGraphics, mouseX, mouseY, partialTicks);
+	public void render(GuiGraphics gg, int mouseX, int mouseY, float partialTicks) {
+		super.render(gg, mouseX, mouseY, partialTicks);
 
-		PraporModVariables.PlayerVariables vars =
-				Minecraft.getInstance().player.getData(PraporModVariables.PLAYER_VARIABLES);
+		var mc = Minecraft.getInstance();
+		var player = mc.player;
+		if (player == null) return;
 
+		PraporModVariables.PlayerVariables vars = player.getData(PraporModVariables.PLAYER_VARIABLES);
 		boolean hasWrites = vars.seenMobs.values().stream().anyMatch(v -> v != 0);
 
-		// если игрок ещё ничего не открыл — делаем затемнение
-		if (!hasWrites) {
-			RenderSystem.enableBlend();
-			RenderSystem.defaultBlendFunc();
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);
-		}
+		final int pageInnerHalf = 60;
+		final int pageCenterY = this.height / 2;
 
-		final int pageInnerHalf = 60; // смещение от центра книги к центру страницы
-		final int pageCenterY = this.height / 2; // вертикальный центр страниц
-
-		// --- отрисовка закладок ---
+		// --- ЗАКЛАДКИ ---
 		int startIndex = pageIndex * ENTRIES_PER_PAGE;
-		for (int i = 0; i<ENTRIES_PER_PAGE; i++){
+		for (int i = 0; i < ENTRIES_PER_PAGE; i++) {
 			for (int x = 0; x < PAGES.size(); x++) {
 				int idx = startIndex + i;
-				MobEntry entry = MOB_ENTRIES.get(idx);
-				if(vars.seenMobs.get(entry.key)-1<x) break;
+				if (idx >= MOB_ENTRIES.size()) break;
+				var entry = MOB_ENTRIES.get(idx);
+				if (vars.seenMobs.get(entry.key()) - 1 < x) break;
+
 				int pageSide = i; // 0 = левая, 1 = правая
-				int tabStartX = this.width / 2 - 20 + (pageSide == 0 ? -pageInnerHalf : pageInnerHalf+19); // центрируем по X
-				int tabY = this.height / 2 - 110; // чуть выше верхней границы книги
+				int tabStartX = this.width / 2 - 20 + (pageSide == 0 ? -pageInnerHalf : pageInnerHalf + 19);
+				int tabY = this.height / 2 - 110;
 				ResourceLocation tabTexture = PAGES.get(x);
-                int idi = idx + x;
-				if(additionList.get(idx) == x) {
-					tabY -= 9;
-				}
-				boolean seen = vars.seenMobs.getOrDefault(entry.key, 0) != 0;
-				if(seen) {
-					guiGraphics.blit(tabTexture,
-							tabStartX + x * 25, // сдвигаем каждую закладку
-							tabY,
-							0, 0,
-							23, 30, // размер закладки в текстуре
-							23, 30
-					);
+
+				if (additionList.get(idx) == x) tabY -= 9;
+
+				boolean seen = vars.seenMobs.getOrDefault(entry.key(), 0) != 0;
+				if (seen) {
+					gg.blit(tabTexture, tabStartX + x * 25, tabY, 0, 0, 23, 30, 23, 30);
 				}
 			}
 		}
 
-		// фон книги
-		guiGraphics.blit(BACKGROUND, this.width / 2 - 142, this.height / 2 - 90, 0, 0, 285, 180, 285, 180);
-
-		for (int i = 0; i<ENTRIES_PER_PAGE; i++){
-			int pageSide = i;
-			int idx = startIndex + i;
-			if(additionList.get(idx)==1 && pageSide==0){
-				ResourceLocation BG_FILL =
-						ResourceLocation.fromNamespaceAndPath("prapor", "textures/screens/guide_bg2.png");
-				guiGraphics.blit(BG_FILL, this.width / 2 - 142, this.height / 2 - 90, 0, 0, 142, 180, 142, 180);
-			}
-			if(additionList.get(idx)==2 && pageSide==0){
-				ResourceLocation BG_FILL =
-						ResourceLocation.fromNamespaceAndPath("prapor", "textures/screens/guide_bg3.png");
-				guiGraphics.blit(BG_FILL, this.width / 2 - 142, this.height / 2 - 90, 0, 0, 142, 180, 142, 180);
-			}
-			if(additionList.get(idx)==1 && pageSide==1){
-				ResourceLocation BG_FILL =
-						ResourceLocation.fromNamespaceAndPath("prapor", "textures/screens/guide_flip_bg2.png");
-				guiGraphics.blit(BG_FILL, this.width / 2, this.height / 2 - 90, 0, 0, 143, 180, 143, 180);
-			}
-			if(additionList.get(idx)==2 && pageSide==1){
-				ResourceLocation BG_FILL =
-						ResourceLocation.fromNamespaceAndPath("prapor", "textures/screens/guide_flip_bg3.png");
-				guiGraphics.blit(BG_FILL, this.width / 2, this.height / 2 - 90, 0, 0, 142, 180, 142, 180);
-			}
-		}
-
-		float follow = 0.005f; // сила поворота моба при движении мышки
+		// --- ФОН КНИГИ ---
+		gg.blit(BACKGROUND, this.width / 2 - 142, this.height / 2 - 90, 0, 0, 285, 180, 285, 180);
 
 		for (int i = 0; i < ENTRIES_PER_PAGE; i++) {
 			int idx = startIndex + i;
 			if (idx >= MOB_ENTRIES.size()) break;
 
-			MobEntry entry = MOB_ENTRIES.get(idx);
+			int pageSide = i;
+			// подложки страничек (варианты)
+			if (additionList.get(idx) == 1 && pageSide == 0) {
+				gg.blit(ResourceLocation.fromNamespaceAndPath("prapor", "textures/screens/guide_bg2.png"),
+						this.width / 2 - 142, this.height / 2 - 90, 0, 0, 142, 180, 142, 180);
+			}
+			if (additionList.get(idx) == 2 && pageSide == 0) {
+				gg.blit(ResourceLocation.fromNamespaceAndPath("prapor", "textures/screens/guide_bg3.png"),
+						this.width / 2 - 142, this.height / 2 - 90, 0, 0, 142, 180, 142, 180);
+			}
+			if (additionList.get(idx) == 1 && pageSide == 1) {
+				gg.blit(ResourceLocation.fromNamespaceAndPath("prapor", "textures/screens/guide_flip_bg2.png"),
+						this.width / 2, this.height / 2 - 90, 0, 0, 143, 180, 143, 180);
+			}
+			if (additionList.get(idx) == 2 && pageSide == 1) {
+				gg.blit(ResourceLocation.fromNamespaceAndPath("prapor", "textures/screens/guide_flip_bg3.png"),
+						this.width / 2, this.height / 2 - 90, 0, 0, 142, 180, 142, 180);
+			}
+		}
 
-			// вычисляем центр левой/правой страницы
-			int pageSide = i; // 0 = левая, 1 = правая
+		// --- МОДЕЛИ НА СТРАНИЦАХ ---
+		float follow = 0.005f;
+		for (int i = 0; i < ENTRIES_PER_PAGE; i++) {
+			int idx = startIndex + i;
+			if (idx >= MOB_ENTRIES.size()) break;
+
+			var entry = MOB_ENTRIES.get(idx);
+			int pageSide = i; // 0 left, 1 right
 			int pageCenterX = this.width / 2 + (pageSide == 0 ? -pageInnerHalf : pageInnerHalf);
 
-			int drawX = pageCenterX + entry.offsetX;
-			int drawY = pageCenterY + entry.offsetY;
+			int drawX = pageCenterX + entry.offsetX();
+			int drawY = pageCenterY + entry.offsetY();
 
-			boolean seen = vars.seenMobs.getOrDefault(entry.key, 0) != 0;
-
-			// если игрок ещё не видел моба — ставим "?"
+			boolean seen = vars.seenMobs.getOrDefault(entry.key(), 0) != 0;
 			if (!seen) {
-				guiGraphics.blit(UNKNOWN,
+				gg.blit(UNKNOWN,
 						pageSide == 0 ? width / 2 - 80 : width / 2 + 60,
 						height / 2 - 20,
 						0, 0, 19, 31, 19, 31);
 			} else {
-				LivingEntity entity = entry.entitySupplier.get();
-				if (entity != null) {
+				LivingEntity le = entry.entitySupplier().get();
+				if (le != null) {
 					float angleX = Mth.clamp((drawX - mouseX) * follow, -2, 2);
 					float angleY = Mth.clamp((drawY - mouseY) * follow, -0.5f, 0.5f);
+					if (le instanceof net.knifick.praporupdate.entity.SoulEntity) angleX -= 4.5f;
 
-					// для SoulEntity небольшая поправка угла
-					if (entity instanceof SoulEntity) angleX -= 4.5f;
-
-					renderEntityInInventoryFollowsAngle(guiGraphics, drawX, drawY,
-							entry.scale, angleX, angleY, entity);
+					renderEntityInInventoryFollowsAngle(gg, drawX, drawY, entry.scale(), angleX, angleY, le);
 				}
 			}
 
-			// текстовое описание
-			int mobStage = vars.seenMobs.getOrDefault(entry.key, 0);
+			// --- ТЕКСТ ---
+			int mobStage = vars.seenMobs.getOrDefault(entry.key(), 0);
 			if (mobStage > 0) {
 				int addIndex = additionList.get(idx);
-				if (addIndex >= entry.descriptions.size()) {
-					addIndex = entry.descriptions.size() - 1; // fallback на последний элемент
-				}
-				Component mainDesc = entry.descriptions.get(addIndex);
+				if (addIndex >= entry.descriptions().size())
+					addIndex = entry.descriptions().size() - 1;
+
+				var mainDesc = entry.descriptions().get(addIndex);
 
 				int textX = (pageSide == 0) ? (this.width / 2 - 120) : (this.width / 2 + 10);
 				int textY = this.height / 2 - 70;
-
-				renderDescriptionsWithPriority(guiGraphics, entry.title, mainDesc,
-						mobStage, textX, textY, 110, 150, pageSide);
+				renderDescriptionsWithPriority(gg, entry.title(), mainDesc, mobStage, textX, textY, 110, 150, pageSide);
 			}
 		}
 
-		// стрелки переключения страниц
-		Font font = Minecraft.getInstance().font;
+		// --- СТРЕЛКИ/ИНДИКАТОР ---
+		Font font = mc.font;
 		int arrowY = this.height / 2 + 70;
 		int leftArrowX = this.width / 2 - 115;
 		int rightArrowX = this.width / 2 + 100;
 
 		int totalPages = (MOB_ENTRIES.size() + ENTRIES_PER_PAGE - 1) / ENTRIES_PER_PAGE;
 
-		boolean hoverLeft = mouseX >= leftArrowX && mouseX <= leftArrowX + 17 &&
-				mouseY >= arrowY && mouseY <= arrowY + 13;
-		boolean hoverRight = mouseX >= rightArrowX && mouseX <= rightArrowX + 23 &&
-				mouseY >= arrowY && mouseY <= arrowY + 13;
+		boolean hoverLeft  = mouseX >= leftArrowX && mouseX <= leftArrowX + 17 && mouseY >= arrowY && mouseY <= arrowY + 13;
+		boolean hoverRight = mouseX >= rightArrowX && mouseX <= rightArrowX + 23 && mouseY >= arrowY && mouseY <= arrowY + 13;
 
-		guiGraphics.blit(ARROWS, leftArrowX, arrowY, hoverLeft ? 18 : 0, 13, 18, 10, 36, 23);
-		guiGraphics.blit(ARROWS, rightArrowX, arrowY, hoverRight ? 18 : 0, 0, 18, 10, 36, 23);
+		gg.blit(ARROWS, leftArrowX, arrowY, hoverLeft ? 18 : 0, 13, 18, 10, 36, 23);
+		gg.blit(ARROWS, rightArrowX, arrowY, hoverRight ? 18 : 0, 0, 18, 10, 36, 23);
 
-		// индикатор страницы
 		String pageIndicator = String.format("%d / %d", pageIndex + 1, Math.max(totalPages, 1));
-		guiGraphics.drawString(font, Component.literal(pageIndicator),
+		gg.drawString(font, Component.literal(pageIndicator),
 				this.width / 2 - font.width(Component.literal(pageIndicator)) / 2,
-				arrowY + 25, 0xFFFFFF, false);
+				arrowY + 25, 0xFFFFFFFF, false);
 
-		// сообщение, если игрок ничего не открыл
+		// --- «затемнение» и подсказка, если игрок ещё ничего не открыл ---
 		if (!hasWrites) {
-			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
-			RenderSystem.disableBlend();
-			guiGraphics.drawString(font, Component.translatable("guide.prapor.guide1"), width / 2 - 89, height / 2 - 50, 0xFFFFFF, false);
-			guiGraphics.drawString(font, Component.translatable("guide.prapor.guide2"), width / 2 - 80, height / 2 - 40, 0xFFFFFF, false);
+			// вместо ShaderColor — полупрозрачная заливка поверх книги
+			// 0xAA000000 = чёрный с альфой ~0.67
+			gg.fill(this.width / 2 - 142, this.height / 2 - 90,
+					this.width / 2 + 143, this.height / 2 + 90,
+					0xAA000000);
+
+			gg.drawString(font, Component.translatable("guide.prapor.guide1"),
+					width / 2 - 89, height / 2 - 50, 0xFFFFFFFF, false);
+			gg.drawString(font, Component.translatable("guide.prapor.guide2"),
+					width / 2 - 80, height / 2 - 40, 0xFFFFFFFF, false);
 		}
 	}
+
 
 
 	@Override
@@ -362,31 +348,50 @@ public class BookScreen extends Screen {
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
 
-	private void renderEntityInInventoryFollowsAngle(GuiGraphics guiGraphics, int x, int y, int scale,
+	private void renderEntityInInventoryFollowsAngle(GuiGraphics gg, int x, int y, int scale,
 													 float angleXComponent, float angleYComponent, LivingEntity entity) {
-		Quaternionf pose = new Quaternionf().rotateZ((float) Math.PI);
-		Quaternionf cameraOrientation = new Quaternionf().rotateX(angleYComponent * 20 * ((float) Math.PI / 180F));
+		// готовим кватернионы (как у тебя раньше)
+		Quaternionf pose = new Quaternionf().rotateZ((float)Math.PI);
+		Quaternionf cameraOrientation = new Quaternionf()
+				.rotateX(angleYComponent * 20 * ((float)Math.PI / 180F));
 		pose.mul(cameraOrientation);
 
+		// временно правим углы у сущности (с последующим откатом)
 		float prevBodyRot = entity.yBodyRot;
-		float prevYRot = entity.getYRot();
-		float prevXRot = entity.getXRot();
-		float prevHeadRotO = entity.yHeadRotO;
-		float prevHeadRot = entity.yHeadRot;
+		float prevYRot    = entity.getYRot();
+		float prevXRot    = entity.getXRot();
+		float prevHeadO   = entity.yHeadRotO;
+		float prevHead    = entity.yHeadRot;
 
 		entity.yBodyRot = 180.0F + angleXComponent * 20.0F;
 		entity.setYRot(180.0F + angleXComponent * 40.0F);
 		entity.setXRot(-angleYComponent * 20.0F);
-		entity.yHeadRot = entity.getYRot();
+		entity.yHeadRot  = entity.getYRot();
 		entity.yHeadRotO = entity.getYRot();
 
-		InventoryScreen.renderEntityInInventory(guiGraphics, x, y, scale, new Vector3f(0, 0, 0), pose, cameraOrientation, entity);
+		// НОВАЯ СИГНАТУРА:
+		int packedLight = LightTexture.FULL_BRIGHT;   // GUI: самосвечение
+		float tickTime  = 0.0f;                       // можно mc.getFrameTime() если нужна плавность
+		Vector3f offset = new Vector3f(0, 0, 0);      // без смещения
 
+		InventoryScreen.renderEntityInInventory(
+				gg,
+				x, y,
+				scale,
+				packedLight,
+				tickTime,
+				offset,
+				pose,
+				cameraOrientation,
+				entity
+		);
+
+		// откатим изменения позы сущности
 		entity.yBodyRot = prevBodyRot;
 		entity.setYRot(prevYRot);
 		entity.setXRot(prevXRot);
-		entity.yHeadRotO = prevHeadRotO;
-		entity.yHeadRot = prevHeadRot;
+		entity.yHeadRotO = prevHeadO;
+		entity.yHeadRot  = prevHead;
 	}
 
 	/**

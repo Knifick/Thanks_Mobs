@@ -1,8 +1,9 @@
-
 package net.knifick.praporupdate.client.screens;
 
 import net.knifick.praporupdate.network.PraporModVariables;
-import org.checkerframework.checker.units.qual.h;
+import net.knifick.praporupdate.util.misc.UIHelper;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.util.Mth;
 
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -13,13 +14,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.Minecraft;
 
 import net.knifick.praporupdate.procedures.IsScremerRProcedure;
-
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.platform.GlStateManager;
 
 @EventBusSubscriber({Dist.CLIENT})
 public class ScreamerOverlay {
@@ -39,19 +36,10 @@ public class ScreamerOverlay {
 			y = entity.getY();
 			z = entity.getZ();
 		}
-		RenderSystem.disableDepthTest();
-		RenderSystem.depthMask(false);
-		RenderSystem.enableBlend();
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-		RenderSystem.setShaderColor(1F, 1F, 1F, (float) ((10-vars.screamAnimValue)/10f));
+		int a = Mth.clamp((int)((float) ((10-vars.screamAnimValue)/10f) * 255f), 0, 255);
+		int color = UIHelper.rgbaToColor(255, 255, 255, a);
 		if (IsScremerRProcedure.execute(entity)) {
-			event.getGuiGraphics().blit(ResourceLocation.parse("prapor:textures/screens/screamer1.png"), 0, 0, 0, 0, w, h, w, h);
+			event.getGuiGraphics().blit(RenderPipelines.GUI_TEXTURED, ResourceLocation.parse("prapor:textures/screens/screamer1.png"), 0, 0, 0, 0, w, h, w, h, color);
 		}
-		RenderSystem.depthMask(true);
-		RenderSystem.defaultBlendFunc();
-		RenderSystem.enableDepthTest();
-		RenderSystem.disableBlend();
-		RenderSystem.setShaderColor(1, 1, 1, 1);
 	}
 }

@@ -89,25 +89,28 @@ public class FlyingBreedGoal extends Goal {
 
     @Nullable
     private Animal getFreePartner() {
-        List<? extends Animal> list = this.level.getNearbyEntities(
-                this.partnerClass, PARTNER_TARGETING, this.animal,
-                this.animal.getBoundingBox().inflate(8.0D)
+        // получаем всех животных в радиусе 8 блоков
+        List<? extends Animal> list = this.level.getEntitiesOfClass(
+                this.partnerClass,
+                this.animal.getBoundingBox().inflate(8.0D),
+                candidate -> true // тут Predicate вместо TargetingConditions
         );
 
-        double d0 = Double.MAX_VALUE;
+        double closestDist = Double.MAX_VALUE;
         Animal found = null;
 
         for (Animal candidate : list) {
             if (this.animal.canMate(candidate) && !candidate.isPanicking()) {
                 double dist = this.animal.distanceToSqr(candidate);
-                if (dist < d0) {
+                if (dist < closestDist) {
                     found = candidate;
-                    d0 = dist;
+                    closestDist = dist;
                 }
             }
         }
         return found;
     }
+
 
     protected void breed() {
         this.animal.spawnChildFromBreeding((ServerLevel) this.level, this.partner);

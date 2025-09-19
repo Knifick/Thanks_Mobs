@@ -4,34 +4,27 @@ import net.knifick.praporupdate.PraporMod;
 import net.knifick.praporupdate.init.PraporModEnchantments;
 import net.knifick.praporupdate.init.PraporModItems;
 import net.knifick.praporupdate.util.ironkin.ScreenShakeUtil;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BetterMaceChargedItem extends BetterMaceItem {
     private static final double BEAM_LENGTH = 12.0;
@@ -48,8 +41,8 @@ public class BetterMaceChargedItem extends BetterMaceItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        InteractionResultHolder<ItemStack> re = super.use(level, player, hand);
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        InteractionResult re = super.use(level, player, hand);
 
         ItemStack itemStack = player.getItemInHand(hand);
         float enchLevel = itemStack.getEnchantmentLevel(PraporModEnchantments.getEnchantment(level, PraporModEnchantments.RAGE_OF_SOULS));
@@ -89,7 +82,7 @@ public class BetterMaceChargedItem extends BetterMaceItem {
         else
             direction = player.getViewVector(1f).scale(-0.7);
         player.addDeltaMovement(direction);
-        int slot = player.getInventory().selected;
+        int slot = player.getInventory().getSelectedSlot();
         ItemStack weapon = player.getWeaponItem();
         ItemStack newWeapon = new ItemStack(PraporModItems.BETTER_MACE.get());
         if(!player.isCreative())
@@ -153,22 +146,19 @@ public class BetterMaceChargedItem extends BetterMaceItem {
 
         if(isEnchanted && hasSoul && player.level().isClientSide) ScreenShakeUtil.startShake(20, 20.0F);
         if(isEnchanted && hasSoul && !player.isCreative()) player.getInventory().setItem(index, new ItemStack(Items.GLASS_BOTTLE));
-        player.getCooldowns().addCooldown(PraporModItems.BETTER_MACE_CHARGED.get(), 15);
+        player.getCooldowns().addCooldown(PraporModItems.BETTER_MACE_CHARGED.get().getDefaultInstance(), 15);
         return re;
     }
 
-    @Override
-    public int getEnchantmentValue() {
-        return 10;
-    }
-
     public static int findSoulBottle(Player player) {
-        for (int i = 0; i < player.getInventory().items.size(); i++) {
-            ItemStack stack = player.getInventory().getItem(i);
+        var inv = player.getInventory();
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack stack = inv.getItem(i);
             if (!stack.isEmpty() && stack.is(PraporModItems.SOUL_BOTTLE.get())) {
                 return i;
             }
         }
         return -1;
     }
+
 }

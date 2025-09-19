@@ -10,7 +10,7 @@ import net.neoforged.neoforge.client.event.ViewportEvent;
 
 import java.util.Random;
 
-@EventBusSubscriber(modid = PraporMod.MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
+@EventBusSubscriber(modid = PraporMod.MODID, value = Dist.CLIENT)
 public class ClientEvents {
 
 	@SubscribeEvent

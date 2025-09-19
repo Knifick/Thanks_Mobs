@@ -3,33 +3,47 @@ package net.knifick.praporupdate.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.knifick.praporupdate.entity.BastardEntity;
 import net.knifick.praporupdate.entity.BobEntity;
 import net.knifick.praporupdate.entity.PookerEntity;
 import net.knifick.praporupdate.entity.model.BobModel;
 import net.knifick.praporupdate.entity.model.PookerModel;
+import net.knifick.praporupdate.init.PraporModTickets;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
-public class BobRenderer extends GeoEntityRenderer<BobEntity> {
+public class BobRenderer<R extends LivingEntityRenderState & GeoRenderState> extends GeoEntityRenderer<BobEntity, R> {
 	public BobRenderer(EntityRendererProvider.Context renderManager) {
 		super(renderManager, new BobModel());
 		this.shadowRadius = 2f;
 	}
 
 	@Override
-	public RenderType getRenderType(BobEntity animatable, ResourceLocation texture, MultiBufferSource bufferSource, float partialTick) {
-		return RenderType.entityTranslucent(getTextureLocation(animatable));
+	@Nullable
+	public RenderType getRenderType(R renderState, ResourceLocation texture) {
+		return RenderType.entityTranslucent(texture);
 	}
 
 	@Override
-	public void preRender(PoseStack poseStack, BobEntity entity, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
+	public void extractRenderState(BobEntity entity, R entityRenderState, float partialTick) {
+		entityRenderState.addGeckolibData(PraporModTickets.ENTITY_TEXTURE, entity.getTexture());
+	}
+
+	@Override
+	public void preRender(R renderState, PoseStack poseStack,
+						  BakedGeoModel model, @Nullable MultiBufferSource bufferSource,
+						  @Nullable VertexConsumer buffer, boolean isReRender,
+						  int packedLight, int packedOverlay, int renderColor) {
 		float scale = 3f;
 		this.scaleHeight = scale;
 		this.scaleWidth = scale;
-		super.preRender(poseStack, entity, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
+		super.preRender(renderState, poseStack, model, bufferSource, buffer, isReRender, packedLight, packedOverlay, renderColor);
 	}
 }

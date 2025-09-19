@@ -1,55 +1,52 @@
 package net.knifick.praporupdate.client.layer;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.knifick.praporupdate.entity.NymphEntity;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
-import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
-import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
-public class OutlineGeoLayer<T extends GeoAnimatable>
-        extends GeoRenderLayer<NymphEntity> {
+public class OutlineGeoLayer<R extends LivingEntityRenderState & GeoRenderState>
+        extends GeoRenderLayer<NymphEntity, Void, R> {
 
-    private final GeoEntityRenderer<NymphEntity> renderer;
+    private final GeoEntityRenderer<NymphEntity, R> renderer;
 
-    public OutlineGeoLayer(GeoEntityRenderer<NymphEntity> renderer) {
+    public OutlineGeoLayer(GeoEntityRenderer<NymphEntity, R> renderer) {
         super(renderer);
         this.renderer = renderer;
     }
 
     @Override
-    public void render(PoseStack poseStack, NymphEntity entity, BakedGeoModel bakedModel, @Nullable RenderType renderType, MultiBufferSource bufferSource, @Nullable VertexConsumer buffer, float partialTick, int packedLight, int packedOverlay) {
+    public void render(R renderState,
+                       PoseStack poseStack,
+                       BakedGeoModel bakedModel,
+                       @Nullable RenderType renderType,
+                       MultiBufferSource bufferSource,
+                       @Nullable VertexConsumer buffer,
+                       int packedLight,
+                       int packedOverlay,
+                       int renderColor) {
 
-        var model = this.renderer.getGeoModel().getBakedModel(
-                this.renderer.getGeoModel().getModelResource(entity));
-        var texture = this.renderer.getTextureLocation(entity);
+        // текстура из рендера по текущему RenderState
+        ResourceLocation texture = renderer.getTextureLocation(renderState);
 
-        RenderType renderTyp = RenderType.entityTranslucent(texture);
-        VertexConsumer vc = bufferSource.getBuffer(renderTyp);
+        // второй проход: можно взять outline/eyes/entityTranslucent — см. примечание ниже
+        RenderType pass = RenderType.entityTranslucent(texture);
+        VertexConsumer vc = bufferSource.getBuffer(pass);
 
-        // Задаём максимальное освещение (fullbright)
-        int fullBright = 0xF000F0;
+        int light  = LightTexture.FULL_BRIGHT; // самосвечение; иначе используй packedLight
+        int color  = 0xFFFFFFFF;               // белый множитель поверх текстуры
 
-        this.renderer.reRender(
-                model,
-                poseStack,
-                bufferSource,
-                entity,
-                renderType,
-                vc,
-                partialTick,
-                fullBright,
-                OverlayTexture.NO_OVERLAY,
-                0xFFFFFFFF // белый множитель (оставляет текстуру как есть)
-        );
+        // ВАЖНО: порядок аргументов как у твоего reRender:
+        // (renderState, poseStack, model, bufferSource, renderType, buffer, packedLight, packedOverlay, renderColor)
+        renderer.reRender(renderState, poseStack, bakedModel, bufferSource, pass, vc, light, packedOverlay, color);
     }
 }

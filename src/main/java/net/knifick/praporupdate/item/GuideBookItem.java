@@ -8,14 +8,14 @@ import net.knifick.praporupdate.network.PraporModVariables;
 import net.knifick.praporupdate.network.payloads.ToastPayload;
 import net.knifick.praporupdate.toast.MobToast;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -30,11 +30,11 @@ public class GuideBookItem extends Item {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		if(!level.isClientSide){
 			PraporModVariables.PlayerVariables vars = player.getData(PraporModVariables.PLAYER_VARIABLES);
 			vars.syncPlayerVariables(player);
-			return InteractionResultHolder.consume(player.getItemInHand(hand));
+			return InteractionResult.CONSUME;
 		}
 		Minecraft.getInstance().setScreen(new BookScreen(Component.literal("Гайд")));
 		return super.use(level, player, hand);
@@ -42,7 +42,7 @@ public class GuideBookItem extends Item {
 
 	@Override
 	public InteractionResult interactLivingEntity(ItemStack itemStack, Player player, LivingEntity livingEntity, InteractionHand hand) {
-		if(player.level().isClientSide) return InteractionResult.sidedSuccess(true);
+		if(player.level().isClientSide) return InteractionResult.SUCCESS;
 		if(!(livingEntity instanceof BastardEntity
 		|| livingEntity instanceof BobEntity
 		|| livingEntity instanceof BrolemEntity
@@ -53,7 +53,7 @@ public class GuideBookItem extends Item {
 		|| livingEntity instanceof SoulEntity
 		|| livingEntity instanceof SuckerEntity)) return InteractionResult.FAIL;
 		addToBook(player, livingEntity, 1);
-		return InteractionResult.sidedSuccess(false);
+		return InteractionResult.SUCCESS_SERVER;
 	}
 
 	public static void addToBook(Player player, LivingEntity entity, int value) {
@@ -81,17 +81,25 @@ public class GuideBookItem extends Item {
 		}
 	}
 
+	public static void showToast(String name) {
+		var player = Minecraft.getInstance().player;
+		if (player == null) return;
 
-	public static void showToast(String name){
-		PraporModVariables.PlayerVariables vars = Minecraft.getInstance().player.getData(PraporModVariables.PLAYER_VARIABLES);
+		PraporModVariables.PlayerVariables vars = player.getData(PraporModVariables.PLAYER_VARIABLES);
 		Minecraft mc = Minecraft.getInstance();
-		mc.player.playSound(SoundEvents.VILLAGER_WORK_CARTOGRAPHER);
-		ToastComponent toastGui = mc.getToasts();
+
+		player.playSound(SoundEvents.VILLAGER_WORK_CARTOGRAPHER);
 
 		String info = "Новый моб: ";
-		if(vars.seenMobs.get(name)>1)
+		if (vars.seenMobs.getOrDefault(name, 0) > 1) {
 			info = "Обновлено: ";
-		toastGui.addToast(new MobToast(Component.literal(info).append(Component.translatable("entity.prapor."+name)), ResourceLocation.parse("prapor:textures/entity/prapor.png")));
+		}
 
+		mc.getToastManager().addToast(
+				new MobToast(
+						Component.literal(info).append(Component.translatable("entity.prapor." + name)),
+						ResourceLocation.fromNamespaceAndPath("prapor", "textures/entity/prapor.png")
+				)
+		);
 	}
 }

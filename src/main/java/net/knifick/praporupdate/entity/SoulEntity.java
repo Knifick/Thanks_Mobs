@@ -3,7 +3,10 @@ package net.knifick.praporupdate.entity;
 
 import net.knifick.praporupdate.init.PraporModItems;
 import net.knifick.praporupdate.item.GuideBookItem;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.common.NeoForgeMod;
 
@@ -13,7 +16,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.entity.projectile.ThrownPotion;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.boss.wither.WitherBoss;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
@@ -83,15 +85,8 @@ public class SoulEntity extends PathfinderMob {
 	}
 
 	@Override
-	public boolean causeFallDamage(float l, float d, DamageSource source) {
-		return false;
-	}
-
-	@Override
-	public boolean hurt(DamageSource damagesource, float amount) {
+	public boolean hurtServer(ServerLevel serverLevel, DamageSource damagesource, float amount) {
 		if (damagesource.is(DamageTypes.IN_FIRE))
-			return false;
-		if (damagesource.getDirectEntity() instanceof ThrownPotion || damagesource.getDirectEntity() instanceof AreaEffectCloud || damagesource.typeHolder().is(NeoForgeMod.POISON_DAMAGE))
 			return false;
 		if (damagesource.is(DamageTypes.FALL))
 			return false;
@@ -105,7 +100,7 @@ public class SoulEntity extends PathfinderMob {
 			return false;
 		if (damagesource.is(DamageTypes.WITHER) || damagesource.is(DamageTypes.WITHER_SKULL))
 			return false;
-		return super.hurt(damagesource, amount);
+		return super.hurtServer(serverLevel, damagesource, amount);
 	}
 
 	@Override
@@ -119,22 +114,27 @@ public class SoulEntity extends PathfinderMob {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
+	public void addAdditionalSaveData(ValueOutput compound) {
 		super.addAdditionalSaveData(compound);
 		compound.putInt("DataTIMER", this.entityData.get(DATA_TIMER));
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
-		super.readAdditionalSaveData(compound);
-		if (compound.contains("DataTIMER"))
-			this.entityData.set(DATA_TIMER, compound.getInt("DataTIMER"));
+	protected void readAdditionalSaveData(ValueInput input) {
+		super.readAdditionalSaveData(input);
+
+		// если ключа нет → останется текущее значение
+		this.entityData.set(DATA_TIMER, input.getIntOr("DataTIMER", this.entityData.get(DATA_TIMER)));
 	}
 
 	@Override
 	public InteractionResult mobInteract(Player sourceentity, InteractionHand hand) {
 		ItemStack itemstack = sourceentity.getItemInHand(hand);
-		InteractionResult retval = InteractionResult.sidedSuccess(this.level().isClientSide());
+		InteractionResult retval;
+		if(this.level().isClientSide())
+			retval = InteractionResult.SUCCESS;
+		else
+			retval = InteractionResult.SUCCESS_SERVER;
 		super.mobInteract(sourceentity, hand);
 		double x = this.getX();
 		double y = this.getY();

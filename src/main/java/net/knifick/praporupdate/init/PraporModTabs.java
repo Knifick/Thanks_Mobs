@@ -23,7 +23,6 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.EnchantedBookItem;
 
 import net.knifick.praporupdate.PraporMod;
 
@@ -31,15 +30,14 @@ import java.util.Optional;
 
 import static net.knifick.praporupdate.init.PraporModEnchantments.RAGE_OF_SOULS;
 import static net.knifick.praporupdate.init.PraporModEnchantments.getEnchantment;
-import static net.minecraft.world.item.EnchantedBookItem.createForEnchantment;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class PraporModTabs {
 	public static final DeferredRegister<CreativeModeTab> REGISTRY = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, PraporMod.MODID);
 	public static final DeferredHolder<CreativeModeTab, CreativeModeTab> THANKS_TAB = REGISTRY.register("thanks_tab",
 			() -> CreativeModeTab.builder().title(Component.translatable("item_group.prapor.thanks_tab")).icon(() -> new ItemStack(PraporModItems.GOLD_TROPHY.get())).displayItems((parameters, tabData) -> {
 				var lookup = parameters.holders().lookup(Registries.ENCHANTMENT);
-				Holder<Enchantment> rage = getEnchantment(lookup, RAGE_OF_SOULS);
+				//Holder<Enchantment> rage = getEnchantment(lookup, RAGE_OF_SOULS);
 				tabData.accept(PraporModItems.GUIDE_BOOK.get());
 				tabData.accept(PraporModItems.PRAPOR_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.POOKER_SPAWN_EGG.get());
@@ -70,10 +68,10 @@ public class PraporModTabs {
 				tabData.accept(PraporModItems.UPGRADE_ACTIVE.get());
 				tabData.accept(PraporModItems.BETTER_MACE.get());
 				tabData.accept(PraporModBlocks.GOLD_TROPHY.get().asItem());
-				tabData.accept(
-						createForEnchantment(new EnchantmentInstance(rage, rage.value().getMaxLevel())),
-						CreativeModeTab.TabVisibility.PARENT_TAB_ONLY
-				);
+//				tabData.accept(
+//						createForEnchantment(new EnchantmentInstance(rage, rage.value().getMaxLevel())),
+//						CreativeModeTab.TabVisibility.PARENT_TAB_ONLY
+//				);
 			}).build());
 
 	@SubscribeEvent

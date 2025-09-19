@@ -17,6 +17,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
@@ -25,7 +27,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class KillCloud extends Entity {
-    public static final EntityDataAccessor<Optional<UUID>> FILTER_UUID = SynchedEntityData.defineId(KillCloud.class, EntityDataSerializers.OPTIONAL_UUID);
+    public static final EntityDataAccessor<String> FILTER_UUID =
+            SynchedEntityData.defineId(KillCloud.class, EntityDataSerializers.STRING);
     public static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(KillCloud.class, EntityDataSerializers.INT);
     private float radius = 1f;
     private int duration = 200;
@@ -35,12 +38,13 @@ public class KillCloud extends Entity {
     }
 
     public void setPlayerUUID(@Nullable UUID player) {
-        this.entityData.set(FILTER_UUID, Optional.ofNullable(player));
+        this.entityData.set(FILTER_UUID, player != null ? player.toString() : "");
     }
 
     @Nullable
     public UUID getPlayerUUID() {
-        return this.entityData.get(FILTER_UUID).orElse(null);
+        String raw = this.entityData.get(FILTER_UUID);
+        return (raw == null || raw.isEmpty()) ? null : UUID.fromString(raw);
     }
 
     public void setVariant(int variant) {
@@ -53,21 +57,24 @@ public class KillCloud extends Entity {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(FILTER_UUID, Optional.empty());
+        builder.define(FILTER_UUID, ""); // пустая строка = UUID нет
         builder.define(VARIANT, 0);
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {
-        if(this.getPlayerUUID() != null)
-            tag.putUUID("player_uuid", this.getPlayerUUID());
+    protected void addAdditionalSaveData(ValueOutput output) {
+        if (this.getPlayerUUID() != null) {
+            output.putString("player_uuid", this.getPlayerUUID().toString());
+        }
     }
 
+
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {
-        if (tag.contains("player_uuid"))
-            this.setPlayerUUID(tag.getUUID("player_uuid"));
+    protected void readAdditionalSaveData(ValueInput input) {
+        String uuidStr = input.getStringOr("player_uuid", "");
+        this.setPlayerUUID(UUID.fromString(uuidStr));
     }
+
 
     @Override
     public void onAddedToLevel() {
@@ -100,6 +107,11 @@ public class KillCloud extends Entity {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel serverLevel, DamageSource damageSource, float v) {
+        return false;
     }
 
     private float getDamage(LivingEntity entity) {

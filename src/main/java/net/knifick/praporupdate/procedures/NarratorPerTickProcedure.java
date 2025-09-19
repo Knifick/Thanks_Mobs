@@ -1,5 +1,6 @@
 package net.knifick.praporupdate.procedures;
 
+import net.knifick.praporupdate.init.PraporModSounds;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.Level;
@@ -26,9 +27,9 @@ public class NarratorPerTickProcedure {
 			entity.hurt(new DamageSource(world.holderOrThrow(ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.parse("prapor:electricalshort")))), 1);
 			if (world instanceof Level _level) {
 				if (!_level.isClientSide()) {
-					_level.playSound(null, BlockPos.containing(x, y, z), BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:electrocute")), SoundSource.HOSTILE, 1, 1);
+					_level.playSound(null, BlockPos.containing(x, y, z), PraporModSounds.ELECTROCUTE.get(), SoundSource.HOSTILE, 1, 1);
 				} else {
-					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:electrocute")), SoundSource.HOSTILE, 1, 1, false);
+					_level.playLocalSound(x, y, z, PraporModSounds.ELECTROCUTE.get(), SoundSource.HOSTILE, 1, 1, false);
 				}
 			}
 		}

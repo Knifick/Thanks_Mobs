@@ -1,53 +1,90 @@
-[10сент.2025 20:40:48.565] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgeclientuserdev, --version, 21.1.65, --assetIndex, 17, --assetsDir, C:\\Users\\delta\\.gradle\\caches\\neoformruntime\\assets, --gameDir, ., --fml.neoForgeVersion, 21.1.65, --fml.fmlVersion, 4.0.24, --fml.mcVersion, 1.21.1, --fml.neoFormVersion, 20240808.144430]
-[10сент.2025 20:40:48.571] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Oracle Corporation Java HotSpot(TM) 64-Bit Server VM 21.0.6+8-LTS-188
-[10сент.2025 20:40:48.574] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 11.0.4+main.d2e20e43 starting: java version 21.0.6 by Oracle Corporation; OS Windows 11 arch amd64 version 10.0
-[10сент.2025 20:40:48.735] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
-[10сент.2025 20:40:48.876] [main/INFO] [EARLYDISPLAY/]: Trying GL version 4.6
-[10сент.2025 20:40:49.032] [main/INFO] [EARLYDISPLAY/]: Requested GL version 4.6 got version 4.6
-[10сент.2025 20:40:49.163] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/C:/Users/delta/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%23131!/ Service=ModLauncher Env=CLIENT
-[10сент.2025 20:40:49.407] [pool-2-thread-1/INFO] [EARLYDISPLAY/]: GL info: NVIDIA GeForce RTX 3060/PCIe/SSE2 GL version 4.6.0 NVIDIA 581.15, NVIDIA Corporation
-[10сент.2025 20:40:49.562] [main/INFO] [net.neoforged.fml.loading.moddiscovery.locators.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
-[10сент.2025 20:40:50.725] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
-[10сент.2025 20:40:50.730] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
-[10сент.2025 20:40:50.741] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgeclientuserdev' with arguments [--version, 21.1.65, --gameDir, ., --assetsDir, C:\Users\delta\.gradle\caches\neoformruntime\assets, --assetIndex, 17]
-[10сент.2025 20:40:50.855] [main/WARN] [mixin/]: Reference map 'geckolib.refmap.json' for geckolib.mixins.json could not be read. If this is a development environment you can ignore this message
-[10сент.2025 20:40:52.697] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 229 Datafixer optimizations took 502 milliseconds
-[10сент.2025 20:40:52.703] [pool-8-thread-1/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.4.1).
-[10сент.2025 20:40:58.696] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[10сент.2025 20:40:58.700] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
-[10сент.2025 20:40:58.706] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[10сент.2025 20:40:58.710] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
-[10сент.2025 20:40:58.739] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
-[10сент.2025 20:40:58.929] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/Z:/MCreatorWorkspaces/praporupdate/build/moddev/artifacts/neoforge-21.1.65-minecraft-merged.jar%23183!/assets/.mcassetsroot' uses unexpected schema
-[10сент.2025 20:40:58.929] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/Z:/MCreatorWorkspaces/praporupdate/build/moddev/artifacts/neoforge-21.1.65-minecraft-merged.jar%23183!/data/.mcassetsroot' uses unexpected schema
-[10сент.2025 20:40:58.970] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
-[10сент.2025 20:40:58.985] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
-[10сент.2025 20:40:59.108] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.3+5
-[10сент.2025 20:40:59.357] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.1.65, for MC 1.21.1
-[10сент.2025 20:40:59.847] [modloading-sync-worker/ERROR] [net.minecraft.Util/]: Entity prapor:munchsaw has no attributes
-[10сент.2025 20:40:59.847] [modloading-sync-worker/WARN] [net.minecraft.Util/]: Did you remember to set a breakpoint here?
-[10сент.2025 20:41:00.528] [Render thread/INFO] [net.neoforged.neoforge.gametest.GameTestHooks/]: Enabled Gametest Namespaces: []
-[10сент.2025 20:41:00.839] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources, mod/geckolib, mod/neoforge, mod/prapor
-[10сент.2025 20:41:00.983] [Worker-Main-11/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-15.1.05.hex, loading
-[10сент.2025 20:41:01.094] [Worker-Main-7/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_jp_patch-15.1.05.hex, loading
-[10сент.2025 20:41:01.263] [Worker-Main-9/WARN] [net.minecraft.client.renderer.texture.SpriteLoader/]: Texture prapor:item/p1 with size 23x30 limits mip level from 2 to 0
-[10сент.2025 20:41:02.650] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:item.goat_horn.play
-[10сент.2025 20:41:02.650] [Render thread/WARN] [net.minecraft.client.sounds.SoundEngine/]: Missing sound for event: minecraft:entity.goat.screaming.horn_break
-[10сент.2025 20:41:02.703] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on Динамики (2- fifine Headset)
-[10сент.2025 20:41:02.704] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
-[10сент.2025 20:41:02.866] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x2 minecraft:textures/atlas/blocks.png-atlas
-[10сент.2025 20:41:02.875] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x2 minecraft:textures/atlas/signs.png-atlas
-[10сент.2025 20:41:02.876] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x2 minecraft:textures/atlas/shield_patterns.png-atlas
-[10сент.2025 20:41:02.876] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x2 minecraft:textures/atlas/banner_patterns.png-atlas
-[10сент.2025 20:41:02.876] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x2 minecraft:textures/atlas/armor_trims.png-atlas
-[10сент.2025 20:41:02.878] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x2 minecraft:textures/atlas/decorated_pot.png-atlas
-[10сент.2025 20:41:02.878] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x2 minecraft:textures/atlas/chest.png-atlas
-[10сент.2025 20:41:02.878] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x2 minecraft:textures/atlas/shulker_boxes.png-atlas
-[10сент.2025 20:41:02.878] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x2 minecraft:textures/atlas/beds.png-atlas
-[10сент.2025 20:41:02.993] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
-[10сент.2025 20:41:02.995] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x0 minecraft:textures/atlas/paintings.png-atlas
-[10сент.2025 20:41:02.995] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x512x0 minecraft:textures/atlas/mob_effects.png-atlas
-[10сент.2025 20:41:02.995] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 64x64x0 minecraft:textures/atlas/map_decorations.png-atlas
-[10сент.2025 20:41:02.995] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x512x0 minecraft:textures/atlas/gui.png-atlas
-[10сент.2025 20:41:03.024] [Render thread/WARN] [net.minecraft.client.renderer.ShaderInstance/]: Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
-[10сент.2025 20:41:03.112] [Render thread/INFO] [net.neoforged.neoforge.client.entity.animation.json.AnimationLoader/]: Loaded 0 entity animations
+[19сент.2025 14:41:42.721] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, neoforgeclientdev, --version, 21.8.46, --assetIndex, 26, --assetsDir, C:\\Users\\delta\\.gradle\\caches\\neoformruntime\\assets, --fml.fmlVersion, 9.0.18, --fml.mcVersion, 1.21.8, --fml.neoForgeVersion, 21.8.46, --fml.neoFormVersion, 20250717.133445]
+[19сент.2025 14:41:42.723] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: JVM identified as Oracle Corporation Java HotSpot(TM) 64-Bit Server VM 21.0.6+8-LTS-188
+[19сент.2025 14:41:42.724] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 9.0 starting: java version 21.0.6 by Oracle Corporation; OS Windows 11 arch amd64 version 10.0
+[19сент.2025 14:41:42.793] [main/WARN] [net.neoforged.fml.loading.FMLConfig/CORE]: Configuration file Z:\MCreatorWorkspaces\praporupdate\run\config\fml.toml is not correct. Correcting
+[19сент.2025 14:41:42.820] [main/INFO] [net.neoforged.fml.loading.ImmediateWindowHandler/]: Loading ImmediateWindowProvider fmlearlywindow
+[19сент.2025 14:41:43.255] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.7 Source=union:/C:/Users/delta/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.15.2+mixin.0.8.7/2af2f021d8e02a0220dc27a7a72b4666d66d44ca/sponge-mixin-0.15.2+mixin.0.8.7.jar%23157!/ Service=ModLauncher Env=CLIENT
+[19сент.2025 14:41:43.264] [main/WARN] [net.neoforged.fml.loading.FMLConfig/CORE]: Configuration file Z:\MCreatorWorkspaces\praporupdate\run\config\fml.toml is not correct. Correcting
+[19сент.2025 14:41:43.470] [fml-loadingscreen/INFO] [net.neoforged.fml.earlydisplay.render.LoadingScreenRenderer/]: GL info: NVIDIA GeForce RTX 3060/PCIe/SSE2 GL version 3.2.0 NVIDIA 581.15, NVIDIA Corporation
+[19сент.2025 14:41:43.670] [main/INFO] [net.neoforged.fml.loading.moddiscovery.locators.JarInJarDependencyLocator/]: Found 2 dependencies adding them to mods collection
+[19сент.2025 14:41:43.673] [main/INFO] [net.neoforged.fml.loading.moddiscovery.ModDiscoverer/]: 
+     Mod List:
+		Name Version (Mod Id)
+
+		GeckoLib 5 5.2.2 (geckolib)
+		Minecraft 1.21.8 (minecraft)
+		NeoForge 21.8.46 (neoforge)
+		ThanksMobs 1.6.5 (prapor)
+[19сент.2025 14:41:44.850] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[19сент.2025 14:41:44.853] [main/INFO] [mixin/]: Compatibility level set to JAVA_21
+[19сент.2025 14:41:44.862] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'neoforgeclientdev' with arguments [--version, 21.8.46, --assetsDir, C:\Users\delta\.gradle\caches\neoformruntime\assets, --assetIndex, 26]
+[19сент.2025 14:41:44.924] [main/WARN] [mixin/]: Reference map 'geckolib.refmap.json' for geckolib.mixins.json could not be read. If this is a development environment you can ignore this message
+[19сент.2025 14:41:45.158] [main/WARN] [mixin/]: Error loading class: org/jetbrains/annotations/ApiStatus$Internal (java.lang.ClassNotFoundException: org.jetbrains.annotations.ApiStatus$Internal)
+[19сент.2025 14:41:46.344] [Datafixer Bootstrap/INFO] [com.mojang.datafixers.DataFixerBuilder/]: 272 Datafixer optimizations took 478 milliseconds
+[19сент.2025 14:41:46.362] [pool-7-thread-1/INFO] [MixinExtras|Service/]: Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.0).
+[19сент.2025 14:41:51.101] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[19сент.2025 14:41:51.102] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[19сент.2025 14:41:51.106] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[19сент.2025 14:41:51.107] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[19сент.2025 14:41:51.108] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[19сент.2025 14:41:51.109] [main/WARN] [net.minecraft.commands.Commands/]: Ambiguity between arguments [waypoint, modify, waypoint, color, reset] and [waypoint, modify, waypoint, color, color] with inputs: [reset]
+[19сент.2025 14:41:51.155] [modloading-worker-0/ERROR] [net.neoforged.neoforge.common.OnlyInWarningsHandler/]: The mod prapor uses the @OnlyIn annotation; the runtime member-stripping behaviour of this annotation is no longer present, which may lead to issues if that behaviour was relied upon
+[19сент.2025 14:41:51.155] [modloading-worker-0/ERROR] [net.neoforged.neoforge.common.OnlyInWarningsHandler/]: @OnlyIn used on method net.knifick.praporupdate.block.listener.ClientListener.registerRenderers(Lnet/neoforged/neoforge/client/event/EntityRenderersEvent$RegisterRenderers;)V
+[19сент.2025 14:41:51.156] [modloading-worker-0/ERROR] [net.neoforged.neoforge.common.OnlyInWarningsHandler/]: @OnlyIn used on class net.knifick.praporupdate.client.particle.EyesParticle
+[19сент.2025 14:41:51.156] [modloading-worker-0/ERROR] [net.neoforged.neoforge.common.OnlyInWarningsHandler/]: @OnlyIn used on class net.knifick.praporupdate.client.particle.KillCloudParticle
+[19сент.2025 14:41:51.156] [modloading-worker-0/ERROR] [net.neoforged.neoforge.common.OnlyInWarningsHandler/]: @OnlyIn used on class net.knifick.praporupdate.client.particle.SparksParticle
+[19сент.2025 14:41:51.156] [modloading-worker-0/ERROR] [net.neoforged.neoforge.common.OnlyInWarningsHandler/]: @OnlyIn used on class net.knifick.praporupdate.mixins.CapeLayerMixin
+[19сент.2025 14:41:51.173] [modloading-worker-0/INFO] [net.neoforged.neoforge.common.NeoForgeMod/NEOFORGE-MOD]: NeoForge mod loading, version 21.8.46, for MC 1.21.8
+[19сент.2025 14:41:51.590] [modloading-sync-worker/ERROR] [net.minecraft.Util/]: Entity prapor:munchsaw has no attributes
+[19сент.2025 14:41:51.606] [modloading-sync-worker/WARN] [net.neoforged.fml.config.ConfigTracker/CONFIG]: Configuration file Z:\MCreatorWorkspaces\praporupdate\run\config\neoforge-client.toml is not correct. Correcting
+[19сент.2025 14:41:51.620] [modloading-sync-worker/WARN] [net.neoforged.fml.config.ConfigTracker/CONFIG]: Configuration file Z:\MCreatorWorkspaces\praporupdate\run\config\neoforge-common.toml is not correct. Correcting
+[19сент.2025 14:41:51.702] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/Z:/MCreatorWorkspaces/praporupdate/build/moddev/artifacts/neoforge-21.8.46.jar%23212!/assets/.mcassetsroot' uses unexpected schema
+[19сент.2025 14:41:51.703] [Render thread/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/Z:/MCreatorWorkspaces/praporupdate/build/moddev/artifacts/neoforge-21.8.46.jar%23212!/data/.mcassetsroot' uses unexpected schema
+[19сент.2025 14:41:51.722] [Render thread/INFO] [com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService/]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
+[19сент.2025 14:41:51.728] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Setting user: Dev
+[19сент.2025 14:41:51.817] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Backend library: LWJGL version 3.3.3+5
+[19сент.2025 14:41:51.913] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Using optional rendering extensions: GL_ARB_buffer_storage, GL_KHR_debug, GL_ARB_vertex_attrib_binding, GL_ARB_direct_state_access
+[19сент.2025 14:41:52.713] [Render thread/INFO] [net.minecraft.server.packs.resources.ReloadableResourceManager/]: Reloading ResourceManager: vanilla, mod_resources, mod/geckolib, mod/neoforge, mod/prapor
+[19сент.2025 14:41:52.770] [resourceLoad/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_pua-16.0.03.hex, loading
+[19сент.2025 14:41:52.771] [resourceLoad/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_all_no_pua-16.0.03.hex, loading
+[19сент.2025 14:41:52.771] [resourceLoad/INFO] [net.minecraft.client.gui.font.providers.UnihexProvider/]: Found unifont_jp_patch-16.0.03.hex, loading
+[19сент.2025 14:41:53.250] [resourceLoad/WARN] [net.minecraft.client.renderer.texture.SpriteLoader/]: Texture prapor:item/p1 with size 23x30 limits mip level from 2 to 0
+[19сент.2025 14:41:53.333] [resourceLoad/WARN] [net.minecraft.client.resources.model.ModelDiscovery/]: Missing block model: minecraft:builtin/entity
+[19сент.2025 14:41:53.762] [modloading-worker-0/FATAL] [net.neoforged.fml.ModLoader/LOADING]: Failed to wait for future Client network registry lock, 1 errors found
+[19сент.2025 14:41:53.893] [Render thread/INFO] [com.mojang.blaze3d.audio.Library/]: OpenAL initialized on device OpenAL Soft on Динамики (fifine Headset)
+[19сент.2025 14:41:53.894] [Render thread/INFO] [net.minecraft.client.sounds.SoundEngine/SOUNDS]: Sound engine started
+[19сент.2025 14:41:53.894] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.sound.SoundEngineLoadEvent to a broken mod state
+[19сент.2025 14:41:54.006] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x2 minecraft:textures/atlas/blocks.png-atlas
+[19сент.2025 14:41:54.014] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.014] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x2 minecraft:textures/atlas/signs.png-atlas
+[19сент.2025 14:41:54.016] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.016] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x2 minecraft:textures/atlas/shield_patterns.png-atlas
+[19сент.2025 14:41:54.016] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.016] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x2 minecraft:textures/atlas/banner_patterns.png-atlas
+[19сент.2025 14:41:54.017] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.017] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 2048x1024x2 minecraft:textures/atlas/armor_trims.png-atlas
+[19сент.2025 14:41:54.021] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.021] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 128x64x2 minecraft:textures/atlas/decorated_pot.png-atlas
+[19сент.2025 14:41:54.022] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.022] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 256x256x2 minecraft:textures/atlas/chest.png-atlas
+[19сент.2025 14:41:54.022] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.022] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x2 minecraft:textures/atlas/shulker_boxes.png-atlas
+[19сент.2025 14:41:54.022] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.022] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x2 minecraft:textures/atlas/beds.png-atlas
+[19сент.2025 14:41:54.022] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.023] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.ModelEvent$BakingCompleted to a broken mod state
+[19сент.2025 14:41:54.024] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 64x64x0 minecraft:textures/atlas/map_decorations.png-atlas
+[19сент.2025 14:41:54.024] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.026] [Render thread/INFO] [net.neoforged.neoforge.client.entity.animation.json.AnimationLoader/]: Loaded 0 entity animations
+[19сент.2025 14:41:54.083] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.EntityRenderersEvent$AddLayers to a broken mod state
+[19сент.2025 14:41:54.088] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[19сент.2025 14:41:54.090] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.090] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 512x512x0 minecraft:textures/atlas/paintings.png-atlas
+[19сент.2025 14:41:54.091] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.091] [Render thread/INFO] [net.minecraft.client.renderer.texture.TextureAtlas/]: Created: 1024x1024x0 minecraft:textures/atlas/gui.png-atlas
+[19сент.2025 14:41:54.092] [Render thread/ERROR] [net.neoforged.fml.ModLoader/]: Cowardly refusing to send event net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent to a broken mod state
+[19сент.2025 14:41:54.174] [Render thread/ERROR] [net.minecraft.CrashReport/]: Negative index in crash report handler (0/31)
+[19сент.2025 14:41:54.186] [Render thread/FATAL] [net.neoforged.neoforge.common.NeoForgeMod/]: Preparing crash report with UUID 926df067-9c97-4382-9fec-d580026993cf
+[19сент.2025 14:41:54.187] [Render thread/FATAL] [net.neoforged.neoforge.client.loading.ClientModLoader/]: Crash report saved to .\crash-reports\crash-2025-09-19_14.41.54-fml.txt
+[19сент.2025 14:41:54.187] [Render thread/FATAL] [net.neoforged.neoforge.common.NeoForgeMod/]: Preparing crash report with UUID a1670e06-43e3-41ca-9bec-82909bf72f13
+[19сент.2025 14:42:05.523] [Render thread/INFO] [net.minecraft.client.Minecraft/]: Stopping!

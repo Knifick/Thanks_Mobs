@@ -1,6 +1,7 @@
 package net.knifick.praporupdate.goal;
 
 import net.knifick.praporupdate.PraporMod;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -237,7 +238,8 @@ public class DirectMeleeAttackGoal extends Goal {
         if (this.canPerformAttack(target)) {
             this.resetAttackCooldown();
             this.mob.swing(InteractionHand.MAIN_HAND);
-            this.mob.doHurtTarget(target);
+            if(target.level() instanceof ServerLevel level)
+                this.mob.doHurtTarget(level, target);
         }
     }
 

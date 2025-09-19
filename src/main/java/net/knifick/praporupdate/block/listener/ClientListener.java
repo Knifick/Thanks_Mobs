@@ -13,7 +13,7 @@ import net.knifick.praporupdate.block.renderer.GoldTrophyTileRenderer;
 import net.knifick.praporupdate.block.entity.GoldTrophyTileEntity;
 import net.knifick.praporupdate.PraporMod;
 
-@EventBusSubscriber(modid = PraporMod.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = PraporMod.MODID, value = Dist.CLIENT)
 public class ClientListener {
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent

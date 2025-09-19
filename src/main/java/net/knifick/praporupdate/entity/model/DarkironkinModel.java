@@ -1,15 +1,17 @@
 package net.knifick.praporupdate.entity.model;
 
-import software.bernie.geckolib.model.data.EntityModelData;
+import net.knifick.praporupdate.entity.BastardEntity;
+import net.knifick.praporupdate.init.PraporModTickets;
+import software.bernie.geckolib.animatable.processing.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.cache.object.GeoBone;
-import software.bernie.geckolib.animation.AnimationState;
 
 import net.minecraft.util.Mth;
 import net.minecraft.resources.ResourceLocation;
 
 import net.knifick.praporupdate.entity.DarkironkinEntity;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
 public class DarkironkinModel extends GeoModel<DarkironkinEntity> {
 	@Override
@@ -18,29 +20,36 @@ public class DarkironkinModel extends GeoModel<DarkironkinEntity> {
 	}
 
 	@Override
-	public ResourceLocation getModelResource(DarkironkinEntity entity) {
+	public ResourceLocation getModelResource(GeoRenderState entity) {
 		ResourceLocation path = ResourceLocation.parse("prapor:geo/dark_ironkin.geo.json");
-		if(entity.getDisplayName().getString().equalsIgnoreCase("Mega knight"))
-			path = ResourceLocation.parse("prapor:geo/dark_ironkin_mega.geo.json");
+		String name = entity.getOrDefaultGeckolibData(PraporModTickets.ENTITY_NAME, "");
+		if(name!=null){
+			if(name.equalsIgnoreCase("Mega knight"))
+				path = ResourceLocation.parse("prapor:geo/dark_ironkin_mega.geo.json");
+		}
 		return path;
 	}
 
 	@Override
-	public ResourceLocation getTextureResource(DarkironkinEntity entity) {
+	public ResourceLocation getTextureResource(GeoRenderState entity) {
 		ResourceLocation path = ResourceLocation.parse("prapor:textures/entities/dark_ironkin.png");
-		if(entity.getDisplayName().getString().equalsIgnoreCase("Mega knight"))
-			path = ResourceLocation.parse("prapor:textures/entities/megagay.png");
+		String name = entity.getOrDefaultGeckolibData(PraporModTickets.ENTITY_NAME, "");
+		if(name!=null) {
+			if (name.equalsIgnoreCase("Mega knight"))
+				path = ResourceLocation.parse("prapor:textures/entities/megagay.png");
+		}
 		return path;
 	}
 
 	@Override
-	public void setCustomAnimations(DarkironkinEntity animatable, long instanceId, AnimationState animationState) {
+	public void setCustomAnimations(AnimationState<DarkironkinEntity> animationState) {
 		GeoBone head = getAnimationProcessor().getBone("head");
 		if (head != null) {
-			EntityModelData entityData = (EntityModelData) animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-			head.setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
-			head.setRotY(entityData.netHeadYaw() * Mth.DEG_TO_RAD);
-		}
+			Float pitch = animationState.getData(DataTickets.ENTITY_PITCH);
+			Float yaw   = animationState.getData(DataTickets.ENTITY_YAW);
 
+			if (pitch != null) head.setRotX(pitch * Mth.DEG_TO_RAD);
+			if (yaw   != null) head.setRotY(yaw * Mth.DEG_TO_RAD);
+		}
 	}
 }

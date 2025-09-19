@@ -1,15 +1,15 @@
 package net.knifick.praporupdate.entity.model;
 
-import net.knifick.praporupdate.entity.NarratorEntity;
-import net.knifick.praporupdate.entity.PraporEntity;
+import net.knifick.praporupdate.entity.BastardEntity;
 import net.knifick.praporupdate.entity.SuckerEntity;
+import net.knifick.praporupdate.init.PraporModTickets;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animatable.processing.AnimationState;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.constant.DataTickets;
 import software.bernie.geckolib.model.GeoModel;
-import software.bernie.geckolib.model.data.EntityModelData;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
 import java.util.Objects;
 
@@ -20,51 +20,52 @@ public class SuckerModel extends GeoModel<SuckerEntity> {
 	}
 
 	@Override
-	public ResourceLocation getModelResource(SuckerEntity entity) {
+	public ResourceLocation getModelResource(GeoRenderState entity) {
 		return ResourceLocation.parse("prapor:geo/sucker.geo.json");
 	}
 
 	@Override
-	public ResourceLocation getTextureResource(SuckerEntity entity) {
+	public ResourceLocation getTextureResource(GeoRenderState entity) {
 		String base = "prapor:textures/entities/sucker/";
-		String texture = entity.getTexture(); // базовое имя текстуры
+		String texture = entity.getGeckolibData(PraporModTickets.ENTITY_TEXTURE); // базовое имя текстуры
 
 		String suffix;
 
-		if(entity.getColor() == -1) {
+		if(entity.getGeckolibData(PraporModTickets.ENTITY_COLOR) == -1) {
 			suffix = "_colored.png";
 		} else {
 			suffix = ".png";
 		}
 
 		// если сущность не сосёт, вставляем _unsuck перед _colored
-		if (!entity.isSuck() && suffix.equals("_colored.png")) {
+		if (Boolean.FALSE.equals(entity.getGeckolibData(PraporModTickets.ENTITY_SUCK)) && suffix.equals("_colored.png")) {
 			suffix = "_unsuck_colored.png";
-		} else if (!entity.isSuck() && suffix.equals(".png")) {
+		} else if (Boolean.FALSE.equals(entity.getGeckolibData(PraporModTickets.ENTITY_SUCK)) && suffix.equals(".png")) {
 			suffix = "_unsuck.png";
 		}
 
 		return ResourceLocation.parse(base + texture + suffix);
 	}
 
-
 	@Override
-	public void setCustomAnimations(SuckerEntity animatable, long instanceId, AnimationState<SuckerEntity> animationState) {
-		super.setCustomAnimations(animatable, instanceId, animationState);
+	public void setCustomAnimations(AnimationState<SuckerEntity> animationState) {
+		super.setCustomAnimations(animationState);
 		GeoBone head = getAnimationProcessor().getBone("Head");
 		if (head != null) {
-			EntityModelData entityData = animationState.getData(DataTickets.ENTITY_MODEL_DATA);
-			head.setRotX(entityData.headPitch() * Mth.DEG_TO_RAD);
-			head.setRotY(entityData.netHeadYaw() * Mth.DEG_TO_RAD);
+			Float pitch = animationState.getData(DataTickets.ENTITY_PITCH);
+			Float yaw   = animationState.getData(DataTickets.ENTITY_YAW);
+
+			if (pitch != null) head.setRotX(pitch * Mth.DEG_TO_RAD);
+			if (yaw   != null) head.setRotY(yaw * Mth.DEG_TO_RAD);
 		}
 		// Получаем кость через Optional
 		this.getBone("RSheka").ifPresent(tailBone -> {
 			// Управление видимостью на основе данных сущности
-            tailBone.setHidden(!Objects.equals(animatable.getTexture(), "sucker_suck"));
+            tailBone.setHidden(!Objects.equals(animationState.renderState().getGeckolibData(PraporModTickets.ENTITY_TEXTURE), "sucker_suck"));
 		});
 		this.getBone("LSheka").ifPresent(tailBone -> {
 			// Управление видимостью на основе данных сущности
-			tailBone.setHidden(!Objects.equals(animatable.getTexture(), "sucker_suck"));
+			tailBone.setHidden(!Objects.equals(animationState.renderState().getGeckolibData(PraporModTickets.ENTITY_TEXTURE), "sucker_suck"));
 		});
 	}
 }

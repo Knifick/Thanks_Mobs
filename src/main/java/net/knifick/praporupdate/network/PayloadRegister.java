@@ -14,7 +14,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
-@EventBusSubscriber(modid = PraporMod.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = PraporMod.MODID)
 public class PayloadRegister {
     @SubscribeEvent
     public static void registerPayloads(final RegisterPayloadHandlersEvent event) {

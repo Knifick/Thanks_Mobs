@@ -12,7 +12,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.knifick.praporupdate.client.model.Modelhat;
 import net.knifick.praporupdate.client.model.ModelCustomModel;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, value = {Dist.CLIENT})
+@EventBusSubscriber(value = {Dist.CLIENT})
 public class PraporModModels {
 	@SubscribeEvent
 	public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {

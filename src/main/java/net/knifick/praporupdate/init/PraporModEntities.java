@@ -1,7 +1,3 @@
-
-/*
- *    MCreator note: This file will be REGENERATED on each build.
- */
 package net.knifick.praporupdate.init;
 
 import net.knifick.praporupdate.entity.*;
@@ -16,53 +12,82 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 
 import net.knifick.praporupdate.PraporMod;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public class PraporModEntities {
-	public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(Registries.ENTITY_TYPE, PraporMod.MODID);
+	public static final DeferredRegister<EntityType<?>> REGISTRY =
+			DeferredRegister.create(Registries.ENTITY_TYPE, PraporMod.MODID);
+
 	public static final DeferredHolder<EntityType<?>, EntityType<PraporEntity>> PRAPOR = register("prapor",
-			EntityType.Builder.<PraporEntity>of(PraporEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+			EntityType.Builder.<PraporEntity>of(PraporEntity::new, MobCategory.CREATURE)
+					.setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 					.sized(0.6f, 1.6f));
+
 	public static final DeferredHolder<EntityType<?>, EntityType<PookerEntity>> POOKER = register("pooker",
-			EntityType.Builder.<PookerEntity>of(PookerEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).fireImmune().sized(2f, 3f));
+			EntityType.Builder.<PookerEntity>of(PookerEntity::new, MobCategory.MONSTER)
+					.setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
+					.fireImmune().sized(2f, 3f));
+
 	public static final DeferredHolder<EntityType<?>, EntityType<SoulEntity>> SOUL = register("soul",
-			EntityType.Builder.<SoulEntity>of(SoulEntity::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).fireImmune().sized(0.2f, 0.4f));
+			EntityType.Builder.<SoulEntity>of(SoulEntity::new, MobCategory.AMBIENT)
+					.setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+					.fireImmune().sized(0.2f, 0.4f));
+
 	public static final DeferredHolder<EntityType<?>, EntityType<NarratorEntity>> NARRATOR = register("narrator",
-			EntityType.Builder.<NarratorEntity>of(NarratorEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
-
+			EntityType.Builder.<NarratorEntity>of(NarratorEntity::new, MobCategory.CREATURE)
+					.setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 					.sized(0.9f, 0.7f));
+
 	public static final DeferredHolder<EntityType<?>, EntityType<BastardEntity>> BASTARD = register("bastard",
-			EntityType.Builder.<BastardEntity>of(BastardEntity::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
-
+			EntityType.Builder.<BastardEntity>of(BastardEntity::new, MobCategory.AMBIENT)
+					.setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 					.sized(0.8f, 1.4f));
-	public static final DeferredHolder<EntityType<?>, EntityType<BrolemEntity>> BROLEM = register("brolem",
-			EntityType.Builder.<BrolemEntity>of(BrolemEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 
+	public static final DeferredHolder<EntityType<?>, EntityType<BrolemEntity>> BROLEM = register("brolem",
+			EntityType.Builder.<BrolemEntity>of(BrolemEntity::new, MobCategory.CREATURE)
+					.setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 					.sized(1.4f, 2.9f));
+
 	public static final DeferredHolder<EntityType<?>, EntityType<DarkironkinEntity>> DARKIRONKIN = register("darkironkin",
-			EntityType.Builder.<DarkironkinEntity>of(DarkironkinEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).fireImmune().sized(1.2f, 2.5f));
+			EntityType.Builder.<DarkironkinEntity>of(DarkironkinEntity::new, MobCategory.MONSTER)
+					.setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+					.fireImmune().sized(1.2f, 2.5f));
+
 	public static final DeferredHolder<EntityType<?>, EntityType<SuckerEntity>> SUCKER = register("sucker",
-			EntityType.Builder.<SuckerEntity>of(SuckerEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+			EntityType.Builder.<SuckerEntity>of(SuckerEntity::new, MobCategory.CREATURE)
+					.setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 					.sized(1.3f, 1.3f));
+
 	public static final DeferredHolder<EntityType<?>, EntityType<BobEntity>> BOB = register("bob",
-			EntityType.Builder.<BobEntity>of(BobEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).sized(1.5f, 7f));
+			EntityType.Builder.<BobEntity>of(BobEntity::new, MobCategory.MONSTER)
+					.setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
+					.sized(1.5f, 7f));
+
 	public static final DeferredHolder<EntityType<?>, EntityType<NymphEntity>> NYMPH = register("nymph",
-			EntityType.Builder.<NymphEntity>of(NymphEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).fireImmune().sized(2f, 0.5f));
+			EntityType.Builder.<NymphEntity>of(NymphEntity::new, MobCategory.CREATURE)
+					.setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
+					.fireImmune().sized(2f, 0.5f));
+
 	public static final DeferredHolder<EntityType<?>, EntityType<KillCloud>> KILL_CLOUD =
 			register("kill_cloud",
-                    EntityType.Builder.<KillCloud>of(KillCloud::new, MobCategory.MISC)
-                            .sized(0.25f, 0.25f)
-                            .clientTrackingRange(8)
-                            .updateInterval(20));
-	public static final DeferredHolder<EntityType<?>, EntityType<MunchsawEntity>> MUNCHSAW = register("munchsaw",
-			EntityType.Builder.<MunchsawEntity>of(MunchsawEntity::new, MobCategory.MONSTER).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).fireImmune().sized(1.1f, 1.2f));
+					EntityType.Builder.<KillCloud>of(KillCloud::new, MobCategory.MISC)
+							.sized(0.25f, 0.25f)
+							.clientTrackingRange(8)
+							.updateInterval(20));
 
-	// Start of user code block custom entities
-	// End of user code block custom entities
-	private static <T extends Entity> DeferredHolder<EntityType<?>, EntityType<T>> register(String registryname, EntityType.Builder<T> entityTypeBuilder) {
-		return REGISTRY.register(registryname, () -> (EntityType<T>) entityTypeBuilder.build(registryname));
+	public static final DeferredHolder<EntityType<?>, EntityType<MunchsawEntity>> MUNCHSAW = register("munchsaw",
+			EntityType.Builder.<MunchsawEntity>of(MunchsawEntity::new, MobCategory.MONSTER)
+					.setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3)
+					.fireImmune().sized(1.1f, 1.2f));
+
+	private static <T extends Entity> DeferredHolder<EntityType<?>, EntityType<T>> register(String registryName, EntityType.Builder<T> builder) {
+		ResourceKey<EntityType<?>> key = ResourceKey.create(Registries.ENTITY_TYPE,
+				ResourceLocation.fromNamespaceAndPath(PraporMod.MODID, registryName));
+		return REGISTRY.register(registryName, () -> builder.build(key));
 	}
 
 	@SubscribeEvent

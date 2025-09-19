@@ -25,7 +25,7 @@ public class PlayerJoinHandler {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         // проверяем, был ли игрок раньше в этом мире
-        if (!player.getPersistentData().getBoolean("prapor:hasJoined")) {
+        if (!player.getPersistentData().getBoolean("prapor:hasJoined").get()) {
             player.getPersistentData().putBoolean("prapor:hasJoined", true);
 
             // выдаём предмет (пример: книга)
@@ -69,7 +69,7 @@ public class PlayerJoinHandler {
         if (resourceLocation == null) return;
 
         // Получаем advancement и проверяем что он существует
-        AdvancementHolder adv = player.server.getAdvancements().get(resourceLocation);
+        AdvancementHolder adv = player.getServer().getAdvancements().get(resourceLocation);
         if (adv == null) {
             PraporMod.LOGGER.warn("Advancement {} not found!", resourceLocation);
             return;

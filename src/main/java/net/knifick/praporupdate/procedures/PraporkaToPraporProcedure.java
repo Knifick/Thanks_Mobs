@@ -37,7 +37,7 @@ public class PraporkaToPraporProcedure {
 					}
 				}.getItemStack(0, entity)).getItem() == Items.SADDLE) {
 			if (sourceentity instanceof ServerPlayer _player) {
-				AdvancementHolder _adv = _player.server.getAdvancements().get(ResourceLocation.parse("prapor:prapor_ach"));
+				AdvancementHolder _adv = _player.getServer().getAdvancements().get(ResourceLocation.parse("prapor:prapor_ach"));
 				if (_adv != null) {
 					AdvancementProgress _ap = _player.getAdvancements().getOrStartProgress(_adv);
 					if (!_ap.isDone()) {
@@ -49,7 +49,7 @@ public class PraporkaToPraporProcedure {
 			sourceentity.startRiding(entity);
 		} else if ((sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == PraporModItems.PRAPORKA.get()) {
 			if (!world.isClientSide()) {
-				if (entity.getPersistentData().getBoolean("dance")) {
+				if (entity.getPersistentData().getBoolean("dance").get()) {
 					entity.getPersistentData().putBoolean("dance", false);
 					if (entity instanceof PraporEntity) {
 						((PraporEntity) entity).setAnimation("empty");

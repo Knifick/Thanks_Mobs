@@ -1,12 +1,13 @@
 package net.knifick.praporupdate.client.effects;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
-import com.mojang.math.Axis;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
@@ -20,180 +21,146 @@ import org.joml.Quaternionf;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@EventBusSubscriber(
-        value = Dist.CLIENT,
-        bus = EventBusSubscriber.Bus.GAME,
-        modid = "prapor"
-)
+@EventBusSubscriber(value = Dist.CLIENT, modid = "prapor")
 public class RingSuckEffectD {
     private static final ResourceLocation SPRITE_SHEET =
             ResourceLocation.fromNamespaceAndPath("prapor", "textures/mob_effect/suck_ring.png");
 
-    // Настройки волны
-    private static final float MAX_LIFETIME = 10.0f; // в секундах
+    // время жизни эффекта в ТИКАХ (10 секунд)
+    private static final float MAX_LIFETIME_TICKS = 10f * 20f;
 
-    // Список активных волн
+    // анимация атласа (кадры вертикально)
+    private static final int FRAME_COUNT = 8;
+    private static final int FRAME_TIME  = 1; // тиков на кадр
+
     private static final List<Wave> waves = new CopyOnWriteArrayList<>();
+
     public static void trigger(double x, double y, double z, double dx, double dy, double dz) {
-        double modifier = 0.05;
         waves.add(new Wave(x, y, z, dx, dy, dz));
     }
 
-    // настройки анимации
-    private static final int FRAME_COUNT = 8;     // всего кадров
-    private static final int FRAME_TIME = 1;      // сколько тиков показывать 1 кадр
-
     @SubscribeEvent
-    public static void onRender(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS)
-            return;
+    public static void onRender(RenderLevelStageEvent.AfterTranslucentBlocks event) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null) return;
 
-        float partialTicks = event.getPartialTick().getGameTimeDeltaPartialTick(true);
+        float pt = event.getPartialTick().getGameTimeDeltaPartialTick(true);
+        float nowTicks = mc.level.getGameTime() + pt;
+
+        Camera cam = event.getCamera();
+        Vec3 camPos = cam.getPosition();
         PoseStack pose = event.getPoseStack();
-        Camera camera = event.getCamera();
-        Vec3 camPos  = camera.getPosition();
 
-        // Обновляем и рендерим все волны
-        for (Wave wave : waves) {
-            float gameTime = Minecraft.getInstance().level.getGameTime() + event.getPartialTick().getGameTimeDeltaPartialTick(true);
-            wave.age = (gameTime - wave.spawnTick);
-            if (wave.age > MAX_LIFETIME) {
-                waves.remove(wave);
-            } else {
-                renderAnimatedQuad(pose, camPos, wave, partialTicks);
+        // буфер уровня (идём через RenderPipeline выбранного RenderType)
+        LevelRenderer lr = event.getLevelRenderer();
+        MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+
+        for (Wave w : waves) {
+            w.ageTicks = nowTicks - w.spawnTick;
+            if (w.ageTicks > MAX_LIFETIME_TICKS) {
+                waves.remove(w);
+                continue;
             }
+            renderAnimatedQuad(pose, buffers, camPos, w, pt);
         }
     }
 
-    private static void renderAnimatedQuad(PoseStack poseStack, Vec3 cam, Wave wave, float partialTicks) {
+    private static void renderAnimatedQuad(PoseStack poseStack,
+                                           MultiBufferSource.BufferSource buffers,
+                                           Vec3 cam,
+                                           Wave wave,
+                                           float partialTicks) {
         poseStack.pushPose();
 
-        // === вычисляем текущий кадр анимации ===
-        long gameTime = Minecraft.getInstance().level.getGameTime();
-        int frame = (int)((gameTime / FRAME_TIME) % FRAME_COUNT);
+        // текущий кадр по игровым тикам
+        long gt = Minecraft.getInstance().level.getGameTime();
+        int frame = (int)((gt / FRAME_TIME) % FRAME_COUNT);
 
-        // === считаем плавное смещение к цели ===
-        float t = (wave.age + partialTicks) / MAX_LIFETIME;
-        if (t > 1.0f) t = 1.0f;
+        // прогресс [0..1]
+        float t = Mth.clamp(wave.ageTicks / MAX_LIFETIME_TICKS, 0f, 1f);
 
-        // направление движения
+        // направление к цели
         Vec3 dir = new Vec3(wave.dx - wave.x, wave.dy - wave.y, wave.dz - wave.z).normalize();
 
-        // смещение старта вперёд (например, 0.3 блока)
+        // небольшой стартовый оффсет вперёд
         double offset = 0.3;
-        double startX = wave.x + dir.x * offset;
-        double startY = wave.y + dir.y * offset;
-        double startZ = wave.z + dir.z * offset;
+        double sx = wave.x + dir.x * offset;
+        double sy = wave.y + dir.y * offset;
+        double sz = wave.z + dir.z * offset;
 
-        // итоговая позиция
-        double cx = Mth.lerp(t, startX, wave.dx);
-        double cy = Mth.lerp(t, startY, wave.dy);
-        double cz = Mth.lerp(t, startZ, wave.dz);
+        // позиция кольца
+        double cx = Mth.lerp(t, sx, wave.dx);
+        double cy = Mth.lerp(t, sy, wave.dy);
+        double cz = Mth.lerp(t, sz, wave.dz);
 
-
-        // Ставим в мир
+        // в пространство уровня
         poseStack.translate(-cam.x, -cam.y, -cam.z);
-        poseStack.translate(cx, cy+0.7, cz);
+        poseStack.translate(cx, cy + 0.7, cz);
 
-        // === ориентация в сторону цели ===
-        //Vec3 dir = new Vec3(wave.dx - wave.x, wave.dy - wave.y, wave.dz - wave.z).normalize();
-
-        // forward-вектор квадрата: сейчас он смотрит вдоль +Y (так как мы его "поднимем")
-        Vec3 forward = new Vec3(0, 1, 0);
-
-        // теперь выровнять его лицом к цели
-        float dot = (float) forward.dot(dir);
-        dot = Mth.clamp(dot, -1.0f, 1.0f);
-        float angle = (float) Math.acos(dot);
-
-        Vec3 axis = forward.cross(dir).normalize();
-        Quaternionf q;
-        if (axis.lengthSqr() < 1e-6) {
-            q = new Quaternionf().rotationY(dot > 0 ? 0f : (float) Math.PI);
-        } else {
-            q = new Quaternionf().fromAxisAngleRad(axis.toVector3f(), angle);
-        }
+        // ориентируем “квадрат-вверх” (ось +Y) на вектор dir
+        Vec3 up = new Vec3(0, 1, 0);
+        float dot = (float)Mth.clamp(up.dot(dir), -1.0, 1.0);
+        float angle = (float)Math.acos(dot);
+        Vec3 axis = up.cross(dir);
+        Quaternionf q = axis.lengthSqr() < 1e-6
+                ? new Quaternionf().rotationY(dot > 0 ? 0f : (float)Math.PI)
+                : new Quaternionf().fromAxisAngleRad(axis.toVector3f(), angle);
         poseStack.mulPose(q);
 
-        // === масштаб ===
-        float baseSize = 4.0f;      // финальный размер
-        float minSize  = 0f;      // стартовый размер
-        float growTime = MAX_LIFETIME * 0.6f; // за сколько времени вырастет
-
-        float size;
-        if (wave.age < growTime) {
-            float progress = (wave.age + partialTicks) / growTime;
-            size = Mth.lerp(progress, minSize, baseSize);
-        } else {
-            size = baseSize;
-        }
+        // рост размера
+        float baseSize = 4.0f;
+        float growTime = MAX_LIFETIME_TICKS * 0.6f;
+        float size = wave.ageTicks < growTime
+                ? Mth.lerp((wave.ageTicks + partialTicks) / growTime, 0f, baseSize)
+                : baseSize;
         poseStack.scale(size, size, size);
 
-        // === альфа-затухание ===
+        // альфа затухает к концу
         float alpha;
-        float fadeStart = MAX_LIFETIME * 0.5f;
-        if (wave.age < fadeStart) {
+        float fadeStart = MAX_LIFETIME_TICKS * 0.5f;
+        if (wave.ageTicks < fadeStart) {
             alpha = 1.0f;
         } else {
-            float fadeProgress = (wave.age - fadeStart) / (MAX_LIFETIME - fadeStart);
-            alpha = 1.0f - fadeProgress;
-            if (alpha < 0f) alpha = 0f;
+            float fade = (wave.ageTicks - fadeStart) / (MAX_LIFETIME_TICKS - fadeStart);
+            alpha = Mth.clamp(1.0f - fade, 0f, 1f);
         }
 
-        // Настройки рендера
-        RenderSystem.enableBlend();
-        RenderSystem.blendFuncSeparate(
-                GlStateManager.SourceFactor.SRC_ALPHA,
-                GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
-                GlStateManager.SourceFactor.ONE,
-                GlStateManager.DestFactor.ZERO
-        );
-        RenderSystem.disableCull();
-        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        RenderSystem.setShaderTexture(0, SPRITE_SHEET);
-        RenderSystem.applyModelViewMatrix();
-
-        // кадры идут ВЕРТИКАЛЬНО
-        float vSize = 1.0f / FRAME_COUNT;
-        float u0 = 0f;
-        float u1 = 1f;
-        float v0 = frame * vSize;
-        float v1 = v0 + vSize;
-
-        // квадрат
-        Tesselator tess = Tesselator.getInstance();
-        BufferBuilder buf = tess.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
+        // выдаём вершины в пайплайн через готовый RenderType (emissive)
+        var vc = buffers.getBuffer(RenderType.eyes(SPRITE_SHEET));
         Matrix4f m = poseStack.last().pose();
-        float s = 0.5f;
 
-        buf.addVertex(m, -s, 0, -s).setUv(u0, v1).setColor(1f, 1f, 1f, alpha);
-        buf.addVertex(m,  s, 0, -s).setUv(u1, v1).setColor(1f, 1f, 1f, alpha);
-        buf.addVertex(m,  s, 0,  s).setUv(u1, v0).setColor(1f, 1f, 1f, alpha);
-        buf.addVertex(m, -s, 0,  s).setUv(u0, v0).setColor(1f, 1f, 1f, alpha);
+        float vUnit = 1f / FRAME_COUNT;
+        float u0 = 0f, u1 = 1f;
+        float v0 = frame * vUnit, v1 = v0 + vUnit;
 
-        BufferUploader.drawWithShader(buf.buildOrThrow());
+        int overlay = OverlayTexture.NO_OVERLAY;
+        int lightPacked   = LightTexture.FULL_BRIGHT; // эффект светится сам
+        int lightU = lightPacked & 0xFFFF;
+        int lightV = (lightPacked >>> 16) & 0xFFFF;
 
-        RenderSystem.enableCull();
-        RenderSystem.disableBlend();
+        float s = 0.5f; // половина стороны юнита (после scale — “реальный” размер)
+
+        // QUAD в плоскости XZ (после поворота смотрит на цель)
+        vc.addVertex(m, -s, 0, -s).setColor(1f, 1f, 1f, alpha).setUv(u0, v1).setOverlay(overlay).setUv2(lightU, lightV);
+        vc.addVertex(m,  s, 0, -s).setColor(1f, 1f, 1f, alpha).setUv(u1, v1).setOverlay(overlay).setUv2(lightU, lightV);
+        vc.addVertex(m,  s, 0,  s).setColor(1f, 1f, 1f, alpha).setUv(u1, v0).setOverlay(overlay).setUv2(lightU, lightV);
+        vc.addVertex(m, -s, 0,  s).setColor(1f, 1f, 1f, alpha).setUv(u0, v0).setOverlay(overlay).setUv2(lightU, lightV);
+
+        // флашим ТОЛЬКО наш тип, не ломая батчи других систем
+        buffers.endBatch(RenderType.eyes(SPRITE_SHEET));
+
         poseStack.popPose();
     }
 
-
-    //    // Внутренний класс для описания волны
     private static class Wave {
-        final double x, y, z;   // старт
-        final double dx, dy, dz; // цель
-        float age;
-        long spawnTick;
-        final float travelTime = 20f; // сколько тиков летит волна (напр. 1 сек = 20)
+        final double x, y, z;     // старт
+        final double dx, dy, dz;  // цель
+        final long   spawnTick;   // момент запуска (ticks)
+        float ageTicks;           // возраст в тиках (float)
 
         Wave(double x, double y, double z, double dx, double dy, double dz) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-            this.dx = dx;
-            this.dy = dy;
-            this.dz = dz;
+            this.x = x; this.y = y; this.z = z;
+            this.dx = dx; this.dy = dy; this.dz = dz;
             this.spawnTick = Minecraft.getInstance().level.getGameTime();
         }
     }

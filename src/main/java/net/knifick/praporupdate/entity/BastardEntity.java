@@ -9,12 +9,16 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.monster.Vindicator;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
+import software.bernie.geckolib.animatable.processing.AnimationController;
+import software.bernie.geckolib.animatable.processing.AnimationTest;
+import software.bernie.geckolib.constant.DataTickets;
+import software.bernie.geckolib.constant.dataticket.DataTicket;
 import software.bernie.geckolib.util.GeckoLibUtil;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animatable.GeoEntity;
 
@@ -160,17 +164,17 @@ public class BastardEntity extends Raider implements GeoEntity {
 
 	@Override
 	public SoundEvent getAmbientSound() {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:bastard_idle"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:bastard_idle")).get().value();
 	}
 
 	@Override
 	public SoundEvent getHurtSound(DamageSource ds) {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:bastard_hurt"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:bastard_hurt")).get().value();
 	}
 
 	@Override
 	public SoundEvent getDeathSound() {
-		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:bastard_death"));
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:bastard_death")).get().value();
 	}
 
 	@Override
@@ -179,7 +183,7 @@ public class BastardEntity extends Raider implements GeoEntity {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
+	public void addAdditionalSaveData(ValueOutput compound) {
 		super.addAdditionalSaveData(compound);
 		compound.putString("Texture", this.getTexture());
 		compound.putInt("DataState", this.entityData.get(DATA_State));
@@ -189,33 +193,43 @@ public class BastardEntity extends Raider implements GeoEntity {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
-		super.readAdditionalSaveData(compound);
-		if (compound.contains("Texture"))
-			this.setTexture(compound.getString("Texture"));
-		if (compound.contains("DataState"))
-			this.entityData.set(DATA_State, compound.getInt("DataState"));
-		if (compound.contains("Dataex"))
-			this.entityData.set(DATA_ex, compound.getInt("Dataex"));
-		if (compound.contains("Dataey"))
-			this.entityData.set(DATA_ey, compound.getInt("Dataey"));
-		if (compound.contains("Dataez"))
-			this.entityData.set(DATA_ez, compound.getInt("Dataez"));
+	protected void readAdditionalSaveData(ValueInput input) {
+		super.readAdditionalSaveData(input);
+
+		input.getString("Texture")
+				.ifPresent(this::setTexture);
+
+		input.getInt("DataState")
+				.ifPresent(v -> this.entityData.set(DATA_State, v));
+
+		input.getInt("Dataex")
+				.ifPresent(v -> this.entityData.set(DATA_ex, v));
+
+		input.getInt("Dataey")
+				.ifPresent(v -> this.entityData.set(DATA_ey, v));
+
+		input.getInt("Dataez")
+				.ifPresent(v -> this.entityData.set(DATA_ez, v));
 	}
+
 
 	@Override
 	public InteractionResult mobInteract(Player sourceentity, InteractionHand hand) {
 		ItemStack itemstack = sourceentity.getItemInHand(hand);
-		InteractionResult retval = InteractionResult.sidedSuccess(this.level().isClientSide());
+		InteractionResult retval;
+		if(this.level().isClientSide())
+			retval = InteractionResult.SUCCESS;
+		else
+			retval = InteractionResult.SUCCESS_SERVER;
 		super.mobInteract(sourceentity, hand);
 		double x = this.getX();
 		double y = this.getY();
 		double z = this.getZ();
 		Entity entity = this;
 		Level world = this.level();
-		if(itemstack.is(PraporModItems.GUIDE_BOOK)){
-			GuideBookItem.addToBook(sourceentity, this, 1);
-		}
+//		if(itemstack.is(PraporModItems.GUIDE_BOOK)){
+//			GuideBookItem.addToBook(sourceentity, this, 1);
+//		}
 
 		BastardRCMProcedure.execute(world, entity, sourceentity);
 		return retval;
@@ -259,33 +273,42 @@ public class BastardEntity extends Raider implements GeoEntity {
 		return builder;
 	}
 
-	private PlayState movementPredicate(AnimationState event) {
-		if (this.animationprocedure.equals("empty")) {
-			if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F))
+	private PlayState movementPredicate(AnimationTest<BastardEntity> test) {
+		if ("empty".equals(this.animationprocedure)) {
+			// аналог event.isMoving() и проверки амплитуды шага
+			final boolean moving = Boolean.TRUE.equals(test.getDataOrDefault(DataTickets.IS_MOVING, false));
 
-			) {
-				return event.setAndContinue(RawAnimation.begin().thenLoop("walk"));
+			if (moving) {
+				return test.setAndContinue(RawAnimation.begin().thenLoop("walk"));
 			}
-			return event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
+			return test.setAndContinue(RawAnimation.begin().thenLoop("idle"));
 		}
 		return PlayState.STOP;
 	}
 
 	String prevAnim = "empty";
 
-	private PlayState procedurePredicate(AnimationState event) {
-		if (!animationprocedure.equals("empty") && event.getController().getAnimationState() == AnimationController.State.STOPPED || (!this.animationprocedure.equals(prevAnim) && !this.animationprocedure.equals("empty"))) {
-			if (!this.animationprocedure.equals(prevAnim))
-				event.getController().forceAnimationReset();
-			event.getController().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
-			if (event.getController().getAnimationState() == AnimationController.State.STOPPED) {
-				this.animationprocedure = "empty";
-				event.getController().forceAnimationReset();
+	private PlayState procedurePredicate(AnimationTest<BastardEntity> test) {
+		if (!"empty".equals(animationprocedure)
+				&& (test.controller().getAnimationState() == AnimationController.State.STOPPED
+				|| !this.animationprocedure.equals(prevAnim))) {
+
+			if (!this.animationprocedure.equals(prevAnim)) {
+				test.controller().forceAnimationReset();
 			}
-		} else if (animationprocedure.equals("empty")) {
+
+			test.controller().setAnimation(RawAnimation.begin().thenPlay(this.animationprocedure));
+
+			// Когда одноразовая анимация завершилась — сбрасываем «процедуру»
+			if (test.controller().getAnimationState() == AnimationController.State.STOPPED) {
+				this.animationprocedure = "empty";
+				test.controller().forceAnimationReset();
+			}
+		} else if ("empty".equals(animationprocedure)) {
 			prevAnim = "empty";
 			return PlayState.STOP;
 		}
+
 		prevAnim = this.animationprocedure;
 		return PlayState.CONTINUE;
 	}
@@ -295,7 +318,6 @@ public class BastardEntity extends Raider implements GeoEntity {
 		++this.deathTime;
 		if (this.deathTime == 20) {
 			this.remove(BastardEntity.RemovalReason.KILLED);
-			this.dropExperience(this);
 		}
 	}
 
@@ -309,8 +331,8 @@ public class BastardEntity extends Raider implements GeoEntity {
 
 	@Override
 	public void registerControllers(AnimatableManager.ControllerRegistrar data) {
-		data.add(new AnimationController<>(this, "movement", 4, this::movementPredicate));
-		data.add(new AnimationController<>(this, "procedure", 4, this::procedurePredicate));
+		data.add(new AnimationController<>("movement", 4, this::movementPredicate));
+		data.add(new AnimationController<>("procedure", 4, this::procedurePredicate));
 	}
 
 	@Override

@@ -28,9 +28,9 @@ public class OnJoinProcedure {
 	private static void execute(@Nullable Event event, Entity entity) {
 		if (entity == null)
 			return;
-		if (!(entity instanceof ServerPlayer _plr0 && _plr0.level() instanceof ServerLevel && _plr0.getAdvancements().getOrStartProgress(_plr0.server.getAdvancements().get(ResourceLocation.parse("prapor:praporshik"))).isDone())) {
+		if (!(entity instanceof ServerPlayer _plr0 && _plr0.level() instanceof ServerLevel && _plr0.getAdvancements().getOrStartProgress(_plr0.getServer().getAdvancements().get(ResourceLocation.parse("prapor:praporshik"))).isDone())) {
 			if (entity instanceof ServerPlayer _player) {
-				AdvancementHolder _adv = _player.server.getAdvancements().get(ResourceLocation.parse("prapor:praporshik"));
+				AdvancementHolder _adv = _player.getServer().getAdvancements().get(ResourceLocation.parse("prapor:praporshik"));
 				if (_adv != null) {
 					AdvancementProgress _ap = _player.getAdvancements().getOrStartProgress(_adv);
 					if (!_ap.isDone()) {

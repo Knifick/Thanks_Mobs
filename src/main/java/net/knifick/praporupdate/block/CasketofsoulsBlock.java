@@ -3,6 +3,9 @@ package net.knifick.praporupdate.block;
 
 import net.knifick.praporupdate.procedures.CasketOfSoulsAnimationProcedure;
 import net.knifick.praporupdate.procedures.GoldTrophyPerTickProcedure;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import org.checkerframework.checker.units.qual.s;
 
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -38,23 +41,21 @@ public class CasketofsoulsBlock extends Block implements EntityBlock {
 	public static final IntegerProperty BLOCKSTATE = IntegerProperty.create("blockstate", 0, 5);
 	public static final IntegerProperty RESPAWN_ANCHOR_CHARGES = BlockStateProperties.RESPAWN_ANCHOR_CHARGES;
 
-	public CasketofsoulsBlock() {
-		super(BlockBehaviour.Properties.of().sound(SoundType.METAL).strength(1f, 100f).lightLevel(s -> (new Object() {
-			public int getLightLevel() {
-				if (s.getValue(BLOCKSTATE) == 1)
-					return 0;
-				if (s.getValue(BLOCKSTATE) == 2)
-					return 0;
-				if (s.getValue(BLOCKSTATE) == 3)
-					return 0;
-				if (s.getValue(BLOCKSTATE) == 4)
-					return 0;
-				if (s.getValue(BLOCKSTATE) == 5)
-					return 10;
-				return 0;
-			}
-		}.getLightLevel())).requiresCorrectToolForDrops());
-		this.registerDefaultState(this.stateDefinition.any().setValue(RESPAWN_ANCHOR_CHARGES, 0));
+
+	public CasketofsoulsBlock(BlockBehaviour.Properties props) {
+		super(props
+				.sound(SoundType.METAL)
+				.strength(1f, 100f)
+				.requiresCorrectToolForDrops()
+				.lightLevel(state -> {
+					int val = state.getValue(BLOCKSTATE);
+					return val == 5 ? 10 : 0;
+				})
+				.noOcclusion()
+				.setId(ResourceKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("prapor", "casket_of_souls")))
+		);
+		this.registerDefaultState(this.stateDefinition.any()
+				.setValue(BLOCKSTATE, 0));
 	}
 
 	@Override
@@ -129,18 +130,6 @@ public class CasketofsoulsBlock extends Block implements EntityBlock {
 		super.triggerEvent(state, world, pos, eventID, eventParam);
 		BlockEntity blockEntity = world.getBlockEntity(pos);
 		return blockEntity == null ? false : blockEntity.triggerEvent(eventID, eventParam);
-	}
-
-	@Override
-	public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (state.getBlock() != newState.getBlock()) {
-			BlockEntity blockEntity = world.getBlockEntity(pos);
-			if (blockEntity instanceof CasketofsoulsBlockEntity be) {
-				Containers.dropContents(world, pos, be);
-				world.updateNeighbourForOutputSignal(pos, this);
-			}
-			super.onRemove(state, world, pos, newState, isMoving);
-		}
 	}
 
 	@Override
