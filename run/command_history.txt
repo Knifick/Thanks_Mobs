@@ -1,19 +1,3 @@
-/summon area_effect_cloud ~ ~ ~ {Duration:200,Radius:0.1f,Effects:[{Id:1,Amplifier:0,Duration:200}]}
-/summon area_effect_cloud ~ ~ ~ {Duration:200,Radius:0.01f,Effects:[{Id:1,Amplifier:0,Duration:200}]}
-/summon area_effect_cloud ~ ~ ~ {Duration:200,Radius:0.01f}
-/summon prapor:kill_cloud
-/time set day
-/summon prapor:kill_cloud
-/time set day
-/summon prapor:kill_cloud
-/spawnpoint
-/summon prapor:kill_cloud\
-/summon prapor:kill_cloud
-/particle prapor:sparks ~ ~ ~
-/particle prapor:eyes
-/particle prapor:eyes ~ ~ ~
-/particle prapor:eyes ~ ~2 ~
-/time set day
 /playsound minecraft:entity.allay.ambient_with_item
 /playsound minecraft:entity.allay.ambient_without_item
 /time set midnight
@@ -48,3 +32,19 @@
 /time set day
 /particle prapor:kill_cloud ~ ~1 ~
 /particle prapor:kill_cloud ~ ~2 ~
+/locate structure minecraft:village_plains
+/tp @s -304 ~ 1264
+/time set night
+/time set midnight
+/time set day
+/kill @e[type=prapor:narrator]
+/time set day
+/tp @s -304 ~ 1264
+/kill
+/time set day
+/locate structure minecraft:village_plains
+/tp @s -288 ~ -992
+/locate structure minecraft:village_plains
+/tp @s -288 ~ -992
+/time set day
+/tp @s -288 ~ -992

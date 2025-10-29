@@ -80,10 +80,6 @@ public class NarratorEntity extends TamableAnimal implements GeoEntity {
 
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-	// swing-поддержка (если добавишь melee/жесты)
-	private boolean swinging;
-	private long lastSwing;
-
 	// геймплейные поля
 	private final Set<UUID> scaredPlayerUUIDs = new HashSet<>();
 	private int narratorState = 0;

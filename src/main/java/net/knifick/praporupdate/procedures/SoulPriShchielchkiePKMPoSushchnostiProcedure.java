@@ -18,7 +18,7 @@ import net.knifick.praporupdate.init.PraporModItems;
 public class SoulPriShchielchkiePKMPoSushchnostiProcedure {
 
 	public static void execute(LevelAccessor world, double x, double y, double z, Entity entity, Entity sourceEntity) {
-		if (!(entity instanceof LivingEntity) || !(sourceEntity instanceof LivingEntity livingSource))
+		if (!(entity instanceof LivingEntity) || !(sourceEntity instanceof Player livingSource))
 			return;
 
 		ItemStack mainHand = livingSource.getMainHandItem();
@@ -40,7 +40,8 @@ public class SoulPriShchielchkiePKMPoSushchnostiProcedure {
 			return;
 		}
 
-		livingSource.setItemInHand(InteractionHand.MAIN_HAND, newItem);
+		livingSource.getInventory().add(newItem);
+		livingSource.getMainHandItem().setCount(livingSource.getMainHandItem().getCount()-1);
 		if (livingSource instanceof Player player) {
 			player.getInventory().setChanged();
 		}

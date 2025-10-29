@@ -4,9 +4,8 @@ import net.knifick.praporupdate.PraporMod;
 import net.knifick.praporupdate.client.effects.RingSuckEffectD;
 import net.knifick.praporupdate.event.mantle.MantleTrigger;
 import net.knifick.praporupdate.item.GuideBookItem;
-import net.knifick.praporupdate.network.payloads.ClickPayload;
-import net.knifick.praporupdate.network.payloads.RingSuckPayload;
-import net.knifick.praporupdate.network.payloads.ToastPayload;
+import net.knifick.praporupdate.network.payloads.*;
+import net.knifick.praporupdate.util.narrator.NarratorMusicClient;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -45,5 +44,17 @@ public class PayloadRegister {
                     context.enqueueWork(()-> MantleTrigger.onItemUse(context.player()));
                 }
         );
+        registrar.playToClient(
+                StartNarratorMusicPayload.TYPE,
+                StartNarratorMusicPayload.STREAM_CODEC,
+                (payload, ctx) -> ctx.enqueueWork(() ->
+                        NarratorMusicClient.start(payload.entityId(), payload.soundId())
+                ));
+        registrar.playToClient(
+                StopNarratorMusicPayload.TYPE,
+                StopNarratorMusicPayload.STREAM_CODEC,
+                (payload, ctx) -> ctx.enqueueWork(() ->
+                        NarratorMusicClient.stop(payload.entityId())
+                ));
     }
 }

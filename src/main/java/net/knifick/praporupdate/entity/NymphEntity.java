@@ -225,12 +225,8 @@ public class NymphEntity extends Animal implements GeoEntity {
 					}
 
 					int distSq = pos.getX() * pos.getX() + pos.getZ() * pos.getZ();
-					if (distSq < 1000 * 1000) {
-						return false;
-					}
-
-					return true;
-				},
+                    return distSq >= 1000 * 1000;
+                },
 				RegisterSpawnPlacementsEvent.Operation.REPLACE
 		);
 	}

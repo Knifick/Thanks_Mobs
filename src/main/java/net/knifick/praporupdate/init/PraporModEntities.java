@@ -36,7 +36,7 @@ public class PraporModEntities {
 	public static final DeferredHolder<EntityType<?>, EntityType<BastardEntity>> BASTARD = register("bastard",
 			EntityType.Builder.<BastardEntity>of(BastardEntity::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 
-					.sized(0.8f, 1.4f));
+					.sized(0.65f, 1f));
 	public static final DeferredHolder<EntityType<?>, EntityType<BrolemEntity>> BROLEM = register("brolem",
 			EntityType.Builder.<BrolemEntity>of(BrolemEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 
