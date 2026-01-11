@@ -23,60 +23,92 @@ import net.knifick.praporupdate.entity.BrolemEntity;
 import net.knifick.praporupdate.PraporMod;
 
 public class BrolemOnRCMProcedure {
-	public static void execute(LevelAccessor world, double x, double y, double z, Entity entity, Entity sourceentity) {
-		if (entity == null || sourceentity == null)
-			return;
-		if ((sourceentity instanceof LivingEntity _livEnt ? _livEnt.getMainHandItem() : ItemStack.EMPTY).getItem() == PraporModItems.SOUL_BOTTLE.get()
-				&& !(entity instanceof BrolemEntity _datEntL2 && _datEntL2.getEntityData().get(BrolemEntity.DATA_OnBuilding)) && !(entity instanceof BrolemEntity _datEntL3 && _datEntL3.getEntityData().get(BrolemEntity.DATA_IsAlive))) {
-			if (sourceentity instanceof LivingEntity _entity) {
-				ItemStack _setstack = new ItemStack(PraporModItems.SOUL_BOTTLE.get()).copy();
-				_setstack.setCount(1);
-				_entity.setItemInHand(InteractionHand.MAIN_HAND, _setstack);
-				if (_entity instanceof Player _player)
-					_player.getInventory().setChanged();
-			}
-			if (entity instanceof BrolemEntity _datEntSetL)
-				_datEntSetL.getEntityData().set(BrolemEntity.DATA_OnBuilding, true);
-			if (entity instanceof BrolemEntity) {
-				((BrolemEntity) entity).setAnimation("empty");
-			}
-			if (entity instanceof BrolemEntity) {
-				((BrolemEntity) entity).setAnimation("build");
-			}
-			if (world instanceof Level _level) {
-				if (!_level.isClientSide()) {
-					_level.playSound(null, BlockPos.containing(x, y, z), BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:soul_sounds")), SoundSource.NEUTRAL, 1, 1);
-				} else {
-					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:soul_sounds")), SoundSource.NEUTRAL, 1, 1, false);
-				}
-			}
-			if (world instanceof Level _level) {
-				if (!_level.isClientSide()) {
-					_level.playSound(null, BlockPos.containing(x, y, z), BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:build_bro")), SoundSource.NEUTRAL, 1, 1);
-				} else {
-					_level.playLocalSound(x, y, z, BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("prapor:build_bro")), SoundSource.NEUTRAL, 1, 1, false);
-				}
-			}
-			if (world instanceof ServerLevel _level)
-				_level.sendParticles(ParticleTypes.SOUL, x, y, z, 5, 1, 1, 1, 0.05);
-			PraporMod.queueServerWork(149, () -> {
-				if (sourceentity instanceof ServerPlayer _player) {
-					AdvancementHolder _adv = _player.server.getAdvancements().get(ResourceLocation.parse("prapor:brolem_ach"));
-					if (_adv != null) {
-						AdvancementProgress _ap = _player.getAdvancements().getOrStartProgress(_adv);
-						if (!_ap.isDone()) {
-							for (String criteria : _ap.getRemainingCriteria())
-								_player.getAdvancements().award(_adv, criteria);
-						}
-					}
-				}
-				if (entity instanceof BrolemEntity _datEntSetL)
-					_datEntSetL.getEntityData().set(BrolemEntity.DATA_OnBuilding, false);
-				if (entity instanceof BrolemEntity _datEntSetL)
-					_datEntSetL.getEntityData().set(BrolemEntity.DATA_IsAlive, true);
-				if (entity instanceof TamableAnimal _toTame && sourceentity instanceof Player _owner)
-					_toTame.tame(_owner);
-			});
-		}
-	}
+
+    public static void execute(LevelAccessor world, double x, double y, double z, Entity entity, Entity sourceentity) {
+        if (entity == null || sourceentity == null)
+            return;
+
+        // Проверяем: в руке Soul Bottle, и Brolem ещё не строится и не живой
+        boolean hasSoulBottle = (sourceentity instanceof LivingEntity livEnt)
+                && livEnt.getMainHandItem().getItem() == PraporModItems.SOUL_BOTTLE.get();
+
+        boolean isBuilding = (entity instanceof BrolemEntity brolem) && brolem.getEntityData().get(BrolemEntity.DATA_OnBuilding);
+        boolean isAlive = (entity instanceof BrolemEntity brolem) && brolem.getEntityData().get(BrolemEntity.DATA_IsAlive);
+
+        if (!hasSoulBottle || isBuilding || isAlive)
+            return;
+
+        // --- 1. Обновляем предмет в руке игрока ---
+        if (sourceentity instanceof LivingEntity living) {
+            ItemStack newStack = new ItemStack(PraporModItems.SOUL_BOTTLE.get());
+            newStack.setCount(1);
+            living.setItemInHand(InteractionHand.MAIN_HAND, newStack);
+
+            if (living instanceof Player player)
+                player.getInventory().setChanged();
+        }
+
+        // --- 2. Ставим флаг "строится" и проигрываем анимацию ---
+        if (entity instanceof BrolemEntity brolem) {
+            brolem.getEntityData().set(BrolemEntity.DATA_OnBuilding, true);
+            brolem.setAnimation("empty");
+            brolem.setAnimation("build");
+        }
+
+        // --- 3. Звуковые эффекты ---
+        playSound(world, x, y, z, "prapor:soul_sounds");
+        playSound(world, x, y, z, "prapor:build_bro");
+
+        // --- 4. Эффект частиц ---
+        if (world instanceof ServerLevel serverLevel)
+            serverLevel.sendParticles(ParticleTypes.SOUL, x, y, z, 5, 1, 1, 1, 0.05);
+
+        // --- 5. Через 149 тиков (7.45 сек) активируем Brolem'а ---
+        PraporMod.queueServerWork(72, () -> {
+
+            // Достижение для игрока
+            if (sourceentity instanceof ServerPlayer player) {
+                AdvancementHolder adv = player.server.getAdvancements()
+                        .get(ResourceLocation.parse("prapor:brolem_ach"));
+
+                if (adv != null) {
+                    AdvancementProgress progress = player.getAdvancements().getOrStartProgress(adv);
+                    if (!progress.isDone()) {
+                        for (String criteria : progress.getRemainingCriteria())
+                            player.getAdvancements().award(adv, criteria);
+                    }
+                }
+            }
+
+            // Завершаем "строительство" и оживляем Brolem'а
+            if (entity instanceof BrolemEntity brolem) {
+                brolem.getEntityData().set(BrolemEntity.DATA_OnBuilding, false);
+                brolem.getEntityData().set(BrolemEntity.DATA_IsAlive, true);
+            }
+
+            // Приручаем Brolem'а на владельца
+            if (entity instanceof TamableAnimal tamable && sourceentity instanceof Player owner)
+                tamable.tame(owner);
+        });
+    }
+
+    /**
+     * Утилита для воспроизведения звука на сервере и клиенте.
+     */
+    private static void playSound(LevelAccessor world, double x, double y, double z, String soundId) {
+        if (!(world instanceof Level level))
+            return;
+
+        ResourceLocation soundLoc = ResourceLocation.parse(soundId);
+
+        if (!level.isClientSide()) {
+            level.playSound(null, BlockPos.containing(x, y, z),
+                    BuiltInRegistries.SOUND_EVENT.get(soundLoc),
+                    SoundSource.NEUTRAL, 1f, 1f);
+        } else {
+            level.playLocalSound(x, y, z,
+                    BuiltInRegistries.SOUND_EVENT.get(soundLoc),
+                    SoundSource.NEUTRAL, 1f, 1f, false);
+        }
+    }
 }

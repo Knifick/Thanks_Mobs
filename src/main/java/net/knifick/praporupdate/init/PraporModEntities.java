@@ -36,7 +36,7 @@ public class PraporModEntities {
 	public static final DeferredHolder<EntityType<?>, EntityType<BastardEntity>> BASTARD = register("bastard",
 			EntityType.Builder.<BastardEntity>of(BastardEntity::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 
-					.sized(0.65f, 1f));
+					.sized(0.65f, 1.3f));
 	public static final DeferredHolder<EntityType<?>, EntityType<BrolemEntity>> BROLEM = register("brolem",
 			EntityType.Builder.<BrolemEntity>of(BrolemEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 
@@ -90,6 +90,6 @@ public class PraporModEntities {
 		event.put(SUCKER.get(), SuckerEntity.createAttributes().build());
 		event.put(BOB.get(), BobEntity.createAttributes().build());
 		event.put(NYMPH.get(), NymphEntity.createAttributes().build());
-		//event.put(MUNCHSAW.get(), MunchsawEntity.createAttributes().build());
+		event.put(MUNCHSAW.get(), MunchsawEntity.createAttributes().build());
 	}
 }

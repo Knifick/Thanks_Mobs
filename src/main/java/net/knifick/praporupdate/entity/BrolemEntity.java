@@ -429,16 +429,16 @@ public class BrolemEntity extends TamableAnimal implements GeoEntity {
 	}
 
 	private PlayState movementPredicate(AnimationState event) {
+        if(!isAlive())
+            return event.setAndContinue(RawAnimation.begin().thenLoop("ruins"));
 		if (this.animationprocedure.equals("empty")) {
-			if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F))
-
-			) {
+			if ((event.isMoving() || !(event.getLimbSwingAmount() > -0.15F && event.getLimbSwingAmount() < 0.15F))) {
 				return event.setAndContinue(RawAnimation.begin().thenLoop("walk"));
 			}
 			if (this.isShiftKeyDown()) {
 				return event.setAndContinue(RawAnimation.begin().thenLoop("walk"));
 			}
-			return event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
+            return event.setAndContinue(RawAnimation.begin().thenLoop("idle"));
 		}
 		return PlayState.STOP;
 	}

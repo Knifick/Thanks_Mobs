@@ -194,7 +194,7 @@ public class BastardEntity extends Raider implements GeoEntity {
 	protected void registerGoals() {
 		super.registerGoals();
         this.chestGoal = new BastardChestRaidGoal(this);
-        this.goalSelector.addGoal(2, this.chestGoal);
+        //this.goalSelector.addGoal(2, this.chestGoal);
 		this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, (float) 15) {
 			@Override
 			public boolean canUse() {
@@ -241,27 +241,6 @@ public class BastardEntity extends Raider implements GeoEntity {
 		});
 		this.goalSelector.addGoal(7, new FloatGoal(this));
 	}
-
-    @Override
-    protected PathNavigation createNavigation(Level level) {
-        return new BastardNavigation(this, level);
-    }
-
-
-    public class BastardNavigation extends GroundPathNavigation {
-        public BastardNavigation(Mob mob, Level level) {
-            super(mob, level);
-            this.setCanOpenDoors(true);
-            this.setCanPassDoors(true);
-        }
-
-        @Override
-        protected boolean hasValidPathType(PathType type) {
-            if (type == PathType.DOOR_WOOD_CLOSED)
-                return true; // ← теперь путь можно прокладывать через закрытые двери
-            return super.hasValidPathType(type);
-        }
-    }
 
 	@Override
 	public boolean removeWhenFarAway(double distanceToClosestPlayer) {
@@ -593,7 +572,7 @@ public class BastardEntity extends Raider implements GeoEntity {
         private final BastardEntity mob;
         private BlockPos chestPos = null;
         private BlockPos approachPos = null;
-        private net.minecraft.core.Direction chestFacing = net.minecraft.core.Direction.NORTH;
+        private Direction chestFacing = Direction.NORTH;
         private final double speedMod = 0.7; // "чуть медленнее"
         private boolean lockedThisChest = false;
 
@@ -620,13 +599,13 @@ public class BastardEntity extends Raider implements GeoEntity {
                     for (int dz = -radius; dz <= radius; dz++) {
                         BlockPos p = base.offset(dx, dy, dz);
                         BlockState st = level.getBlockState(p);
-                        if (!(st.getBlock() instanceof net.minecraft.world.level.block.ChestBlock chest)) continue;
+                        if (!(st.getBlock() instanceof ChestBlock chest)) continue;
 
                         // Непустой?
                         if (!chestExistsWithItems(level, p)) continue;
 
                         // Куда встать: прямо перед лицевой стороной сундука
-                        net.minecraft.core.Direction f = st.getValue(net.minecraft.world.level.block.ChestBlock.FACING);
+                        Direction f = st.getValue(ChestBlock.FACING);
                         BlockPos front = p.relative(f);
 
                         // Туда можно встать? (блок проходим и есть место над ним)
@@ -667,9 +646,24 @@ public class BastardEntity extends Raider implements GeoEntity {
         }
 
         private void moveToApproach() {
-            Path p = mob.getNavigation().createPath(approachPos, 1);
-            if (p != null) {
-                mob.getNavigation().moveTo(p, speedMod);
+            Path path = mob.getNavigation().createPath(approachPos, 1);
+            Vec3 entityPos = mob.position(); // или getX(), getY(), getZ()
+            Vec3 targetVec = Vec3.atCenterOf(approachPos); // центр блока
+            Vec3 direction = targetVec.subtract(entityPos);
+            double horizontalStrength = 0.01; // настраиваемое
+            if(mob.level().getBlockState(mob.blockPosition().below()).isAir()
+            || (mob.getDeltaMovement().x == 0 && mob.getDeltaMovement().z == 0)){
+                Vec3 motion = new Vec3(
+                        direction.x * horizontalStrength,
+                        mob.getDeltaMovement().y,
+                        direction.z * horizontalStrength
+                );
+                mob.setDeltaMovement(motion);
+                mob.hurtMarked = true;
+            }
+            if (path != null) {
+                System.out.println("NOT null");
+                mob.getNavigation().moveTo(path, speedMod);
             }
         }
 
@@ -702,16 +696,19 @@ public class BastardEntity extends Raider implements GeoEntity {
             Vec3 dest = Vec3.atCenterOf(approachPos);
             double dist = here.distanceTo(dest);
 
-            // если путь закончился, но сундук далеко — перестроить путь
-            if (!mob.getNavigation().isInProgress() && dist > 0.7) {
-                mob.getMoveControl().setWantedPosition(dest.x, dest.y, dest.z, speedMod);
-            }
+            moveToApproach(); // см. обновлённый метод ниже
+//            if (!mob.getNavigation().isInProgress() && dist < 2) {
+//                mob.getMoveControl().setWantedPosition(dest.x, dest.y, dest.z, speedMod);
+//            }
+//
+//            if (mob.tickCount % 20 == 0 && dist > 0.7) {
+//                mob.getNavigation().recomputePath();
+//            }
 
             // если расстояние совсем маленькое — считаем, что дошёл
-            if (dist <= 0.9) { // было 0.7 → увеличено до 0.9 для стабильности
+            if (dist <= 0.9) {
                 mob.getNavigation().stop();
-                mob.setPos(dest.x, dest.y, dest.z);
-
+                mob.setPos(dest.x, dest.y, dest.z); // аккуратно "щелкаем" в центр клетки
                 Vec3 chestCenter = Vec3.atCenterOf(chestPos);
                 mob.lookAt(EntityAnchorArgument.Anchor.EYES, chestCenter);
 
@@ -722,6 +719,7 @@ public class BastardEntity extends Raider implements GeoEntity {
                 mob.setState(STATE_RUMMAGE);
                 mob.rummageTicks = 20 * 4;
             }
+
         }
 
         private void tickRummage(ServerLevel level) {
@@ -734,8 +732,8 @@ public class BastardEntity extends Raider implements GeoEntity {
                     FakePlayer fake = FakePlayerFactory.getMinecraft(level);
 
                     BlockState st = level.getBlockState(chestPos);
-                    if (st.getBlock() instanceof net.minecraft.world.level.block.ChestBlock) {
-                        level.blockEvent(chestPos, st.getBlock(), 1, 1);                 // shouldBeOpen(true)
+                    if (st.getBlock() instanceof ChestBlock) {
+                        level.blockEvent(chestPos, st.getBlock(), 1, 1);
                         level.sendBlockUpdated(chestPos, st, st, 3);
                         playChestSoundLikeVanilla(level, chestPos, st, net.minecraft.sounds.SoundEvents.CHEST_OPEN);
                     }

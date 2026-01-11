@@ -50,7 +50,7 @@ public class PraporModTabs {
 				tabData.accept(PraporModItems.SUCKER_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.BOB_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.NYMPH_SPAWN_EGG.get());
-				//tabData.accept(PraporModItems.MUCNHSAW_SPAWN_EGG.get());
+				tabData.accept(PraporModItems.MUCNHSAW_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.SOUL_SPAWN_EGG.get());
 				tabData.accept(PraporModItems.PRAPORKA.get());
 				tabData.accept(PraporModItems.BATTERY.get());
